@@ -1,0 +1,23 @@
+doctype 5
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    title TODO!!
+    meta(name="description", content="TODO")
+    meta(name="keywords", content="TODO")
+    meta(name="author", content="Anton Podviaznikov")
+    script
+      var cUnity = {};
+      cUnity.user =  {
+        username: '#{user.username}',
+        avatar: '#{user.avatar}',
+        profileUrl: '#{user.profileUrl}',
+        displayName: '#{user.displayName}',
+        accessToken: '#{user.accessToken}'
+      };      
+
+    script(src="/app.js")
+  body
+    - each community in communities
+      p
+        a(href="/communities/#{community.name}")= community.name

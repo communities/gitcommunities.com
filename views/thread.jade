@@ -1,0 +1,15 @@
+doctype 5
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    title TODO!!
+    meta(name="description", content="TODO")
+    meta(name="keywords", content="TODO")
+    meta(name="author", content="Anton Podviaznikov")
+    script(src="/app.js")
+  body
+    - each message in messages
+      section
+        div!= message.html
+        footer
+          span= message.author.login
