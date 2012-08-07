@@ -119,15 +119,7 @@ app.get "/communities/:community/:thread", (req, res) ->
               author: commits[messagesCount - i - 1].author
             callback undefined, message  
     async.parallel workers, (errors, messages) -> 
-      res.render "thread", messages: messages
-  # communityRepo.contents "1.md", "links-to-animations-examples", (error, blob) ->
-  #   console.log "xxx", error, blob
-  #   content = new Buffer(blob.content, "base64").toString("utf8")
-  #   res.render "thread", messages: [{content: content}]
-  # communityRepo = github.repo url
-  # communityRepo.branches (error, branches) ->
-  #   console.log branches
-  #   res.render "community", threads: branches, communityUrl: url    
+      res.render "thread", messages: messages  
 
 port = process.env.PORT || 8090
 app.listen port
