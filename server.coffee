@@ -1,8 +1,9 @@
 express = require "express"
-stitch  = require "stitch"
 md      = require "markdown"
 async   = require "async"
 
+stylus  = require "stylus"
+nib     = require "nib"
 
 github      = require("octonode").client()
 communities = github.org "communities"
@@ -38,8 +39,22 @@ passport.use new GitHubStrategy {
       return done(null, profile);
 
 
-app.configure ->
 
+# stylus compile function
+compile = (str, path) ->
+  return stylus(str)
+    .define("url", stylus.url({ paths: [__dirname + "/public"] }))
+    .set("filename", path)
+    .set("warn", true)
+    .set("compress", false)
+    .use(nib())
+
+app.configure ->
+  # stylus middleware
+  app.use stylus.middleware
+    src    : __dirname + "/styls"  # styl files should be placed inside this folder
+    dest   : __dirname + "/public" # CSS files will be complied to public directory
+    compile: compile    # compile function
   app.set "views", __dirname + "/views"
   app.set "view engine", "jade"
   app.set "view options", {layout: false}
@@ -55,13 +70,6 @@ app.configure ->
   app.use passport.session()
   app.use app.router 
   app.use express.static __dirname + "/public"
-
-
-jsPack = stitch.createPackage({
-  paths: [__dirname + "/client"]
-})
-
-app.get "/app.js", jsPack.createServer()
 
 
 app.get "/auth",
@@ -80,46 +88,55 @@ app.get "/auth/callback",
 
 
 app.get "/", (req, res) ->
-  communities.repos (error, communities) ->
-    user = req.user or {}
-    res.render "index", communities: communities, user: user
-
-
-app.get "/communities", (req, res) ->
-
-  communities.repos (error, communities) ->
-    console.log typeof communities, communities.length
-    res.json communities
+  res.render "index", user: req.user or {}
 
 app.get "/communities/:community", (req, res) ->
-  communityUrl = "communities/" + req.params.community
-  communityRepo = github.repo communityUrl
-  communityRepo.branches (error, branches) ->
-    console.log branches
-    res.render "community", threads: branches, communityUrl: communityUrl
+  res.render "index", user: req.user or {}
 
 app.get "/communities/:community/:thread", (req, res) ->
-  communityUrl = "communities/" + req.params.community
-  communityRepo = github.repo communityUrl
-  communityRepo.commits {sha: "0eaaef6e5cba616d78e7428beda0f9c4320126dc"}, (error, commits) ->
-    messagesCount = commits.length - 1
-    console.log "count", messagesCount, commits[0].author.login, commits[1].author.login, commits[2].author.login, commits[3].author.login
-    workers = for i in [0..messagesCount - 1]
-      do (i) ->
-        (callback) ->
-          communityRepo.contents "#{i + 1}.md", "links-to-animations-examples", (error, blob) ->
-            if error
-              callback error
-              return
-            content = new Buffer(blob.content, "base64").toString("utf8")
-            html = md.markdown.toHTML(content)
-            message =
-              content: content
-              html: html
-              author: commits[messagesCount - i - 1].author
-            callback undefined, message  
-    async.parallel workers, (errors, messages) -> 
-      res.render "thread", messages: messages  
+  res.render "index", user: req.user or {}
+
+# app.get "/", (req, res) ->
+#   communities.repos (error, communities) ->
+#     user = req.user or {}
+#     res.render "index", communities: communities, user: user
+
+
+# app.get "/communities", (req, res) ->
+
+#   communities.repos (error, communities) ->
+#     console.log typeof communities, communities.length
+#     res.json communities
+
+# app.get "/communities/:community", (req, res) ->
+#   communityUrl = "communities/" + req.params.community
+#   communityRepo = github.repo communityUrl
+#   communityRepo.branches (error, branches) ->
+#     console.log branches
+#     res.render "community", threads: branches, communityUrl: communityUrl
+
+# app.get "/communities/:community/:thread", (req, res) ->
+#   communityUrl = "communities/" + req.params.community
+#   communityRepo = github.repo communityUrl
+#   communityRepo.commits {sha: "0eaaef6e5cba616d78e7428beda0f9c4320126dc"}, (error, commits) ->
+#     messagesCount = commits.length - 1
+#     console.log "count", messagesCount, commits[0].author.login, commits[1].author.login, commits[2].author.login, commits[3].author.login
+#     workers = for i in [0..messagesCount - 1]
+#       do (i) ->
+#         (callback) ->
+#           communityRepo.contents "#{i + 1}.md", "links-to-animations-examples", (error, blob) ->
+#             if error
+#               callback error
+#               return
+#             content = new Buffer(blob.content, "base64").toString("utf8")
+#             html = md.markdown.toHTML(content)
+#             message =
+#               content: content
+#               html: html
+#               author: commits[messagesCount - i - 1].author
+#             callback undefined, message  
+#     async.parallel workers, (errors, messages) -> 
+#       res.render "thread", messages: messages  
 
 port = process.env.PORT || 8090
 app.listen port
