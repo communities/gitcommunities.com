@@ -1,11 +1,11 @@
 $(function(){
 
-  function showPage(pagename, fn) {
+  function showPage(pagename, fn){
     $(".page.visible").removeClass('visible').addClass('invisible');
 
     $("#" + pagename).removeClass('invisible').addClass('visible');
 
-    if (fn) {
+    if(fn){
       fn();
     }
   }
@@ -44,6 +44,11 @@ $(function(){
         });
       }
     });
+    
+    repo.commits("0eaaef6e5cba616d78e7428beda0f9c4320126dc", 100, function(err, commits){
+      console.log("commits", commits);
+    });
+
   }
 
   function renderArray(array, containerEl, templateName){

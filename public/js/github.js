@@ -308,7 +308,10 @@
       this.contents = function(path, cb) {
         _request("GET", repoPath + "/contents", { path: path }, cb);
       };
-
+      
+      this.commits = function(sha, perPage, cb) {
+        _request("GET", repoPath + "/commits?sha=0eaaef6e5cba616d78e7428beda0f9c4320126dc", cb);
+      };
       // Fork repository
       // -------
 
