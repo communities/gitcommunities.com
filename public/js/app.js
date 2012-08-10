@@ -36,19 +36,46 @@ $(function(){
     var repo = new Github({}).getRepo('communities', community);
     repo.getTree(thread, function(err, tree){
       console.log(tree);
+      var workers = [];
       var i = 0;
       for(; i < tree.length; i++){
         var node = tree[i];
-        repo.read(thread, node.path, function(err, data){
-          console.log(data);
-        });
+        (function(node){
+          var worker = function(callback){
+            repo.read(thread, node.path, function(err, data, sha){
+              callback(err, {content: data, thread: thread, path: node.path, sha: sha});    
+            });
+          };
+          workers.push(worker);
+        })(node);
       }
+      async.parallel(workers, function(erros, files){
+        files = _.first(files, files.length - 1);
+        console.log("files", files);
+        repo.commits("0eaaef6e5cba616d78e7428beda0f9c4320126dc", function(err, commits){
+          commits = _.first(commits, commits.length - 1);
+          console.log("commits", commits);
+          var mdConverter = new Showdown.converter();
+          var $messagesListEL = $('#messages-list');
+          var i = 0;
+          for(; i < commits.length; i++){
+            var k = commits.length - i - 1;
+            var file = files[k];
+            var commit = commits[i];
+            file.commit = commit;
+            file.html = mdConverter.makeHtml(file.content);
+          }
+          console.log("new files", files);
+          // _.each(files, function(file){
+          //   file.html = mdConverter.makeHtml(file.content);
+          // });
+          renderArray(files, $messagesListEL, 'thread-page-message-tpl');
+          });
+        
+      });
     });
     
-    repo.commits("0eaaef6e5cba616d78e7428beda0f9c4320126dc", 100, function(err, commits){
-      console.log("commits", commits);
-    });
-
+    
   }
 
   function renderArray(array, containerEl, templateName){
