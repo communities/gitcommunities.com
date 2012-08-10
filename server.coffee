@@ -5,8 +5,8 @@ async   = require "async"
 stylus  = require "stylus"
 nib     = require "nib"
 
-github      = require("octonode").client()
-communities = github.org "communities"
+github    = require "octonode"
+# communities = github.org "communities"
 
 app = module.exports = express.createServer()
 
@@ -90,12 +90,39 @@ app.get "/auth/callback",
 app.get "/", (req, res) ->
   res.render "index", user: req.user or {}
 
+app.get "/create", (req, res) ->
+  res.render "index", user: req.user or {}
+
 app.get "/communities/:community", (req, res) ->
   res.render "index", user: req.user or {}
 
 app.get "/communities/:community/:thread", (req, res) ->
   res.render "index", user: req.user or {}
 
+
+app.post "/communities", (req, res) ->
+  name = req.body.name;
+  console.log "xx", name, req.user.username
+  github.auth.config({
+    username: "communities-admin"
+    password: 'M5GR0ZDQSgwRYc2'
+  }).login ['user', 'repo', 'gist'], (err, id, token) ->
+    ghAdmin = github.client token
+    console.log(token, ghAdmin, "done");
+    org = ghAdmin.org "communities"
+    repo = 
+      name: name
+      description: "This is your first repo"
+      homepage: "https://github.com"
+      private: false
+      has_issues: true
+      has_wiki: true
+      has_downloads: true
+    ghAdmin.post "/orgs/communities/repos", repo, (err, resp, repo) ->
+     console.log "yyy1", err, resp, repo
+     res.json repo
+   # org.createRepository "test-repo", (err, repo) ->
+   #    console.log "yyy1", err, repo
 # app.get "/", (req, res) ->
 #   communities.repos (error, communities) ->
 #     user = req.user or {}

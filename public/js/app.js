@@ -10,13 +10,30 @@ $(function(){
     }
   }
 
-  // ROUTER
+  // RENDERERS
 
   function renderHomePage(){
     var $communitiesListEl = $('#communities-list');
     var github = new Github({}).getUser();
     github.orgRepos('communities', function(err, repos){
+      _.each(repos, function(repo){
+        repo.created = moment(repo.created_at).fromNow();
+      })
       renderArray(repos, $communitiesListEl, 'home-page-community-tpl');
+    });
+    
+    $('#goto-new-community-page-btn').on('click', function(){
+      page('create');
+    });
+  }
+
+  function renderCreateCommunityPage(){
+    var $createCommunityBtn = $('#create-new-community-btn');
+    $createCommunityBtn.on('click', function(){
+      var name = $("#new-community-name").val();
+      $.post('/communities', {name: name}, function(data){
+        console.log("repo created");
+      });
     });
   }
 
@@ -43,7 +60,7 @@ $(function(){
         (function(node){
           var worker = function(callback){
             repo.read(thread, node.path, function(err, data, sha){
-              callback(err, {content: data, thread: thread, path: node.path, sha: sha});    
+              callback(err, {content: data, thread: thread, path: node.path, sha: sha}); 
             });
           };
           workers.push(worker);
@@ -77,6 +94,18 @@ $(function(){
     
     
   }
+  function renderHeader(ctx, next){
+    if(_.isEmpty(cUnity.user.username)){
+      console.log("unlogined");
+      $(".unlogined-show").show();
+      $(".logined-show").hide();
+    } else{
+      console.log("logined");
+      $(".logined-show").show();
+      $(".unlogined-show").hide();
+    }
+    next();
+  }
 
   function renderArray(array, containerEl, templateName){
     var i = 0;
@@ -87,21 +116,26 @@ $(function(){
       containerEl.append(html);
     }
   }
+  // ROUTER
 
-  page('', function(){
-    showPage('home-page', renderHomePage);    
+  page('', renderHeader, function(){
+    showPage('home-page', renderHomePage);
+  });
+  
+  page('/create', renderHeader, function(){
+    showPage('new-community-page', renderCreateCommunityPage);
   });
 
-  page('/communities/:community', function(ctx){
+  page('/communities/:community', renderHeader, function(ctx){
     showPage('community-page', function(){
       renderCommunityPage(ctx.params.community);
-    }); 
+    });
   });
 
-  page('/communities/:community/:thread', function(ctx){
+  page('/communities/:community/:thread', renderHeader, function(ctx){
     showPage('thread-page', function(){
       renderThreadPage(ctx.params.community, ctx.params.thread);
-    }); 
+    });
   });
 
   page.start({ click: false });
