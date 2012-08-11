@@ -51,7 +51,7 @@ html(lang="en")
        section#messages-list
     script(type="text/template")#home-page-community-tpl
       |<section>
-      |<a href="/communities/<%= name %>"><h1><%= name %></h1></a>
+      |<a class="nav-link" href="/communities/<%= name %>"><h1><%= name %></h1></a>
       |<div class="community-content">
       | <p><%= description %>
       | <div class="metadata"><time><%= created %></time>
@@ -60,7 +60,7 @@ html(lang="en")
       |</div>
       |</section>
     script(type="text/template")#community-page-thread-tpl
-      <div><a href="/communities/<%= community %>/<%= name %>"><%= name %></a></div>  
+      <div><a class="nav-link" href="/communities/<%= community %>/<%= name %>"><%= name %></a></div>  
     script(type="text/template")#thread-page-message-tpl
       |<section>
       | <div class="message-content">

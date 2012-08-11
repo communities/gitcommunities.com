@@ -140,7 +140,16 @@ $(function(){
       if(i != 1){
         $breadcumbsEl.append("<li>></li>");
       }
-      $breadcumbsEl.append("<li>" + pathes[i] + "</li>");
+      var html = '';
+      if(i == 1){
+       html = "<li><a class='nav-link' href='/'>" + pathes[i] + "</a></li>";
+      } else if(i == 2){
+       html = "<li><a class='nav-link' href='/communities/" + pathes[i] + "'>" + pathes[i] + "</a></li>";
+      } else {
+        html = "<li>" + pathes[i] + "</li>";
+      }
+
+      $breadcumbsEl.append(html);
     }
     next();
   }
@@ -177,5 +186,11 @@ $(function(){
   });
 
   page.start({ click: false });
+
+  $('html').on('click', 'a.nav-link', function(e){
+    e.preventDefault()
+    var href = $(e.currentTarget).attr('href');
+    page(href);
+  });
   
 });
