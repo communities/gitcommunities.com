@@ -18,12 +18,16 @@ $(function(){
     github.orgRepos('communities', function(err, repos){
       _.each(repos, function(repo){
         repo.created = moment(repo.created_at).fromNow();
-      })
+      });
       renderArray(repos, $communitiesListEl, 'home-page-community-tpl');
     });
     
     $('#goto-new-community-page-btn').on('click', function(){
       page('create');
+    });
+    $('#communities-list').on('click', '.join-community-btn', function(e){
+      var name = $(e.currentTarget).data('name');
+      $.post('/communities/' + name + '/join');
     });
   }
 
@@ -31,7 +35,8 @@ $(function(){
     var $createCommunityBtn = $('#create-new-community-btn');
     $createCommunityBtn.on('click', function(){
       var name = $("#new-community-name").val();
-      $.post('/communities', {name: name}, function(data){
+      var description = $("#new-community-description").val();
+      $.post('/communities', {name: name, description: description}, function(data){
         console.log("repo created");
       });
     });
@@ -46,6 +51,22 @@ $(function(){
         data.push({name: branch, community: community});
       });
       renderArray(data, $threadsListEl, 'community-page-thread-tpl');
+    });
+    var $createThreadBtn = $('#create-new-thread-btn');
+    $createThreadBtn.on('click', function(){
+      var refSpec = {
+        "ref": "refs/heads/test",
+        "sha": "496a6ddf94d1889a27e1979c9578f9e1257e40c3"
+      };
+      var repo = cUnity.github.getRepo('communities', community);
+      console.log('user', cUnity.github.getUser());
+      repo.getRef('heads/master', function(err, sha) {
+        console.log('get branch', err, sha);
+      });
+      // repo.createRef(refSpec, function(err){
+      //   console.log("create branch", err);
+      // });
+      $.post("/communities/" + community);
     });
   }
   
@@ -83,9 +104,7 @@ $(function(){
             file.html = mdConverter.makeHtml(file.content);
           }
           console.log("new files", files);
-          // _.each(files, function(file){
-          //   file.html = mdConverter.makeHtml(file.content);
-          // });
+
           renderArray(files, $messagesListEL, 'thread-page-message-tpl');
           });
         
@@ -95,6 +114,15 @@ $(function(){
     
   }
   function renderHeader(ctx, next){
+    var $breadcumbsEl = $('.app-header nav.breadcrumbs ul');
+    var pathes = ctx.path.split("/");
+    var i = 1;
+    for(; i < pathes.length; i++){
+      if(i != 1){
+        $breadcumbsEl.append("<li>></li>");
+      }
+      $breadcumbsEl.append("<li>" + pathes[i] + "</li>");
+    }
     if(_.isEmpty(cUnity.user.username)){
       console.log("unlogined");
       $(".unlogined-show").show();
@@ -103,6 +131,10 @@ $(function(){
       console.log("logined");
       $(".logined-show").show();
       $(".unlogined-show").hide();
+      cUnity.github = new Github({
+        token: cUnity.user.accessToken,
+        auth: "oauth"
+      });
     }
     next();
   }

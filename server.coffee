@@ -101,8 +101,8 @@ app.get "/communities/:community/:thread", (req, res) ->
 
 
 app.post "/communities", (req, res) ->
-  name = req.body.name;
-  console.log "xx", name, req.user.username
+  data = req.body
+  console.log "xx", data, req.user.username
   github.auth.config({
     username: "communities-admin"
     password: 'M5GR0ZDQSgwRYc2'
@@ -111,22 +111,49 @@ app.post "/communities", (req, res) ->
     console.log(token, ghAdmin, "done");
     org = ghAdmin.org "communities"
     repo = 
-      name: name
-      description: "This is your first repo"
-      homepage: "https://github.com"
+      name: data.name
+      description: data.description
+      homepage: ""
       private: false
       has_issues: true
       has_wiki: true
       has_downloads: true
-    ghAdmin.post "/orgs/communities/repos", repo, (err, resp, repo) ->
-     console.log "yyy1", err, resp, repo
-     res.json repo
-   # org.createRepository "test-repo", (err, repo) ->
-   #    console.log "yyy1", err, repo
-# app.get "/", (req, res) ->
-#   communities.repos (error, communities) ->
-#     user = req.user or {}
-#     res.render "index", communities: communities, user: user
+    ghAdmin.post "/orgs/communities/repos", repo, (err, status, repo) ->
+     console.log "yyy1", err, status, repo
+     ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-members", permission: "push", repo_names:["communities/#{repo.name}"]}, (err, status, resp) ->
+      console.log "yyy2", err, status, repo
+      res.json repo
+
+app.post "/communities/:community/join", (req, res) ->
+  community = req.params.community
+  github.auth.config({
+    username: "communities-admin"
+    password: 'M5GR0ZDQSgwRYc2'
+  }).login ['user', 'repo', 'gist'], (err, id, token) ->
+    ghAdmin = github.client token
+    ghAdmin.get "/orgs/communities/teams", (err, status, teams) ->
+      console.log("teams", teams);
+      membersTeam = team for team in teams when team.name == "#{community}-members"
+      console.log "membersTeam", membersTeam
+      ghAdmin.put "/teams/#{membersTeam.id}/members/#{req.user.username}", {}, (err, status, resp) ->
+        console.log "add new team member", err, status, resp
+        res.json resp
+  
+
+app.post "/communities/:community", (req, res) ->
+  community = req.params.community
+  console.log "xx", community, req.user.username
+  github.auth.config({
+    username: "communities-admin"
+    password: 'M5GR0ZDQSgwRYc2'
+  }).login ['user', 'repo', 'gist'], (err, id, token) ->
+    ghAdmin = github.client token
+    #repo = github.repo("communities/#{community}")
+    spec = {"ref": "refs/heads/test","sha": "496a6ddf94d1889a27e1979c9578f9e1257e40c3"}
+    ghAdmin.post "/repos/communities/#{community}/git/refs", spec, (err, status, resp) ->
+      res.json resp
+
+
 
 
 # app.get "/communities", (req, res) ->

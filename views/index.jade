@@ -25,21 +25,26 @@ html(lang="en")
     script(src="/js/showdown.js")
     script(src="/js/app.js")
   body
+    header.app-header
+      nav.breadcrumbs
+        ul          
+      nav
+        a(href="/create")#goto-new-community-page-btn.action-btn.btn.logined-show Create Community
+        a(href="/logout").action-btn.btn.logined-show Logout
+        a(href="/auth")#login-btn.action-btn.btn.unlogined-show Login
     #home-page.page.invisible 
-      header
-        h1 All communities
-        nav
-          a(href="/create")#goto-new-community-page-btn.action-btn.btn.logined-show Create Community
-          a(href="/logout").action-btn.btn.logined-show Logout
-          a(href="/auth")#login-btn.action-btn.btn.unlogined-show Login
       section#communities-list
     #new-community-page.invisible
       h1 Create new community here!
-      form(onsubmit="false")  
-        input(required)#new-community-name.input.logined-show
-        button#create-new-community-btn.action-btn.btn.logined-show Create Community
+      form(onsubmit="false").logined-show  
+        input(required)#new-community-name.input
+        textarea(required)#new-community-description.input
+        button#create-new-community-btn.action-btn.btn Create Community
     #community-page.page.invisible 
-      h1 Community page
+      header
+        h1 Community page
+        input(required)#new-thread-name.input.logined-show
+        button#create-new-thread-btn.action-btn.btn.logined-show Create Thread
       section#threads-list
     #thread-page.page.invisible 
       h1 Thread page
