@@ -52,6 +52,9 @@ $(function(){
       });
       renderArray(data, $threadsListEl, 'community-page-thread-tpl');
     });
+    $.get("/communities/" + community + '/members', function(members){
+      console.log("members", members);
+    });
     var $createThreadBtn = $('#create-new-thread-btn');
     $createThreadBtn.on('click', function(){
       var refSpec = {
@@ -81,7 +84,7 @@ $(function(){
         (function(node){
           var worker = function(callback){
             repo.read(thread, node.path, function(err, data, sha){
-              callback(err, {content: data, thread: thread, path: node.path, sha: sha}); 
+              callback(err, {content: data, thread: thread, path: node.path, sha: sha});
             });
           };
           workers.push(worker);
@@ -90,30 +93,46 @@ $(function(){
       async.parallel(workers, function(erros, files){
         files = _.first(files, files.length - 1);
         console.log("files", files);
-        repo.commits("0eaaef6e5cba616d78e7428beda0f9c4320126dc", function(err, commits){
-          commits = _.first(commits, commits.length - 1);
-          console.log("commits", commits);
-          var mdConverter = new Showdown.converter();
-          var $messagesListEL = $('#messages-list');
-          var i = 0;
-          for(; i < commits.length; i++){
-            var k = commits.length - i - 1;
-            var file = files[k];
-            var commit = commits[i];
-            file.commit = commit;
-            file.html = mdConverter.makeHtml(file.content);
-          }
-          console.log("new files", files);
+        repo.getRef('heads/' + thread, function(err, sha){
 
-          renderArray(files, $messagesListEL, 'thread-page-message-tpl');
-          });
+          repo.commits(sha, function(err, commits){
+            commits = _.first(commits, commits.length - 1);
+            console.log("commits", commits);
+            var mdConverter = new Showdown.converter();
+            var $messagesListEL = $('#messages-list');
+            var i = 0;
+            for(; i < commits.length; i++){
+              var k = commits.length - i - 1;
+              var file = files[k];
+              var commit = commits[i];
+              file.commit = commit;
+              file.html = mdConverter.makeHtml(file.content);
+            }
+            console.log("new files", files);
+
+            renderArray(files, $messagesListEL, 'thread-page-message-tpl');
+            });
         
-      });
+          });
+
+
+        });
     });
     
     
   }
   function renderHeader(ctx, next){
+    if(_.isEmpty(cUnity.user.username)){
+      console.log('unlogined');
+      $('html').addClass('unlogined');
+    } else{
+      console.log('logined');
+      $('html').addClass('logined');
+      cUnity.github = new Github({
+        token: cUnity.user.accessToken,
+        auth: "oauth"
+      });
+    }
     var $breadcumbsEl = $('.app-header nav.breadcrumbs ul');
     var pathes = ctx.path.split("/");
     var i = 1;
@@ -122,19 +141,6 @@ $(function(){
         $breadcumbsEl.append("<li>></li>");
       }
       $breadcumbsEl.append("<li>" + pathes[i] + "</li>");
-    }
-    if(_.isEmpty(cUnity.user.username)){
-      console.log("unlogined");
-      $(".unlogined-show").show();
-      $(".logined-show").hide();
-    } else{
-      console.log("logined");
-      $(".logined-show").show();
-      $(".unlogined-show").hide();
-      cUnity.github = new Github({
-        token: cUnity.user.accessToken,
-        auth: "oauth"
-      });
     }
     next();
   }

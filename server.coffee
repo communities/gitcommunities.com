@@ -87,18 +87,6 @@ app.get "/auth/callback",
     res.redirect "/"
 
 
-app.get "/", (req, res) ->
-  res.render "index", user: req.user or {}
-
-app.get "/create", (req, res) ->
-  res.render "index", user: req.user or {}
-
-app.get "/communities/:community", (req, res) ->
-  res.render "index", user: req.user or {}
-
-app.get "/communities/:community/:thread", (req, res) ->
-  res.render "index", user: req.user or {}
-
 
 app.post "/communities", (req, res) ->
   data = req.body
@@ -120,9 +108,13 @@ app.post "/communities", (req, res) ->
       has_downloads: true
     ghAdmin.post "/orgs/communities/repos", repo, (err, status, repo) ->
      console.log "yyy1", err, status, repo
-     ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-members", permission: "push", repo_names:["communities/#{repo.name}"]}, (err, status, resp) ->
-      console.log "yyy2", err, status, repo
-      res.json repo
+     ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-admins", permission: "admin", repo_names:["communities/#{repo.name}"]}, (err, status, team) ->
+       console.log "create new admin team", err, status, team
+       ghAdmin.put "/teams/#{team.id}/members/#{req.user.username}", {}, (err, status, resp) ->
+         console.log "add new team member", err, status, resp   
+         ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-members", permission: "push", repo_names:["communities/#{repo.name}"]}, (err, status, team) ->
+          console.log "yyy3", err, status, team
+          res.json repo
 
 app.post "/communities/:community/join", (req, res) ->
   community = req.params.community
@@ -138,6 +130,21 @@ app.post "/communities/:community/join", (req, res) ->
       ghAdmin.put "/teams/#{membersTeam.id}/members/#{req.user.username}", {}, (err, status, resp) ->
         console.log "add new team member", err, status, resp
         res.json resp
+
+app.get "/communities/:community/members", (req, res) ->
+  community = req.params.community
+  github.auth.config({
+    username: "communities-admin"
+    password: 'M5GR0ZDQSgwRYc2'
+  }).login ['user', 'repo', 'gist'], (err, id, token) ->
+    ghAdmin = github.client token
+    ghAdmin.get "/orgs/communities/teams", (err, status, teams) ->
+      console.log("teams", teams);
+      membersTeam = team for team in teams when team.name == "#{community}-members"
+      console.log "membersTeam", membersTeam
+      ghAdmin.get "/teams/#{membersTeam.id}/members", {}, (err, status, members) ->
+        console.log "add new team member", err, status, members
+        res.json members 
   
 
 app.post "/communities/:community", (req, res) ->
@@ -155,6 +162,18 @@ app.post "/communities/:community", (req, res) ->
 
 
 
+
+app.get "/", (req, res) ->
+  res.render "index", user: req.user or {}
+
+app.get "/create", (req, res) ->
+  res.render "index", user: req.user or {}
+
+app.get "/communities/:community", (req, res) ->
+  res.render "index", user: req.user or {}
+
+app.get "/communities/:community/:thread", (req, res) ->
+  res.render "index", user: req.user or {}
 
 # app.get "/communities", (req, res) ->
 

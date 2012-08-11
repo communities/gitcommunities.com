@@ -94,6 +94,18 @@ a img {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+html.unlogined .unlogined-show {
+  display: block;
+}
+html.unlogined .logined-show {
+  display: none;
+}
+html.logined .logined-show {
+  display: block;
+}
+html.logined .unlogined-show {
+  display: none;
+}
 .breadcrumbs ul li {
   display: inline-block;
 }

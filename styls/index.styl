@@ -3,6 +3,20 @@ global-reset();
 *
   box-sizing: border-box;
 
+
+html
+  &.unlogined
+    & .unlogined-show
+      display: block;
+    & .logined-show
+      display: none;
+  &.logined
+    & .logined-show
+      display: block;
+    & .unlogined-show
+      display: none;
+
+
 .breadcrumbs ul li
   display: inline-block;
 
