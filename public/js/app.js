@@ -54,7 +54,7 @@ $(function(){
     repo.listBranches(function(err, branches){
       var data = [];
       _.each(branches, function(branch){
-        data.push({name: branch, community: community});
+        data.push({name: branch.name, community: community});
       });
       renderArray(data, $topicsListEl, 'community-page-topic-tpl');
     });
@@ -125,6 +125,8 @@ $(function(){
               var k = commits.length - i - 1;
               var file = files[k];
               var commit = commits[i];
+              commit.published_at = commit.commit.author.date;
+              commit.published = moment(commit.published_at).fromNow();
               file.commit = commit;
               file.html = mdConverter.makeHtml(file.content);
             }

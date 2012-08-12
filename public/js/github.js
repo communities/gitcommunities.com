@@ -179,7 +179,8 @@
       this.listBranches = function(cb) {
         _request("GET", repoPath + "/git/refs/heads", null, function(err, heads) {
           if (err) return cb(err);
-          cb(null, _.map(heads, function(head) { return _.last(head.ref.split('/')); }));
+          _.each(heads, function(head) { head.name =  _.last(head.ref.split('/')); });
+          cb(null, heads);
         });
       };
 
@@ -310,7 +311,7 @@
       };
       
       this.commits = function(sha, cb) {
-        _request("GET", repoPath + "/commits?sha=0eaaef6e5cba616d78e7428beda0f9c4320126dc", null, cb);
+        _request("GET", repoPath + "/commits?sha=" + sha, null, cb);
       };
       // Fork repository
       // -------
