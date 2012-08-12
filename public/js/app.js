@@ -14,6 +14,7 @@ $(function(){
 
   function renderHomePage(){
     var $communitiesListEl = $('#communities-list');
+    $communitiesListEl.empty();
     var github = new Github({}).getUser();
     github.orgRepos('communities', function(err, repos){
       _.each(repos, function(repo){
@@ -25,7 +26,7 @@ $(function(){
     $('#goto-new-community-page-btn').on('click', function(){
       page('create');
     });
-    $('#communities-list').on('click', '.join-community-btn', function(e){
+    $communitiesListEl.on('click', '.join-community-btn', function(e){
       var name = $(e.currentTarget).data('name');
       $.post('/communities/' + name + '/join');
     });
@@ -48,49 +49,53 @@ $(function(){
   }
 
   function renderCommunityPage(community){
-    var $threadsListEl = $('#threads-list');
+    var $topicsListEl = $('#topics-list');
     var repo = new Github({}).getRepo('communities', community);
     repo.listBranches(function(err, branches){
       var data = [];
       _.each(branches, function(branch){
         data.push({name: branch, community: community});
       });
-      renderArray(data, $threadsListEl, 'community-page-thread-tpl');
+      renderArray(data, $topicsListEl, 'community-page-topic-tpl');
     });
     $.get("/communities/" + community + '/members', function(members){
       console.log("members", members);
     });
-    $('#goto-new-thread-page-btn').on('click', function(){
+    $('#goto-new-topic-page-btn').on('click', function(){
       page('/communities/' + community + '/create');
     });
   }
  
-  function renderCreateThreadPage(){
-    var editor = new EpicEditor({container: 'new-thread-message', basePath: '/epiceditor'}).load();
+  function renderCreateTopicPage(community){
+    var editor = new EpicEditor({container: 'new-topic-message', basePath: '/epiceditor'}).load();
    
-    var $createThreadBtn = $('#create-new-thread-btn');
-    $createThreadBtn.on('click', function(e){
+    var $createTopicBtn = $('#create-new-topic-btn');
+    $createTopicBtn.on('click', function(e){
       e.preventDefault();
-      var refSpec = {
-        "ref": "refs/heads/test",
-        "sha": "496a6ddf94d1889a27e1979c9578f9e1257e40c3"
-      };
       var repo = cUnity.github.getRepo('communities', community);
-
-      console.log('user', cUnity.github.getUser());
       repo.getRef('heads/master', function(err, sha) {
         console.log('get branch', err, sha);
+        var topic = $('#new-topic-name').val();
+        var refSpec = {
+          ref: 'refs/heads/' + topic,
+          sha: sha
+        };
+        repo.createRef(refSpec, function(err) {
+          console.log('xx', err);
+          var content = editor.getElement('editor').body.innerHTML;
+          console.log('content', content);
+          repo.write(topic, '1.md', content, 'start conversation', function(err) {
+            console.log('yy', err);
+          });
+        });
       });
-      // repo.createRef(refSpec, function(err){
-      //   console.log("create branch", err);
-      // });
-      $.post("/communities/" + community);
+      //$.post("/communities/" + community);
     });
   }
 
-  function renderThreadPage(community, thread){
+  function renderTopicPage(community, topic){
     var repo = new Github({}).getRepo('communities', community);
-    repo.getTree(thread, function(err, tree){
+    repo.getTree(topic, function(err, tree){
       console.log(tree);
       var workers = [];
       var i = 0;
@@ -98,8 +103,8 @@ $(function(){
         var node = tree[i];
         (function(node){
           var worker = function(callback){
-            repo.read(thread, node.path, function(err, data, sha){
-              callback(err, {content: data, thread: thread, path: node.path, sha: sha});
+            repo.read(topic, node.path, function(err, data, sha){
+              callback(err, {content: data, topic: topic, path: node.path, sha: sha});
             });
           };
           workers.push(worker);
@@ -108,7 +113,7 @@ $(function(){
       async.parallel(workers, function(erros, files){
         files = _.first(files, files.length - 1);
         console.log("files", files);
-        repo.getRef('heads/' + thread, function(err, sha){
+        repo.getRef('heads/' + topic, function(err, sha){
 
           repo.commits(sha, function(err, commits){
             commits = _.first(commits, commits.length - 1);
@@ -125,7 +130,7 @@ $(function(){
             }
             console.log("new files", files);
 
-            renderArray(files, $messagesListEL, 'thread-page-message-tpl');
+            renderArray(files, $messagesListEL, 'topic-page-message-tpl');
             });
         
           });
@@ -143,6 +148,8 @@ $(function(){
     } else{
       console.log('logined');
       $('html').addClass('logined');
+      $('#user-profile img').attr('src', cUnity.user.avatar);
+      $('#user-profile span').text(cUnity.user.username);
       cUnity.github = new Github({
         token: cUnity.user.accessToken,
         auth: "oauth"
@@ -188,26 +195,29 @@ $(function(){
     showPage('new-community-page', renderCreateCommunityPage);
   });
  
-   page('/communities/:community/create', renderHeader, function(){
-    showPage('new-thread-page', renderCreateThreadPage);
-  });
-
   page('/communities/:community', renderHeader, function(ctx){
     showPage('community-page', function(){
       renderCommunityPage(ctx.params.community);
     });
   });
 
-  page('/communities/:community/:thread', renderHeader, function(ctx){
-    showPage('thread-page', function(){
-      renderThreadPage(ctx.params.community, ctx.params.thread);
+  page('/communities/:community/create', renderHeader, function(ctx){
+    showPage('new-topic-page', function(){
+      renderCreateTopicPage(ctx.params.community);
+    });
+  });
+
+
+  page('/communities/:community/:topic', renderHeader, function(ctx){
+    showPage('topic-page', function(){
+      renderTopicPage(ctx.params.community, ctx.params.topic);
     });
   });
 
   page.start({ click: false });
 
   $('html').on('click', 'a.nav-link', function(e){
-    e.preventDefault()
+    e.preventDefault();
     var href = $(e.currentTarget).attr('href');
     page(href);
   });

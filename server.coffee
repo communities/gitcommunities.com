@@ -189,7 +189,7 @@ app.get "/create", (req, res) ->
 app.get "/communities/:community", (req, res) ->
   res.render "index", user: req.user or {}
 
-app.get "/communities/:community/:thread", (req, res) ->
+app.get "/communities/:community/:topic", (req, res) ->
   res.render "index", user: req.user or {}
 
 # app.get "/communities", (req, res) ->
@@ -203,9 +203,9 @@ app.get "/communities/:community/:thread", (req, res) ->
 #   communityRepo = github.repo communityUrl
 #   communityRepo.branches (error, branches) ->
 #     console.log branches
-#     res.render "community", threads: branches, communityUrl: communityUrl
+#     res.render "community", topics: branches, communityUrl: communityUrl
 
-# app.get "/communities/:community/:thread", (req, res) ->
+# app.get "/communities/:community/:topic", (req, res) ->
 #   communityUrl = "communities/" + req.params.community
 #   communityRepo = github.repo communityUrl
 #   communityRepo.commits {sha: "0eaaef6e5cba616d78e7428beda0f9c4320126dc"}, (error, commits) ->
@@ -226,7 +226,7 @@ app.get "/communities/:community/:thread", (req, res) ->
 #               author: commits[messagesCount - i - 1].author
 #             callback undefined, message  
 #     async.parallel workers, (errors, messages) -> 
-#       res.render "thread", messages: messages  
+#       res.render "topic", messages: messages  
 
 port = process.env.PORT || 8090
 app.listen port

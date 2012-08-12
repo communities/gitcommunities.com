@@ -30,8 +30,11 @@ html(lang="en")
       nav.breadcrumbs
         ul          
       nav
-        a(href="/create")#goto-new-community-page-btn.action-btn.btn.logined-show Create Community
-        button#goto-new-thread-page-btn.action-btn.btn.logined-show Create Thread
+        #user-profile.logined-show
+          img.avatar
+          span
+        a(href="/create")#goto-new-community-page-btn.action-btn.btn.logined-show New Community
+        button#goto-new-topic-page-btn.action-btn.btn.logined-show New Topic
         a(href="/logout").action-btn.btn.logined-show Logout
         a(href="/auth")#login-btn.action-btn.btn.unlogined-show Login
     #home-page.page.invisible 
@@ -41,17 +44,16 @@ html(lang="en")
       form(onsubmit="false").logined-show  
         input(required)#new-community-name.input
         textarea(required)#new-community-description.input
-        button#create-new-community-btn.action-btn.btn Create Community
+        button#create-new-community-btn.action-btn.btn New Community
     #community-page.page.invisible 
-      section#threads-list
-    #new-thread-page.page.invisible
+      section#topics-list
+    #new-topic-page.page.invisible
       form(onsubmit="false")
-        input(required)#new-thread-name.input.logined-show
-        #new-thread-message.message.markdown-editor
-        button#create-new-thread-btn.action-btn.btn.logined-show Create Thread
-    #thread-page.page.invisible 
-      h1 Thread page
-       section#messages-list
+        input(required)#new-topic-name.input.logined-show
+        #new-topic-message.message.markdown-editor
+        button#create-new-topic-btn.action-btn.btn.logined-show New Topic
+    #topic-page.page.invisible 
+      section#messages-list
     script(type="text/template")#home-page-community-tpl
       |<section>
       |<a class="nav-link" href="/communities/<%= name %>"><h1><%= name %></h1></a>
@@ -62,9 +64,9 @@ html(lang="en")
       | </div>
       |</div>
       |</section>
-    script(type="text/template")#community-page-thread-tpl
+    script(type="text/template")#community-page-topic-tpl
       <div><a class="nav-link" href="/communities/<%= community %>/<%= name %>"><%= name %></a></div>  
-    script(type="text/template")#thread-page-message-tpl
+    script(type="text/template")#topic-page-message-tpl
       |<section>
       | <div class="message-content">
       |  <p><%= html %></p>
@@ -72,7 +74,7 @@ html(lang="en")
       | </div>
       | <div class="user-info">
       | <a href="<%= commit.author.url %>" target="_blank">
-      |   <img src="<%= commit.author.avatar_url %>" class="small-photo">
+      |   <img src="<%= commit.author.avatar_url %>" class="avatar avatar-small">
       | </a>
       | </div>
       |</section>  

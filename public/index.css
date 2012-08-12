@@ -109,6 +109,14 @@ html.logined .unlogined-show {
 .breadcrumbs ul li {
   display: inline-block;
 }
+.avatar {
+  padding: 3px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-top: 1px solid #efefef;
+  border-bottom: 1px solid #9d9d9d;
+  vertical-align: top;
+}
 .visible {
   display: block;
 }
