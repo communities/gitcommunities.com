@@ -54,7 +54,9 @@ $(function(){
     repo.listBranches(function(err, branches){
       var data = [];
       _.each(branches, function(branch){
-        data.push({name: branch.name, community: community});
+        if(branch.name != 'master'){
+          data.push({name: branch.name, community: community});
+        }
       });
       renderArray(data, $topicsListEl, 'community-page-topic-tpl');
     });
@@ -94,7 +96,15 @@ $(function(){
   }
 
   function renderTopicPage(community, topic){
-    var repo = new Github({}).getRepo('communities', community);
+    var repo = cUnity.github.getRepo('communities', community);
+    var $createMessageBtn = $('#create-new-message-btn');
+    $createMessageBtn.on('click', function(e){
+      e.preventDefault();
+      var text = $('#new-message-form .new-message-content').val();
+      repo.write(topic, '2.md', text, 'reply', function(err) {
+        console.log('yy', err);
+      });
+    });
     repo.getTree(topic, function(err, tree){
       console.log(tree);
       var workers = [];
