@@ -33,11 +33,16 @@ $(function(){
 
   function renderCreateCommunityPage(){
     var $createCommunityBtn = $('#create-new-community-btn');
-    $createCommunityBtn.on('click', function(){
+    $createCommunityBtn.on('click', function(e){
+      e.preventDefault();
       var name = $("#new-community-name").val();
       var description = $("#new-community-description").val();
       $.post('/communities', {name: name, description: description}, function(data){
         console.log("repo created");
+        var repo = cUnity.github.getRepo('communities', name);
+        repo.write('master', 'README', 'YOUR_NEW_CONTENTS', 'YOUR_COMMIT_MESSAGE', function(err){
+          console.log('error saving file');
+        });
       });
     });
   }
@@ -55,13 +60,23 @@ $(function(){
     $.get("/communities/" + community + '/members', function(members){
       console.log("members", members);
     });
+    $('#goto-new-thread-page-btn').on('click', function(){
+      page('/communities/' + community + '/create');
+    });
+  }
+ 
+  function renderCreateThreadPage(){
+    var editor = new EpicEditor({container: 'new-thread-message', basePath: '/epiceditor'}).load();
+   
     var $createThreadBtn = $('#create-new-thread-btn');
-    $createThreadBtn.on('click', function(){
+    $createThreadBtn.on('click', function(e){
+      e.preventDefault();
       var refSpec = {
         "ref": "refs/heads/test",
         "sha": "496a6ddf94d1889a27e1979c9578f9e1257e40c3"
       };
       var repo = cUnity.github.getRepo('communities', community);
+
       console.log('user', cUnity.github.getUser());
       repo.getRef('heads/master', function(err, sha) {
         console.log('get branch', err, sha);
@@ -72,7 +87,7 @@ $(function(){
       $.post("/communities/" + community);
     });
   }
-  
+
   function renderThreadPage(community, thread){
     var repo = new Github({}).getRepo('communities', community);
     repo.getTree(thread, function(err, tree){
@@ -171,6 +186,10 @@ $(function(){
   
   page('/create', renderHeader, function(){
     showPage('new-community-page', renderCreateCommunityPage);
+  });
+ 
+   page('/communities/:community/create', renderHeader, function(){
+    showPage('new-thread-page', renderCreateThreadPage);
   });
 
   page('/communities/:community', renderHeader, function(ctx){

@@ -6,7 +6,20 @@ stylus  = require "stylus"
 nib     = require "nib"
 
 github    = require "octonode"
+
+gitty = require "gitty"
 # communities = github.org "communities"
+
+gitty.create "dsad", "description", __dirname + "/repos", (err, data) ->
+  console.log "xx", err, data
+  gitty.add __dirname + "/repos/dsad", ["README.md"], (err, data) ->
+    console.log "xx2", err, data
+    gitty.commit __dirname + "/repos/dsad", "initial", (err, data) ->
+      console.log "xx3", err, data
+      gitty.remote.add __dirname + "/repos/dsad", "origin", "https://github.com/communities/dsad.git", (err, data) ->
+        console.log "xx4", err, data
+        gitty.push __dirname + "/repos/dsad", "origin", "master", (err, data) ->
+          console.log "xx5", err, data
 
 app = module.exports = express.createServer()
 
@@ -114,7 +127,11 @@ app.post "/communities", (req, res) ->
          console.log "add new team member", err, status, resp   
          ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-members", permission: "push", repo_names:["communities/#{repo.name}"]}, (err, status, team) ->
           console.log "yyy3", err, status, team
-          res.json repo
+
+          spec = {"ref": "refs/heads/master","sha": ""}
+          ghAdmin.post "/repos/communities/#{repo.name}/git/refs", spec, (err, status, resp) ->
+            console.log "new branch", err, status, resp
+            res.json repo
 
 app.post "/communities/:community/join", (req, res) ->
   community = req.params.community

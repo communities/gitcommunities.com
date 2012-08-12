@@ -23,6 +23,7 @@ html(lang="en")
     script(src="/js/page.js")
     script(src="/js/github.js")
     script(src="/js/showdown.js")
+    script(src="/js/epiceditor.js")
     script(src="/js/app.js")
   body
     header.app-header
@@ -30,6 +31,7 @@ html(lang="en")
         ul          
       nav
         a(href="/create")#goto-new-community-page-btn.action-btn.btn.logined-show Create Community
+        button#goto-new-thread-page-btn.action-btn.btn.logined-show Create Thread
         a(href="/logout").action-btn.btn.logined-show Logout
         a(href="/auth")#login-btn.action-btn.btn.unlogined-show Login
     #home-page.page.invisible 
@@ -41,11 +43,12 @@ html(lang="en")
         textarea(required)#new-community-description.input
         button#create-new-community-btn.action-btn.btn Create Community
     #community-page.page.invisible 
-      header
-        h1 Community page
-        input(required)#new-thread-name.input.logined-show
-        button#create-new-thread-btn.action-btn.btn.logined-show Create Thread
       section#threads-list
+    #new-thread-page.page.invisible
+      form(onsubmit="false")
+        input(required)#new-thread-name.input.logined-show
+        #new-thread-message.message.markdown-editor
+        button#create-new-thread-btn.action-btn.btn.logined-show Create Thread
     #thread-page.page.invisible 
       h1 Thread page
        section#messages-list
