@@ -110,12 +110,18 @@ html.logined .unlogined-show {
   display: inline-block;
 }
 .avatar {
-  padding: 3px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-top: 1px solid #efefef;
-  border-bottom: 1px solid #9d9d9d;
-  vertical-align: top;
+  -webkit-box-shadow: rgba(0,0,0,0.1) 0 2px 5px;
+  box-shadow: rgba(0,0,0,0.1) 0 2px 5px;
+  border: 2px solid rgba(0,0,0,0.15);
+  margin-right: 10px;
+  opacity: 0.8;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
+  filter: alpha(opacity=80);
+}
+.avatar:hover {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
 }
 .visible {
   display: block;
