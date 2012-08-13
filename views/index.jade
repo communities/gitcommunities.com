@@ -22,6 +22,7 @@ html(lang="en")
     script(src="/js/moment.js")
     script(src="/js/page.js")
     script(src="/js/github.js")
+    script(src="/js/spin.js")
     script(src="/js/showdown.js")
     script(src="/js/epiceditor.js")
     script(src="/js/app.js")
@@ -57,7 +58,7 @@ html(lang="en")
         button#create-new-topic-btn.action-btn.btn.logined-show New Topic
     #topic-page.page.invisible 
       form#new-message-form(onsubmit="false")
-        textarea.new-message-content.input
+        textarea(required).new-message-content.input
         button#create-new-message-btn.action-btn.btn Post
       section#messages-list
     script(type="text/template")#home-page-community-tpl

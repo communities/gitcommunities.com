@@ -15,6 +15,7 @@ $(function(){
   function renderHomePage(){
     var $communitiesListEl = $('#communities-list').empty();
     var github = new Github({}).getUser();
+    $communitiesListEl.spin();
     github.orgRepos('communities', function(err, repos){
       _.each(repos, function(repo){
         repo.created = moment(repo.created_at).fromNow();
@@ -22,6 +23,7 @@ $(function(){
       repos = _.filter(repos, function(repo){
         return repo.name != 'gitcommunities.com';
       });
+      $communitiesListEl.spin(false);
       renderArray(repos, $communitiesListEl, 'home-page-community-tpl');
     });
     
@@ -53,6 +55,7 @@ $(function(){
   function renderCommunityPage(community){
     var $topicsListEl = $('#topics-list').empty();
     var repo = new Github({}).getRepo('communities', community);
+    $topicsListEl.spin();
     repo.listBranches(function(err, branches){
       var data = [];
       _.each(branches, function(branch){
@@ -60,6 +63,7 @@ $(function(){
           data.push({name: branch.name, community: community});
         }
       });
+      $topicsListEl.spin(false);
       renderArray(data, $topicsListEl, 'community-page-topic-tpl');
     });
     $.get("/communities/" + community + '/members', function(members){
@@ -100,8 +104,8 @@ $(function(){
   function renderTopicPage(community, topic){
     var repo = cUnity.github.getRepo('communities', community);
     var $createMessageBtn = $('#create-new-message-btn');
-    var $messagesListEL = $('#messages-list').empty();
-
+    var $messagesListEl = $('#messages-list').empty();
+    $messagesListEl.spin();
     repo.getTree(topic, function(err, tree){
 
       $createMessageBtn.on('click', function(e){
@@ -148,8 +152,8 @@ $(function(){
               }
             }
             console.log("new files", files);
-
-            renderArray(files, $messagesListEL, 'topic-page-message-tpl');
+            $messagesListEl.spin(false);
+            renderArray(files, $messagesListEl, 'topic-page-message-tpl');
             });
         
           });

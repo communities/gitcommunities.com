@@ -136,6 +136,9 @@ html.logined .unlogined-show {
   outline: 0;
   outline: thin dotted 9;
 }
+a {
+  text-decoration: none;
+}
 textarea.input {
   overflow: hidden;
   vertical-align: top;
