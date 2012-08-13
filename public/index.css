@@ -113,7 +113,7 @@ html.logined .unlogined-show {
   display: inline-block;
   width: 210px;
   height: 18px;
-  padding: 4px;
+  padding: 14px;
   margin-bottom: 9px;
   margin: 0;
   font-size: 13px;
@@ -141,6 +141,11 @@ textarea.input {
   vertical-align: top;
   padding: 10px;
   height: 60px;
+}
+form .input {
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
 }
 .btn {
   display: inline-block;
@@ -207,10 +212,13 @@ header.app-header #user-toolbar {
 }
 #topic-page .message {
   position: relative;
+  border: 1px solid #808080;
+  padding: 10px;
 }
 #topic-page .message .user-info {
   position: absolute;
-  right: 10px;
+  right: 5px;
+  top: 5px;
 }
 .visible {
   display: block;

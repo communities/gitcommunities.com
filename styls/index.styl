@@ -25,7 +25,7 @@ html
   display: inline-block;
   width: 210px;
   height: 18px;
-  padding: 4px;
+  padding: 14px;
   margin-bottom: 9px;
   margin: 0;
   font-size: 13px;
@@ -47,6 +47,11 @@ textarea.input
   padding: 10px;
   height: 60px;
 
+form
+  & .input
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
 .btn
   display: inline-block;
   padding: 0.4em 0.9em;
@@ -103,9 +108,12 @@ header.app-header
 #topic-page
   & .message
     position: relative;
+    border: 1px solid grey;
+    padding: 10px;
     & .user-info
       position: absolute;
-      right: 10px;  
+      right: 5px;  
+      top: 5px;
 .visible
   display: block;
 .inline-visible

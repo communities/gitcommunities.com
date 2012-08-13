@@ -42,11 +42,11 @@ html(lang="en")
         ul            
     #home-page.page.invisible 
       section#communities-list
-    #new-community-page.invisible
+    #new-community-page.page.invisible
       h1 Create new community here!
       form(onsubmit="false").logined-show  
-        input(required)#new-community-name.input
-        textarea(required)#new-community-description.input
+        input(required,placeholder="Name of the commuinity")#new-community-name.input
+        textarea(required,placeholder="Short description for the community")#new-community-description.input
         button#create-new-community-btn.action-btn.btn New Community
     #community-page.page.invisible 
       section#topics-list

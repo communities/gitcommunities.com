@@ -183,7 +183,7 @@ $(function(){
       }
       var html = '';
       if(i == 1){
-       html = "<li><a class='nav-link' href='/'>" + pathes[i] + "</a></li>";
+       html = "<li><a class='nav-link' href='/'>Home</a></li>";
       } else if(i == 2){
        html = "<li><a class='nav-link' href='/communities/" + pathes[i] + "'>" + pathes[i] + "</a></li>";
       } else {
