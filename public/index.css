@@ -145,13 +145,10 @@ textarea.input {
 .btn {
   display: inline-block;
   padding: 0.4em 0.9em;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   text-align: center;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   vertical-align: middle;
-  margin-bottom: 0;
+  margin: 0;
   -webkit-border-radius: 0.25em;
   border-radius: 0.25em;
   border: 1px solid rgba(0,0,0,0.2);
@@ -199,6 +196,14 @@ header.app-header #user-profile .avatar {
 header.app-header #user-toolbar {
   position: absolute;
   right: 10px;
+}
+#home-page .community-item {
+  position: relative;
+}
+#home-page .community-item .join-community-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 #topic-page .message {
   position: relative;

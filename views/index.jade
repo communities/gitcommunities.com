@@ -61,14 +61,14 @@ html(lang="en")
         button#create-new-message-btn.action-btn.btn Post
       section#messages-list
     script(type="text/template")#home-page-community-tpl
-      |<section>
+      |<section class="community-item">
       |<a class="nav-link" href="/communities/<%= name %>"><h1><%= name %></h1></a>
       |<div class="community-content">
       | <p><%= description %>
       | <div class="metadata"><time><%= created %></time>
-      |   <button class="join-community-btn action-btn btn logined-show" data-name="<%= name %>">Join</button>
+      |  </div>
       | </div>
-      |</div>
+      |<button class="join-community-btn action-btn btn logined-show" data-name="<%= name %>">Join</button>
       |</section>
     script(type="text/template")#community-page-topic-tpl
       <div><a class="nav-link" href="/communities/<%= community %>/<%= name %>"><%= name %></a></div>  
