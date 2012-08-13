@@ -33,10 +33,13 @@ html(lang="en")
         #user-profile.logined-show
           img.avatar
           span
-        a(href="/create")#goto-new-community-page-btn.action-btn.btn.logined-show New Community
-        button#goto-new-topic-page-btn.action-btn.btn.logined-show New Topic
-        a(href="/logout").action-btn.btn.logined-show Logout
-        a(href="/auth")#login-btn.action-btn.btn.unlogined-show Login
+        #user-toolbar
+          .logined-show
+            a(href="/create")#goto-new-community-page-btn.action-btn.btn New Community
+            button#goto-new-topic-page-btn.action-btn.btn New Topic
+            a(href="/logout").action-btn.btn Logout
+          .unlogined-show
+            a(href="/auth")#login-btn.action-btn.btn Login
     #home-page.page.invisible 
       section#communities-list
     #new-community-page.invisible

@@ -173,11 +173,26 @@ textarea.input {
   opacity: 0.8;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
   filter: alpha(opacity=80);
+  width: 45px;
 }
 .avatar:hover {
   opacity: 1;
   -ms-filter: none;
   filter: none;
+}
+.page {
+  width: 1020px;
+  margin: 0 auto;
+}
+#user-profile .avatar {
+  width: 30px;
+}
+#topic-page .message {
+  position: relative;
+}
+#topic-page .message .user-info {
+  position: absolute;
+  right: 10px;
 }
 .visible {
   display: block;

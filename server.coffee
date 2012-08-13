@@ -7,19 +7,19 @@ nib     = require "nib"
 
 github    = require "octonode"
 
-gitty = require "gitty"
+# gitty = require "gitty"
 # communities = github.org "communities"
 
-gitty.create "dsad", "description", __dirname + "/repos", (err, data) ->
-  console.log "xx", err, data
-  gitty.add __dirname + "/repos/dsad", ["README.md"], (err, data) ->
-    console.log "xx2", err, data
-    gitty.commit __dirname + "/repos/dsad", "initial", (err, data) ->
-      console.log "xx3", err, data
-      gitty.remote.add __dirname + "/repos/dsad", "origin", "https://github.com/communities/dsad.git", (err, data) ->
-        console.log "xx4", err, data
-        gitty.push __dirname + "/repos/dsad", "origin", "master", (err, data) ->
-          console.log "xx5", err, data
+# gitty.create "dsad", "description", __dirname + "/repos", (err, data) ->
+#   console.log "xx", err, data
+#   gitty.add __dirname + "/repos/dsad", ["README.md"], (err, data) ->
+#     console.log "xx2", err, data
+#     gitty.commit __dirname + "/repos/dsad", "initial", (err, data) ->
+#       console.log "xx3", err, data
+#       gitty.remote.add __dirname + "/repos/dsad", "origin", "https://github.com/communities/dsad.git", (err, data) ->
+#         console.log "xx4", err, data
+#         gitty.push __dirname + "/repos/dsad", "origin", "master", (err, data) ->
+#           console.log "xx5", err, data
 
 app = module.exports = express.createServer()
 
