@@ -13,12 +13,14 @@ $(function(){
   // RENDERERS
 
   function renderHomePage(){
-    var $communitiesListEl = $('#communities-list');
-    $communitiesListEl.empty();
+    var $communitiesListEl = $('#communities-list').empty();
     var github = new Github({}).getUser();
     github.orgRepos('communities', function(err, repos){
       _.each(repos, function(repo){
         repo.created = moment(repo.created_at).fromNow();
+      });
+      repos = _.filter(repos, function(repo){
+        return repo.name != 'gitcommunities.com';
       });
       renderArray(repos, $communitiesListEl, 'home-page-community-tpl');
     });
@@ -49,7 +51,7 @@ $(function(){
   }
 
   function renderCommunityPage(community){
-    var $topicsListEl = $('#topics-list');
+    var $topicsListEl = $('#topics-list').empty();
     var repo = new Github({}).getRepo('communities', community);
     repo.listBranches(function(err, branches){
       var data = [];
@@ -98,14 +100,18 @@ $(function(){
   function renderTopicPage(community, topic){
     var repo = cUnity.github.getRepo('communities', community);
     var $createMessageBtn = $('#create-new-message-btn');
-    $createMessageBtn.on('click', function(e){
-      e.preventDefault();
-      var text = $('#new-message-form .new-message-content').val();
-      repo.write(topic, '2.md', text, 'reply', function(err) {
-        console.log('yy', err);
-      });
-    });
+    var $messagesListEL = $('#messages-list').empty();
+
     repo.getTree(topic, function(err, tree){
+
+      $createMessageBtn.on('click', function(e){
+        e.preventDefault();
+        var text = $('#new-message-form .new-message-content').val();
+        var fileName =  tree.length + '.md';
+        repo.write(topic, fileName, text, 'reply', function(err) {
+          console.log('yy', err);
+        });
+      });
       console.log(tree);
       var workers = [];
       var i = 0;
@@ -129,16 +135,17 @@ $(function(){
             commits = _.first(commits, commits.length - 1);
             console.log("commits", commits);
             var mdConverter = new Showdown.converter();
-            var $messagesListEL = $('#messages-list');
             var i = 0;
             for(; i < commits.length; i++){
               var k = commits.length - i - 1;
               var file = files[k];
-              var commit = commits[i];
-              commit.published_at = commit.commit.author.date;
-              commit.published = moment(commit.published_at).fromNow();
-              file.commit = commit;
-              file.html = mdConverter.makeHtml(file.content);
+              if(file){
+                var commit = commits[i];
+                commit.published_at = commit.commit.author.date;
+                commit.published = moment(commit.published_at).fromNow();
+                file.commit = commit;
+                file.html = mdConverter.makeHtml(file.content);
+              }
             }
             console.log("new files", files);
 
@@ -167,7 +174,7 @@ $(function(){
         auth: "oauth"
       });
     }
-    var $breadcumbsEl = $('.app-header nav.breadcrumbs ul');
+    var $breadcumbsEl = $('.app-header nav.breadcrumbs ul').empty();
     var pathes = ctx.path.split("/");
     var i = 1;
     for(; i < pathes.length; i++){
