@@ -26,10 +26,8 @@ html(lang="en")
     script(src="/js/epiceditor.js")
     script(src="/js/app.js")
   body
-    header.app-header
-      nav.breadcrumbs
-        ul          
-      nav
+    header.app-header         
+      nav.main-toolbar
         #user-profile.logined-show
           img.avatar
           span
@@ -40,6 +38,8 @@ html(lang="en")
             a(href="/logout").action-btn.btn Logout
           .unlogined-show
             a(href="/auth")#login-btn.action-btn.btn Login
+      nav.breadcrumbs
+        ul            
     #home-page.page.invisible 
       section#communities-list
     #new-community-page.invisible

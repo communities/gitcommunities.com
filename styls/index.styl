@@ -76,14 +76,23 @@ textarea.input
   &:hover
     opacity: 1;
 
+.app-header
 .page
   width: 1020px;
   margin: 0 auto;
 
-
-#user-profile .avatar
-  width: 30px;
-
+header.app-header
+  & .main-toolbar
+    position: relative;
+    height: 40px;
+  #user-profile
+    position: absolute;
+    left: 10px;
+    & .avatar
+      width: 30px;
+  #user-toolbar
+    position: absolute;
+    right: 10px;
 #topic-page
   & .message
     position: relative;
