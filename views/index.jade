@@ -61,12 +61,14 @@ html(lang="en")
         textarea(required).new-message-content.input
         button#create-new-message-btn.action-btn.btn Post
       section#messages-list
+      footer
+        p Except as otherwise noted, the content of this page is licensed under the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
     script(type="text/template")#home-page-community-tpl
       |<section class="community-item">
       |<a class="nav-link" href="/communities/<%= name %>"><h1><%= name %></h1></a>
       |<div class="community-content">
       | <p><%= description %>
-      | <div class="metadata"><time><%= created %></time>
+      | <div class="metadata"><time pubdate datetime="<%= created_at %>"><%= created %></time>
       |  </div>
       | </div>
       |<button class="join-community-btn action-btn btn logined-show" data-name="<%= name %>">Join</button>
@@ -77,7 +79,7 @@ html(lang="en")
       |<section class="message">
       | <div class="message-content">
       |  <p><%= html %></p>
-      |  <div class="metadata"><time><%= commit.published %></time></div>
+      |  <div class="metadata"><time pubdate datetime="<%= commit.published_at %>"><%= commit.published %></time></div>
       | </div>
       | <div class="user-info">
       | <a href="<%= commit.author.url %>" target="_blank">
