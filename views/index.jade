@@ -57,7 +57,7 @@ html(lang="en")
         #new-topic-message.message.markdown-editor
         button#create-new-topic-btn.action-btn.btn.logined-show New Topic
     #topic-page.page.invisible 
-      form#new-message-form(onsubmit="false")
+      form#new-message-form(onsubmit="false").logined-show
         textarea(required).new-message-content.input
         button#create-new-message-btn.action-btn.btn Post
       section#messages-list

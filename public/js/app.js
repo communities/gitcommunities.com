@@ -102,7 +102,7 @@ $(function(){
   }
 
   function renderTopicPage(community, topic){
-    var repo = cUnity.github.getRepo('communities', community);
+    var repo = new Github({}).getRepo('communities', community);
     var $createMessageBtn = $('#create-new-message-btn');
     var $messagesListEl = $('#messages-list').empty();
     $messagesListEl.spin();
@@ -112,7 +112,8 @@ $(function(){
         e.preventDefault();
         var text = $('#new-message-form .new-message-content').val();
         var fileName =  tree.length + '.md';
-        repo.write(topic, fileName, text, 'reply', function(err) {
+        var authedRepo = cUnity.github.getRepo('communities', community);
+        authedRepo.write(topic, fileName, text, 'reply', function(err) {
           console.log('yy', err);
         });
       });
