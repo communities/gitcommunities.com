@@ -42,7 +42,7 @@ html(lang="en")
       nav.breadcrumbs
         ul            
     #home-page.page.invisible 
-      section#communities-list
+      ul#communities-list.items-list
     #new-community-page.page.invisible
       h1 Create new community here!
       form(onsubmit="false").logined-show  
@@ -50,7 +50,7 @@ html(lang="en")
         textarea(required,placeholder="Short description for the community")#new-community-description.input
         button#create-new-community-btn.action-btn.btn New Community
     #community-page.page.invisible 
-      section#topics-list
+      ul#topics-list
     #new-topic-page.page.invisible
       form(onsubmit="false")
         input(required)#new-topic-name.input.logined-show
@@ -64,7 +64,9 @@ html(lang="en")
       footer
         p Except as otherwise noted, the content of this page is licensed under the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
     script(type="text/template")#home-page-community-tpl
-      |<section class="community-item">
+      |<li class="community-item">
+      |<div class="members-count"><span><%= members_count %></span></div>
+      |<div class="details">
       |<a class="nav-link" href="/communities/<%= name %>"><h1><%= name %></h1></a>
       |<div class="community-content">
       | <p><%= description %>
@@ -74,10 +76,11 @@ html(lang="en")
       |   Members <span><%= members_count %></span> Topics <span><%= topics_count %></span>
       |  </div>
       | </div>
+      |</div>
       |<button class="join-community-btn action-btn btn logined-show" data-name="<%= name %>">Join</button>
-      |</section>
+      |</li>
     script(type="text/template")#community-page-topic-tpl
-      <div><a class="nav-link" href="/communities/<%= community %>/<%= name %>"><%= name %></a></div>  
+      <li><a class="nav-link" href="/communities/<%= community %>/<%= name %>"><%= name %></a></li>  
     script(type="text/template")#topic-page-message-tpl
       |<section class="message">
       | <div class="message-content">

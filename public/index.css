@@ -183,6 +183,22 @@ form .input {
   min-height: 80px;
   overflow: hidden;
 }
+.items-list li {
+  padding: 10px 20px;
+  background: #f4f4f0;
+  margin: 0 0 20px 0;
+  -webkit-box-shadow: 1px 2px 2px rgba(0,0,0,0.15);
+  box-shadow: 1px 2px 2px rgba(0,0,0,0.15);
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  border-top: 1px solid #fff;
+  position: relative;
+  height: 100px;
+}
+.items-list li:hover {
+  background: #fff;
+  cursor: pointer;
+}
 .avatar {
   -webkit-box-shadow: rgba(0,0,0,0.1) 0 2px 5px;
   box-shadow: rgba(0,0,0,0.1) 0 2px 5px;
@@ -218,13 +234,45 @@ header.app-header #user-toolbar {
   position: absolute;
   right: 10px;
 }
-#home-page .community-item {
-  position: relative;
-}
 #home-page .community-item .join-community-btn {
   position: absolute;
   right: 10px;
   top: 10px;
+}
+#home-page .community-item .details {
+  margin-left: 100px;
+}
+#home-page .community-item .members-count {
+  min-width: 88px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  background: #fa8f0e;
+  display: inline-block;
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+  overflow: hidden;
+  z-index: 100000;
+}
+#home-page .community-item .members-count span {
+  display: inline-block;
+  padding: 3px 0;
+  font-size: 5.2em;
+  font-family: sans-serif;
+  font-weight: bold;
+  line-height: 1;
+  vertical-align: middle;
+  color: #fff;
+  text-shadow: rgba(0,0,0,0.2) 0 -1px 0;
+  letter-spacing: -0.05em;
 }
 #topic-page .message {
   position: relative;
