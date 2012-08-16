@@ -47,10 +47,12 @@ $(function(){
   }
 
   function renderCommunityPage(community){
+    var $page = $('#community-page');
     var $topicsListEl = $('#topics-list').empty();
     $topicsListEl.spin();
     $.get("/api/communities/" + community, function(community){
       $topicsListEl.spin(false);
+      $page.find('.details').html(community.description);
       renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');      
     });
     $('#goto-new-topic-page-btn').on('click', function(){
