@@ -247,41 +247,6 @@ app.get "/communities/:community", (req, res) ->
 app.get "/communities/:community/:topic", (req, res) ->
   res.render "index", user: req.user or {}
 
-# app.get "/communities", (req, res) ->
-
-#   communities.repos (error, communities) ->
-#     console.log typeof communities, communities.length
-#     res.json communities
-
-# app.get "/communities/:community", (req, res) ->
-#   communityUrl = "communities/" + req.params.community
-#   communityRepo = github.repo communityUrl
-#   communityRepo.branches (error, branches) ->
-#     console.log branches
-#     res.render "community", topics: branches, communityUrl: communityUrl
-
-# app.get "/communities/:community/:topic", (req, res) ->
-#   communityUrl = "communities/" + req.params.community
-#   communityRepo = github.repo communityUrl
-#   communityRepo.commits {sha: "0eaaef6e5cba616d78e7428beda0f9c4320126dc"}, (error, commits) ->
-#     messagesCount = commits.length - 1
-#     console.log "count", messagesCount, commits[0].author.login, commits[1].author.login, commits[2].author.login, commits[3].author.login
-#     workers = for i in [0..messagesCount - 1]
-#       do (i) ->
-#         (callback) ->
-#           communityRepo.contents "#{i + 1}.md", "links-to-animations-examples", (error, blob) ->
-#             if error
-#               callback error
-#               return
-#             content = new Buffer(blob.content, "base64").toString("utf8")
-#             html = md.markdown.toHTML(content)
-#             message =
-#               content: content
-#               html: html
-#               author: commits[messagesCount - i - 1].author
-#             callback undefined, message  
-#     async.parallel workers, (errors, messages) -> 
-#       res.render "topic", messages: messages  
 
 port = process.env.PORT || 8090
 app.listen port

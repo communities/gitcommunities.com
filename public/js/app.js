@@ -87,7 +87,11 @@ $(function(){
           var content = editor.getElement('editor').body.innerHTML;
           console.log('content', content);
           repo.write(topic, '1.md', content, 'start conversation', function(err) {
-            console.log('yy', err);
+            if(err){
+              alert("Error hapenned");
+            }else{
+              page("/communities/" + community + "/" + topic);
+            }
           });
         });
       });
