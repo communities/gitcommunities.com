@@ -1,10 +1,10 @@
 $(function(){
 
-  function showPage(pagename, fn){
-    $(".page.visible").removeClass('visible').addClass('invisible');
+  function showPage(pageName, pageTitle, fn){
+    $('.page.visible').removeClass('visible').addClass('invisible');
 
-    $("#" + pagename).removeClass('invisible').addClass('visible');
-
+    $('#' + pageName).removeClass('invisible').addClass('visible');
+    document.title = pageTitle;
     if(fn){
       fn();
     }
@@ -16,7 +16,7 @@ $(function(){
     var $communitiesListEl = $('#communities-list').empty();
     var github = new Github({}).getUser();
     $communitiesListEl.spin();
-    $.get('/communities', function(repos){
+    $.get('/api/communities', function(repos){
       $communitiesListEl.spin(false);
       renderArray(repos, $communitiesListEl, 'home-page-community-tpl');
     });
@@ -48,20 +48,10 @@ $(function(){
 
   function renderCommunityPage(community){
     var $topicsListEl = $('#topics-list').empty();
-    var repo = new Github({}).getRepo('communities', community);
     $topicsListEl.spin();
-    repo.listBranches(function(err, branches){
-      var data = [];
-      _.each(branches, function(branch){
-        if(branch.name != 'master'){
-          data.push({name: branch.name, community: community});
-        }
-      });
+    $.get("/api/communities/" + community, function(community){
       $topicsListEl.spin(false);
-      renderArray(data, $topicsListEl, 'community-page-topic-tpl');
-    });
-    $.get("/communities/" + community + '/members', function(members){
-      console.log("members", members);
+      renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');      
     });
     $('#goto-new-topic-page-btn').on('click', function(){
       page('/communities/' + community + '/create');
@@ -210,28 +200,28 @@ $(function(){
   // ROUTER
 
   page('', renderHeader, function(){
-    showPage('home-page', renderHomePage);
+    showPage('home-page', 'Communities', renderHomePage);
   });
   
   page('/create', renderHeader, function(){
-    showPage('new-community-page', renderCreateCommunityPage);
+    showPage('new-community-page', 'Communities: create new one', renderCreateCommunityPage);
   });
  
   page('/communities/:community', renderHeader, function(ctx){
-    showPage('community-page', function(){
+    showPage('community-page', ctx.params.community,  function(){
       renderCommunityPage(ctx.params.community);
     });
   });
 
   page('/communities/:community/create', renderHeader, function(ctx){
-    showPage('new-topic-page', function(){
+    showPage('new-topic-page', ctx.params.community + ': create new topic', function(){
       renderCreateTopicPage(ctx.params.community);
     });
   });
 
 
   page('/communities/:community/:topic', renderHeader, function(ctx){
-    showPage('topic-page', function(){
+    showPage('topic-page', ctx.params.community + ': ' + ctx.params.topic, function(){
       renderTopicPage(ctx.params.community, ctx.params.topic);
     });
   });

@@ -104,7 +104,7 @@ app.get "/auth/callback",
     res.redirect "/"
 
 
-app.get "/communities", (req, res) ->
+app.get "/api/communities", (req, res) ->
   gh = new GitHubApi version: "3.0.0"
   gh.repos.getFromOrg {org: "communities"}, (err, repos) ->
     repos = _.filter repos, (repo) -> repo.name != 'gitcommunities.com'
@@ -125,6 +125,28 @@ app.get "/communities", (req, res) ->
           repos[i].topics_count = results[i].length  
         res.json repos
 
+app.get "/api/communities/:community", (req, res) ->
+  community = req.params.community
+  getCommunity community, (err, community) ->
+    res.json community 
+
+
+getCommunity = (community, callback) ->
+  gh = new GitHubApi version: "3.0.0"
+  gh.repos.get {user: "communities", repo: community}, (err, repo) ->
+    if err
+      callback err
+      return
+    worker =
+      topics: async.apply getTopics, community
+      members: async.apply getMembers, community
+    async.parallel worker, (err, results) ->
+      if err
+        callback err
+        return
+      repo.topics = results.topics
+      repo.members = results.members  
+      callback undefined, repo             
 
 getTopics = (community, callback) ->
   gh = new GitHubApi version: "3.0.0"  
