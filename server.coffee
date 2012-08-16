@@ -1,11 +1,15 @@
 express = require "express"
 md      = require "markdown"
 async   = require "async"
+_       = require "underscore"
+moment  = require "moment"
 
 stylus  = require "stylus"
 nib     = require "nib"
 
 github    = require "octonode"
+
+GitHubApi = require "github"
 
 # gitty = require "gitty"
 # communities = github.org "communities"
@@ -100,6 +104,17 @@ app.get "/auth/callback",
     res.redirect "/"
 
 
+app.get "/communities", (req, res) ->
+  gh = new GitHubApi version: "3.0.0"
+  gh.repos.getFromOrg {org: "communities"}, (err, repos) ->
+    repos = _.filter repos, (repo) -> repo.name != 'gitcommunities.com'
+    _.each repos, (repo) ->
+        repo.created = moment(repo.created_at).fromNow()
+
+    res.json repos
+
+
+
 
 app.post "/communities", (req, res) ->
   data = req.body
@@ -123,6 +138,7 @@ app.post "/communities", (req, res) ->
      console.log "yyy1", err, status, repo
      ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-admins", permission: "admin", repo_names:["communities/#{repo.name}"]}, (err, status, team) ->
        console.log "create new admin team", err, status, team
+
        ghAdmin.put "/teams/#{team.id}/members/#{req.user.username}", {}, (err, status, resp) ->
          console.log "add new team member", err, status, resp   
          ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-members", permission: "push", repo_names:["communities/#{repo.name}"]}, (err, status, team) ->
