@@ -68,7 +68,10 @@ html(lang="en")
       |<a class="nav-link" href="/communities/<%= name %>"><h1><%= name %></h1></a>
       |<div class="community-content">
       | <p><%= description %>
-      | <div class="metadata"><time pubdate datetime="<%= created_at %>"><%= created %></time>
+      | <div class="metadata">
+      |   Created <time pubdate datetime="<%= created_at %>"><%= created %></time>
+      |   Updated <time datetime="<%= pushed_at %>"><%= pushed %></time>
+      |   Members <span><%= members_count %></span>
       |  </div>
       | </div>
       |<button class="join-community-btn action-btn btn logined-show" data-name="<%= name %>">Join</button>

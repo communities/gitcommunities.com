@@ -16,13 +16,7 @@ $(function(){
     var $communitiesListEl = $('#communities-list').empty();
     var github = new Github({}).getUser();
     $communitiesListEl.spin();
-    github.orgRepos('communities', function(err, repos){
-      _.each(repos, function(repo){
-        repo.created = moment(repo.created_at).fromNow();
-      });
-      repos = _.filter(repos, function(repo){
-        return repo.name != 'gitcommunities.com';
-      });
+    $.get('/communities', function(repos){
       $communitiesListEl.spin(false);
       renderArray(repos, $communitiesListEl, 'home-page-community-tpl');
     });

@@ -108,12 +108,34 @@ app.get "/communities", (req, res) ->
   gh = new GitHubApi version: "3.0.0"
   gh.repos.getFromOrg {org: "communities"}, (err, repos) ->
     repos = _.filter repos, (repo) -> repo.name != 'gitcommunities.com'
+    membersFetchFuncs = []
     _.each repos, (repo) ->
-        repo.created = moment(repo.created_at).fromNow()
+      repo.created = moment(repo.created_at).fromNow()
+      repo.pushed = moment(repo.pushed_at).fromNow()
+      membersFetchFuncs.push async.apply getMembers, repo.name
+    async.parallel membersFetchFuncs, (err, results) ->
+      for i in [0...repos.length]
+        repos[i].members = results[i] 
+        repos[i].members_count = results[i].length    
+      res.json repos
 
-    res.json repos
 
-
+getMembers = (community, callback) ->
+  # gh = new GitHubApi version: "3.0.0"
+  # gh.repos.getTeams {user: "communities"}
+  # gh.orgs.getTeamMembers {id:}
+  github.auth.config({
+    username: "communities-admin"
+    password: 'M5GR0ZDQSgwRYc2'
+  }).login ['user', 'repo', 'gist'], (err, id, token) ->
+    ghAdmin = github.client token
+    ghAdmin.get "/orgs/communities/teams", (err, status, teams) ->
+      console.log("teams", teams);
+      membersTeam = team for team in teams when team.name == "#{community}-members"
+      console.log "membersTeam", membersTeam
+      ghAdmin.get "/teams/#{membersTeam.id}/members", {}, (err, status, members) ->
+        callback undefined, members 
+  
 
 
 app.post "/communities", (req, res) ->
@@ -166,19 +188,8 @@ app.post "/communities/:community/join", (req, res) ->
 
 app.get "/communities/:community/members", (req, res) ->
   community = req.params.community
-  github.auth.config({
-    username: "communities-admin"
-    password: 'M5GR0ZDQSgwRYc2'
-  }).login ['user', 'repo', 'gist'], (err, id, token) ->
-    ghAdmin = github.client token
-    ghAdmin.get "/orgs/communities/teams", (err, status, teams) ->
-      console.log("teams", teams);
-      membersTeam = team for team in teams when team.name == "#{community}-members"
-      console.log "membersTeam", membersTeam
-      ghAdmin.get "/teams/#{membersTeam.id}/members", {}, (err, status, members) ->
-        console.log "add new team member", err, status, members
-        res.json members 
-  
+  getMembers community, (err, members) ->
+    res.json members
 
 app.post "/communities/:community", (req, res) ->
   community = req.params.community
