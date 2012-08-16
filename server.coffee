@@ -109,16 +109,35 @@ app.get "/communities", (req, res) ->
   gh.repos.getFromOrg {org: "communities"}, (err, repos) ->
     repos = _.filter repos, (repo) -> repo.name != 'gitcommunities.com'
     membersFetchFuncs = []
+    topicsFetchFuncs = []
     _.each repos, (repo) ->
       repo.created = moment(repo.created_at).fromNow()
       repo.pushed = moment(repo.pushed_at).fromNow()
       membersFetchFuncs.push async.apply getMembers, repo.name
+      topicsFetchFuncs.push async.apply getTopics, repo.name
     async.parallel membersFetchFuncs, (err, results) ->
       for i in [0...repos.length]
         repos[i].members = results[i] 
         repos[i].members_count = results[i].length    
-      res.json repos
+      async.parallel topicsFetchFuncs, (err, results) ->
+        for i in [0...repos.length]
+          repos[i].topics = results[i] 
+          repos[i].topics_count = results[i].length  
+        res.json repos
 
+
+getTopics = (community, callback) ->
+  gh = new GitHubApi version: "3.0.0"  
+  gh.repos.getBranches {user: "communities", repo: community}, (err, branches) ->
+    if err
+      callback err
+      return
+    topics = [];
+    _.each branches, (branch) ->
+      if branch.name != "master"
+        topics.push name: branch.name, community: community
+    callback undefined, topics    
+        
 
 getMembers = (community, callback) ->
   # gh = new GitHubApi version: "3.0.0"
@@ -128,12 +147,21 @@ getMembers = (community, callback) ->
     username: "communities-admin"
     password: 'M5GR0ZDQSgwRYc2'
   }).login ['user', 'repo', 'gist'], (err, id, token) ->
+    if err
+      callback err
+      return
     ghAdmin = github.client token
     ghAdmin.get "/orgs/communities/teams", (err, status, teams) ->
       console.log("teams", teams);
+      if err 
+        callback err
+        return
       membersTeam = team for team in teams when team.name == "#{community}-members"
       console.log "membersTeam", membersTeam
       ghAdmin.get "/teams/#{membersTeam.id}/members", {}, (err, status, members) ->
+        if err
+          callback err
+          return
         callback undefined, members 
   
 
