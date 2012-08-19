@@ -61,12 +61,12 @@ html(lang="en")
       form#new-message-form(onsubmit="false").logined-show
         textarea(required).new-message-content.input
         button#create-new-message-btn.action-btn.btn Post
-      section#messages-list
+      section#messages-list.items-list
       footer
         p Except as otherwise noted, the content of this page is licensed under the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
     script(type="text/template")#home-page-community-tpl
       |<li class="community-item">
-      |<div class="members-count"><span><%= members_count %></span></div>
+      |<div class="members-count counter"><span><%= members_count %></span></div>
       |<div class="details">
       |<a class="nav-link" href="/communities/<%= name %>"><h1><%= name %></h1></a>
       |<div class="community-content">
@@ -82,7 +82,7 @@ html(lang="en")
       |</li>
     script(type="text/template")#community-page-topic-tpl
       |<li class="topic-item">
-      | <div class="messages-count"><span><%= commits.length %></span></div>
+      | <div class="messages-count counter"><span><%= commits.length %></span></div>
       | <div class="details">
       |   <a class="nav-link" href="/communities/<%= community %>/<%= name %>"><%= name %></a> 
       |   <div class="topic-content">
@@ -92,7 +92,7 @@ html(lang="en")
       |</div>
       |</li> 
     script(type="text/template")#topic-page-message-tpl
-      |<section class="message">
+      |<li class="message">
       | <div class="message-content">
       |  <p><%= html %></p>
       |  <div class="metadata"><time pubdate datetime="<%= commit.published_at %>"><%= commit.published %></time></div>
@@ -102,4 +102,4 @@ html(lang="en")
       |   <img src="<%= commit.author.avatar_url %>" class="avatar avatar-small">
       | </a>
       | </div>
-      |</section>  
+      |</li>  

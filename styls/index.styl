@@ -94,10 +94,40 @@ form
   border-radius: 6px;
   border-top: 1px solid white;
   position: relative;
-  height: 100px;
+  min-height: 100px;
+  list-style: none;
   &:hover
     background: white;
     cursor: pointer;
+  & .details
+    margin-left: 100px;
+  & .counter
+    min-width: 88px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    background: #FA8F0E;
+    display: inline-block;
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    transition: all .20s ease-in-out;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    overflow: hidden;
+    z-index: 100000;   
+
+    & span
+      display: inline-block;
+      padding: 3px 0;
+      font-size: 5.2em;
+      font-family: sans-serif;
+      font-weight: bold;
+      line-height: 1;
+      vertical-align: middle;
+      color: white;
+      text-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0;
+      letter-spacing: -0.05em; 
 
 .avatar
   box-shadow: rgba(0, 0, 0, 0.1) 0 2px 5px;
@@ -126,49 +156,16 @@ header.app-header
     position: absolute;
     right: 10px;
 
-.page
+#home-page.page
   & .community-item
-  & .topic-item
     & .join-community-btn
       position: absolute;
       right: 10px;
       top: 10px;
-    & .details
-      margin-left: 100px;
-    & .members-count
-    & .messages-count
-      min-width: 88px;
-      border-bottom-right-radius: 6px;
-      border-bottom-left-radius: 6px;
-      background: #FA8F0E;
-      display: inline-block;
-      position: absolute;
-      bottom: 10px;
-      left: 20px;
-      transition: all .20s ease-in-out;
-      cursor: pointer;
-      text-align: center;
-      display: inline-block;
-      overflow: hidden;
-      z-index: 100000;   
 
-      & span
-        display: inline-block;
-        padding: 3px 0;
-        font-size: 5.2em;
-        font-family: sans-serif;
-        font-weight: bold;
-        line-height: 1;
-        vertical-align: middle;
-        color: white;
-        text-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0;
-        letter-spacing: -0.05em; 
 
 #topic-page
   & .message
-    position: relative;
-    border: 1px solid grey;
-    padding: 10px;
     & .user-info
       position: absolute;
       right: 5px;  

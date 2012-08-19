@@ -193,11 +193,47 @@ form .input {
   border-radius: 6px;
   border-top: 1px solid #fff;
   position: relative;
-  height: 100px;
+  min-height: 100px;
+  list-style: none;
 }
 .items-list li:hover {
   background: #fff;
   cursor: pointer;
+}
+.items-list li .details {
+  margin-left: 100px;
+}
+.items-list li .counter {
+  min-width: 88px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  background: #fa8f0e;
+  display: inline-block;
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+  overflow: hidden;
+  z-index: 100000;
+}
+.items-list li .counter span {
+  display: inline-block;
+  padding: 3px 0;
+  font-size: 5.2em;
+  font-family: sans-serif;
+  font-weight: bold;
+  line-height: 1;
+  vertical-align: middle;
+  color: #fff;
+  text-shadow: rgba(0,0,0,0.2) 0 -1px 0;
+  letter-spacing: -0.05em;
 }
 .avatar {
   -webkit-box-shadow: rgba(0,0,0,0.1) 0 2px 5px;
@@ -234,58 +270,10 @@ header.app-header #user-toolbar {
   position: absolute;
   right: 10px;
 }
-.page .community-item .join-community-btn,
-.page .topic-item .join-community-btn {
+#home-page.page .community-item .join-community-btn {
   position: absolute;
   right: 10px;
   top: 10px;
-}
-.page .community-item .details,
-.page .topic-item .details {
-  margin-left: 100px;
-}
-.page .community-item .members-count,
-.page .topic-item .members-count,
-.page .community-item .messages-count,
-.page .topic-item .messages-count {
-  min-width: 88px;
-  border-bottom-right-radius: 6px;
-  border-bottom-left-radius: 6px;
-  background: #fa8f0e;
-  display: inline-block;
-  position: absolute;
-  bottom: 10px;
-  left: 20px;
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-  text-align: center;
-  display: inline-block;
-  overflow: hidden;
-  z-index: 100000;
-}
-.page .community-item .members-count span,
-.page .topic-item .members-count span,
-.page .community-item .messages-count span,
-.page .topic-item .messages-count span {
-  display: inline-block;
-  padding: 3px 0;
-  font-size: 5.2em;
-  font-family: sans-serif;
-  font-weight: bold;
-  line-height: 1;
-  vertical-align: middle;
-  color: #fff;
-  text-shadow: rgba(0,0,0,0.2) 0 -1px 0;
-  letter-spacing: -0.05em;
-}
-#topic-page .message {
-  position: relative;
-  border: 1px solid #808080;
-  padding: 10px;
 }
 #topic-page .message .user-info {
   position: absolute;
