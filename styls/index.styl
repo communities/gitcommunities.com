@@ -86,7 +86,7 @@ form
   min-height: 80px;
   overflow: hidden;
 
-.items-list li
+.items-list > li
   padding: 10px 20px;
   background: #F4F4F0;
   margin: 0 0 20px 0;
@@ -162,6 +162,13 @@ header.app-header
       position: absolute;
       right: 10px;
       top: 10px;
+
+ul.participants
+  & li
+    list-style: none;
+    display: inline-block;
+    & img
+      width: 24px;
 
 
 #topic-page

@@ -183,7 +183,7 @@ form .input {
   min-height: 80px;
   overflow: hidden;
 }
-.items-list li {
+.items-list > li {
   padding: 10px 20px;
   background: #f4f4f0;
   margin: 0 0 20px 0;
@@ -196,14 +196,14 @@ form .input {
   min-height: 100px;
   list-style: none;
 }
-.items-list li:hover {
+.items-list > li:hover {
   background: #fff;
   cursor: pointer;
 }
-.items-list li .details {
+.items-list > li .details {
   margin-left: 100px;
 }
-.items-list li .counter {
+.items-list > li .counter {
   min-width: 88px;
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
@@ -223,7 +223,7 @@ form .input {
   overflow: hidden;
   z-index: 100000;
 }
-.items-list li .counter span {
+.items-list > li .counter span {
   display: inline-block;
   padding: 3px 0;
   font-size: 5.2em;
@@ -274,6 +274,13 @@ header.app-header #user-toolbar {
   position: absolute;
   right: 10px;
   top: 10px;
+}
+ul.participants li {
+  list-style: none;
+  display: inline-block;
+}
+ul.participants li img {
+  width: 24px;
 }
 #topic-page .message .user-info {
   position: absolute;

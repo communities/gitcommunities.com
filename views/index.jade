@@ -87,7 +87,12 @@ html(lang="en")
       |   <a class="nav-link" href="/communities/<%= community %>/<%= name %>"><%= name %></a> 
       |   <div class="topic-content">
       |     <div class="metadata">
+      |   Created <time pubdate datetime="<%= created_at %>"><%= createdWhen %></time>
+      |   Updated <time datetime="<%= updated_at %>"><%= updatedWhen %></time>      
       |     </div>
+      |     <ul class="participants">
+      |       <% _.each(participants, function(participant) { %> <li><img src="<%= participant.avatar_url %>" alt="<%= participant.login %>"></li> <% }); %>  
+      |     </ul>
       |   </div>
       |</div>
       |</li> 

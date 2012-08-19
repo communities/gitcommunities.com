@@ -52,6 +52,12 @@ $(function(){
     $topicsListEl.spin();
     $.get("/api/communities/" + community, function(community){
       $topicsListEl.spin(false);
+      _.each(community.topics, function(topic){
+        topic.created_at = topic.created.commit.author.date;
+        topic.createdWhen = moment(topic.created_at).fromNow();
+        topic.updated_at = topic.updated.commit.author.date;
+        topic.updatedWhen = moment(topic.updated_at).fromNow();
+      });
       $page.find('.details').html(community.description);
       renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');      
     });
@@ -157,10 +163,8 @@ $(function(){
   }
   function renderHeader(ctx, next){
     if(_.isEmpty(cUnity.user.username)){
-      console.log('unlogined');
       $('html').addClass('unlogined');
     } else{
-      console.log('logined');
       $('html').addClass('logined');
       $('#user-profile img').attr('src', cUnity.user.avatar);
       $('#user-profile span').text(cUnity.user.username);

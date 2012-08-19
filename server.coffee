@@ -164,7 +164,12 @@ getTopics = (community, callback) ->
       for i in [0...topics.length]
         topics[i].sha = meta[i].sha
         commits = meta[i].commits
-        topics[i].commits = _.first(commits, commits.length - 1);    
+        topics[i].commits = _.first(commits, commits.length - 1)
+        topics[i].created = _.last topics[i].commits
+        topics[i].updated = _.first topics[i].commits 
+        participants = (commit.author for commit in topics[i].commits)
+        participants = _.uniq participants, false, (participant) -> participant.id
+        topics[i].participants = participants
       callback undefined, topics    
         
 
