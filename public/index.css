@@ -234,15 +234,20 @@ header.app-header #user-toolbar {
   position: absolute;
   right: 10px;
 }
-#home-page .community-item .join-community-btn {
+.page .community-item .join-community-btn,
+.page .topic-item .join-community-btn {
   position: absolute;
   right: 10px;
   top: 10px;
 }
-#home-page .community-item .details {
+.page .community-item .details,
+.page .topic-item .details {
   margin-left: 100px;
 }
-#home-page .community-item .members-count {
+.page .community-item .members-count,
+.page .topic-item .members-count,
+.page .community-item .messages-count,
+.page .topic-item .messages-count {
   min-width: 88px;
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
@@ -262,7 +267,10 @@ header.app-header #user-toolbar {
   overflow: hidden;
   z-index: 100000;
 }
-#home-page .community-item .members-count span {
+.page .community-item .members-count span,
+.page .topic-item .members-count span,
+.page .community-item .messages-count span,
+.page .topic-item .messages-count span {
   display: inline-block;
   padding: 3px 0;
   font-size: 5.2em;

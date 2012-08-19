@@ -154,11 +154,18 @@ getTopics = (community, callback) ->
     if err
       callback err
       return
-    topics = [];
+    topics = []
+    workers = []
     _.each branches, (branch) ->
       if branch.name != "master"
         topics.push name: branch.name, community: community
-    callback undefined, topics    
+        workers.push async.apply getTopicMeta, community, branch.name
+    async.parallel workers, (errors, meta) ->
+      for i in [0...topics.length]
+        topics[i].sha = meta[i].sha
+        commits = meta[i].commits
+        topics[i].commits = _.first(commits, commits.length - 1);    
+      callback undefined, topics    
         
 
 getMembers = (community, callback) ->
@@ -185,12 +192,29 @@ getMembers = (community, callback) ->
           callback err
           return
         callback undefined, members 
-  
 
+
+getTopicMeta = (community, topic, callback) ->
+  github.client().get "/repos/communities/#{community}/git/refs/heads/#{topic}", {}, (err, status, ref) ->
+    if err
+      callback err
+      return
+    getCommits community, ref.object.sha, (err, commits) ->
+      if err
+        callback err
+        return
+      resp =
+        sha: ref.object.sha
+        commits: commits
+      console.log "opop", resp  
+      callback undefined, resp    
+
+getCommits = (community, sha, callback) ->
+  github.client().get "/repos/communities/#{community}/commits?sha=#{sha}", {}, (err, status, commits) ->
+    callback err, commits
 
 app.post "/communities", (req, res) ->
   data = req.body
-  console.log "xx", data, req.user.username
   github.auth.config({
     username: "communities-admin"
     password: 'M5GR0ZDQSgwRYc2'
@@ -241,15 +265,16 @@ app.get "/communities/:community/members", (req, res) ->
   getMembers community, (err, members) ->
     res.json members
 
+
+
+
 app.post "/communities/:community", (req, res) ->
   community = req.params.community
-  console.log "xx", community, req.user.username
   github.auth.config({
     username: "communities-admin"
     password: 'M5GR0ZDQSgwRYc2'
   }).login ['user', 'repo', 'gist'], (err, id, token) ->
     ghAdmin = github.client token
-    #repo = github.repo("communities/#{community}")
     spec = {"ref": "refs/heads/test","sha": "496a6ddf94d1889a27e1979c9578f9e1257e40c3"}
     ghAdmin.post "/repos/communities/#{community}/git/refs", spec, (err, status, resp) ->
       res.json resp

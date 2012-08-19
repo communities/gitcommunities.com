@@ -51,7 +51,7 @@ html(lang="en")
         button#create-new-community-btn.action-btn.btn New Community
     #community-page.page.invisible
       section.details 
-      ul#topics-list
+      ul#topics-list.items-list
     #new-topic-page.page.invisible
       form(onsubmit="false")
         input(required)#new-topic-name.input.logined-show
@@ -81,7 +81,16 @@ html(lang="en")
       |<button class="join-community-btn action-btn btn logined-show" data-name="<%= name %>">Join</button>
       |</li>
     script(type="text/template")#community-page-topic-tpl
-      <li><a class="nav-link" href="/communities/<%= community %>/<%= name %>"><%= name %></a></li>  
+      |<li class="topic-item">
+      | <div class="messages-count"><span><%= commits.length %></span></div>
+      | <div class="details">
+      |   <a class="nav-link" href="/communities/<%= community %>/<%= name %>"><%= name %></a> 
+      |   <div class="topic-content">
+      |     <div class="metadata">
+      |     </div>
+      |   </div>
+      |</div>
+      |</li> 
     script(type="text/template")#topic-page-message-tpl
       |<section class="message">
       | <div class="message-content">
