@@ -289,6 +289,7 @@ app.get "/communities/:community/:topic", (req, res) ->
   res.render "index", user: req.user or {}
 
 
+
 port = process.env.PORT || 8090
 app.listen port
 console.log "server started on port 8090. Open http://localhost:8090 in your browser"  

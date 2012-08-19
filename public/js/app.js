@@ -50,6 +50,17 @@ $(function(){
     var $page = $('#community-page');
     var $topicsListEl = $('#topics-list').empty();
     $topicsListEl.spin();
+    
+     var repo = new Github({}).getRepo('communities', community);
+
+     repo.read('master', 'README.md', function(err, content){
+       if(!err && content){
+          var mdConverter = new Showdown.converter();
+          var html = mdConverter.makeHtml(content);
+          $page.find('.details p').html(html);
+        }
+     });
+
     $.get("/api/communities/" + community, function(community){
       $topicsListEl.spin(false);
       _.each(community.topics, function(topic){
@@ -58,7 +69,8 @@ $(function(){
         topic.updated_at = topic.updated.commit.author.date;
         topic.updatedWhen = moment(topic.updated_at).fromNow();
       });
-      $page.find('.details').html(community.description);
+      $page.find('.details h1').html(community.name);
+      $page.find('.details h2').html(community.description);
       renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');      
     });
     $('#goto-new-topic-page-btn').on('click', function(){
