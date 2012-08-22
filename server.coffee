@@ -8,7 +8,8 @@ moment  = require "moment"
 stylus  = require "stylus"
 nib     = require "nib"
 
-github    = require "octonode"
+github  = require "octonode"
+gitty   = require "gitty"
 
 GitHubApi = require "github"
 
@@ -33,21 +34,51 @@ github.auth.config({
 
 
 
-# gitty = require "gitty"
-# communities = github.org "communities"
-
-# gitty.create "dsad", "description", __dirname + "/repos", (err, data) ->
-#   console.log "xx", err, data
-#   gitty.add __dirname + "/repos/dsad", ["README.md"], (err, data) ->
-#     console.log "xx2", err, data
-#     gitty.commit __dirname + "/repos/dsad", "initial", (err, data) ->
-#       console.log "xx3", err, data
-#       gitty.remote.add __dirname + "/repos/dsad", "origin", "https://github.com/communities/dsad.git", (err, data) ->
-#         console.log "xx4", err, data
-#         gitty.push __dirname + "/repos/dsad", "origin", "master", (err, data) ->
-#           console.log "xx5", err, data
+createRepo = (repo, username, callback) ->
+  createGitHubRepo repo, username, (err, repo) ->
+    if err
+      callback err
+      return
+    createGitRepo repo, callback  
 
 
+createGitHubRepo = (repo, username, callback) ->
+  ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
+  ghAdmin.post "/orgs/communities/repos", repo, (err, status, repo) ->
+    if err
+      callback err
+      return
+    ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-admins", permission: "admin", repo_names:["communities/#{repo.name}"]}, (err, status, team) ->
+      if err
+        callback err
+        return
+      ghAdmin.put "/teams/#{team.id}/members/#{username}", {}, (err, status, resp) ->
+        if err
+          callback err
+          return   
+        ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-members", permission: "push", repo_names:["communities/#{repo.name}"]}, (err, status, team) ->
+          if err
+            callback err
+            return
+          callback undefined, repo    
+
+
+createGitRepo = (repo, callback) ->
+  {name} = repo
+  gitty.create name, repo.description, __dirname + "/repos", (err, data) ->
+    # gitty.add __dirname + "/repos/#{name}", ["LICENSE"], (err, data) ->
+    #   console.log "added file", err, data
+    #   if err
+    #     callback err
+    #     return
+    gitty.commit __dirname + "/repos/#{name}", "initial", (err, data) ->
+      gitty.remote.add __dirname + "/repos/#{name}", "origin", "https://github.com/communities/#{name}.git", (err, data) ->
+        console.log "origin was add", err, data
+        gitty.push __dirname + "/repos/#{name}", "origin", "master", (err, data) ->
+          if err
+            callback err
+            return
+          callback undefined, data  
 
 
 passport = require "passport"
@@ -191,7 +222,10 @@ getMembers = (community, callback) ->
       callback err
       return
     membersTeam = team for team in teams when team.name == "#{community}-members"
-    console.log "membersTeam", membersTeam
+    console.log "membersTeam", membersTeam, community
+    if not membersTeam
+      callback "Internal error. Teams is missing"
+      return
     ghAdmin.get "/teams/#{membersTeam.id}/members", {}, (err, status, members) ->
       if err
         callback err
@@ -211,7 +245,6 @@ getTopicMeta = (community, topic, callback) ->
       resp =
         sha: ref.object.sha
         commits: commits
-      console.log "opop", resp  
       callback undefined, resp    
 
 getCommits = (community, sha, callback) ->
@@ -220,8 +253,6 @@ getCommits = (community, sha, callback) ->
 
 app.post "/communities", (req, res) ->
   data = req.body
-  ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
-  org = ghAdmin.org "communities"
   repo = 
     name: data.name
     description: data.description
@@ -230,20 +261,9 @@ app.post "/communities", (req, res) ->
     has_issues: true
     has_wiki: true
     has_downloads: true
-  ghAdmin.post "/orgs/communities/repos", repo, (err, status, repo) ->
-   console.log "yyy1", err, status, repo
-   ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-admins", permission: "admin", repo_names:["communities/#{repo.name}"]}, (err, status, team) ->
-     console.log "create new admin team", err, status, team
-
-     ghAdmin.put "/teams/#{team.id}/members/#{req.user.username}", {}, (err, status, resp) ->
-       console.log "add new team member", err, status, resp   
-       ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-members", permission: "push", repo_names:["communities/#{repo.name}"]}, (err, status, team) ->
-        console.log "yyy3", err, status, team
-
-        spec = {"ref": "refs/heads/master","sha": ""}
-        ghAdmin.post "/repos/communities/#{repo.name}/git/refs", spec, (err, status, resp) ->
-          console.log "new branch", err, status, resp
-          res.json repo
+  createRepo repo, req.user.username, (err, repo) ->
+    console.log "repo was created with err", err
+    res.json repo
 
 app.post "/communities/:community/join", (req, res) ->
   community = req.params.community

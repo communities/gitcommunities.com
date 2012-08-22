@@ -38,10 +38,7 @@ $(function(){
       var description = $("#new-community-description").val();
       $.post('/communities', {name: name, description: description}, function(data){
         console.log("repo created");
-        var repo = cUnity.github.getRepo('communities', name);
-        repo.write('master', 'README', 'YOUR_NEW_CONTENTS', 'YOUR_COMMIT_MESSAGE', function(err){
-          console.log('error saving file');
-        });
+        page('/communities/' + name);
       });
     });
   }
