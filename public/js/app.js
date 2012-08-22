@@ -90,7 +90,6 @@ $(function(){
           sha: sha
         };
         repo.createRef(refSpec, function(err) {
-          console.log('xx', err);
           var content = editor.getElement('editor').body.innerHTML;
           console.log('content', content);
           repo.write(topic, '1.md', content, 'start conversation', function(err) {
@@ -102,7 +101,6 @@ $(function(){
           });
         });
       });
-      //$.post("/communities/" + community);
     });
   }
 
