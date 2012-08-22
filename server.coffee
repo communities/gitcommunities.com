@@ -13,6 +13,9 @@ github    = require "octonode"
 GitHubApi = require "github"
 
 
+app = module.exports = express.createServer()
+
+
 nconf
   .argv()
   .env()
@@ -44,7 +47,6 @@ github.auth.config({
 #         gitty.push __dirname + "/repos/dsad", "origin", "master", (err, data) ->
 #           console.log "xx5", err, data
 
-app = module.exports = express.createServer()
 
 
 
@@ -122,22 +124,11 @@ app.get "/api/communities", (req, res) ->
   gh = new GitHubApi version: "3.0.0"
   gh.repos.getFromOrg {org: "communities"}, (err, repos) ->
     repos = _.filter repos, (repo) -> repo.name != 'gitcommunities.com'
-    membersFetchFuncs = []
-    topicsFetchFuncs = []
+    communitiesFetchFuncs = []
     _.each repos, (repo) ->
-      repo.created = moment(repo.created_at).fromNow()
-      repo.pushed = moment(repo.pushed_at).fromNow()
-      membersFetchFuncs.push async.apply getMembers, repo.name
-      topicsFetchFuncs.push async.apply getTopics, repo.name
-    async.parallel membersFetchFuncs, (err, results) ->
-      for i in [0...repos.length]
-        repos[i].members = results[i] 
-        repos[i].members_count = results[i].length    
-      async.parallel topicsFetchFuncs, (err, results) ->
-        for i in [0...repos.length]
-          repos[i].topics = results[i] 
-          repos[i].topics_count = results[i].length  
-        res.json repos
+      communitiesFetchFuncs.push async.apply getCommunity, repo.name
+    async.parallel communitiesFetchFuncs, (err, repos) ->
+      res.json repos
 
 app.get "/api/communities/:community", (req, res) ->
   community = req.params.community
@@ -159,7 +150,12 @@ getCommunity = (community, callback) ->
         callback err
         return
       repo.topics = results.topics
-      repo.members = results.members  
+      repo.topics_count = results.topics.length
+      repo.members = results.members
+      repo.members_count = results.members.length
+      repo.created = moment(repo.created_at).fromNow()
+      repo.pushed = moment(repo.pushed_at).fromNow()
+  
       callback undefined, repo             
 
 getTopics = (community, callback) ->
