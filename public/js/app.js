@@ -14,7 +14,6 @@ $(function(){
 
   function renderHomePage(){
     var $communitiesListEl = $('#communities-list').empty();
-    var github = new Github({}).getUser();
     $communitiesListEl.spin();
     $.get('/api/communities', function(repos){
       $communitiesListEl.spin(false);
@@ -48,7 +47,7 @@ $(function(){
     var $topicsListEl = $('#topics-list').empty();
     $topicsListEl.spin();
     
-     var repo = new Github({}).getRepo('communities', community);
+     var repo = getRepo(community);
 
      repo.read('master', 'README.md', function(err, content){
        if(!err && content){
@@ -81,7 +80,7 @@ $(function(){
     var $createTopicBtn = $('#create-new-topic-btn');
     $createTopicBtn.on('click', function(e){
       e.preventDefault();
-      var repo = cUnity.github.getRepo('communities', community);
+      var repo =  getAuthRepo(community);
       repo.getRef('heads/master', function(err, sha) {
         console.log('get branch', err, sha);
         var topic = $('#new-topic-name').val();
@@ -105,7 +104,7 @@ $(function(){
   }
 
   function renderTopicPage(community, topic){
-    var repo = new Github({}).getRepo('communities', community);
+    var repo = getRepo(community);
     var $createMessageBtn = $('#create-new-message-btn');
     var $messagesListEl = $('#messages-list').empty();
     $messagesListEl.spin();
@@ -115,10 +114,17 @@ $(function(){
         e.preventDefault();
         var text = $('#new-message-form .new-message-content').val();
         var fileName =  tree.length + '.md';
-        var authedRepo = cUnity.github.getRepo('communities', community);
-        authedRepo.write(topic, fileName, text, 'reply', function(err) {
-          console.log('yy', err);
+        var authedRepo = getAuthRepo(community);
+        // authedRepo.write(topic, fileName, text, 'reply', function(err) {
+        //   console.log('yy', err);
+        // });
+        authedRepo.write(topic, fileName, text, 'start conversation', function(err) {
+          console.log('err', err);
+          if(err){
+            alert("Error hapenned");
+          }
         });
+
       });
       console.log(tree);
       var workers = [];
@@ -165,9 +171,21 @@ $(function(){
 
         });
     });
-    
-    
+        
   }
+
+  function getAuthRepo(community){
+    var gh = new Github({
+        token: cUnity.user.accessToken,
+        auth: "oauth"
+    });
+    return gh.getRepo("communities", community);
+  }
+  function getRepo(community){
+    var gh = new Github({});
+    return gh.getRepo("communities", community);
+  }
+
   function renderHeader(ctx, next){
     if(_.isEmpty(cUnity.user.username)){
       $('html').addClass('unlogined');
@@ -175,10 +193,6 @@ $(function(){
       $('html').addClass('logined');
       $('#user-profile img').attr('src', cUnity.user.avatar);
       $('#user-profile span').text(cUnity.user.username);
-      cUnity.github = new Github({
-        token: cUnity.user.accessToken,
-        auth: "oauth"
-      });
     }
     var $breadcumbsEl = $('.app-header nav.breadcrumbs ul').empty();
     var pathes = ctx.path.split("/");
