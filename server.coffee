@@ -60,7 +60,18 @@ createGitHubRepo = (repo, username, callback) ->
           if err
             callback err
             return
-          callback undefined, repo    
+          hook = {
+            "name": "web",
+            "active": true,
+            "config": {
+              "url": "http://gitcommunities.com/webhook"
+            }
+          }  
+          ghAdmin.post "/repos/communities/#{repo.name}/hooks", hook, (err) ->
+            if err
+              callback err
+              return
+            callback undefined, repo    
 
 
 createGitRepo = (repo, callback) ->
