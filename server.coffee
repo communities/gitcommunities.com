@@ -14,7 +14,7 @@ gitty   = require "gitty"
 GitHubApi = require "github"
 
 
-app = module.exports = express.createServer()
+app = module.exports = express()
 
 
 nconf
