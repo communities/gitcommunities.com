@@ -51,8 +51,7 @@ $(function(){
 
      repo.read('master', 'README.md', function(err, content){
        if(!err && content){
-          var mdConverter = new Showdown.converter();
-          var html = mdConverter.makeHtml(content);
+          var html = makeHtml(content);
           $page.find('.details p').html(html);
         }
      });
@@ -119,6 +118,19 @@ $(function(){
           console.log("sha", sha);
           if(err){
             alert("Error hapenned");
+          } else{
+            var message = {
+              html: makeHtml(text)
+            };
+            message.commit = {
+              published: moment().fromNow(),
+              published_at: moment().format()
+            }; 
+            message.commit.author = {
+              url: cUnity.user.profileUrl,
+              avatar_url: cUnity.user.avatar
+            };
+            renderArrayItem(message, $messagesListEl, 'topic-page-message-tpl');
           }
         });
       });
@@ -144,7 +156,6 @@ $(function(){
           repo.commits(sha, function(err, commits){
             commits = _.first(commits, commits.length - 1);
             console.log("commits", commits);
-            var mdConverter = new Showdown.converter();
             var i = 0;
             for(; i < commits.length; i++){
               var k = commits.length - i - 1;
@@ -154,13 +165,13 @@ $(function(){
                 commit.published_at = commit.commit.author.date;
                 commit.published = moment(commit.published_at).fromNow();
                 file.commit = commit;
-                file.html = mdConverter.makeHtml(file.content);
+                file.html = makeHtml(file.content);
               }
             }
             console.log("new files", files);
             $messagesListEl.spin(false);
             renderArray(files, $messagesListEl, 'topic-page-message-tpl');
-            });
+          });
         
           });
 
@@ -168,6 +179,10 @@ $(function(){
         });
     });
         
+  }
+  function makeHtml(md){
+    var mdConverter = new Showdown.converter();
+    return mdConverter.makeHtml(md);
   }
 
   function getAuthRepo(community){
@@ -211,14 +226,17 @@ $(function(){
     next();
   }
 
-  function renderArray(array, containerEl, templateName){
-    var i = 0;
+  function renderArrayItem(item, containerEl, templateName){
     var tplStr = $('#' + templateName).html();
     var tpl = _.template(tplStr);
-    for(; i <  array.length; i++){
-      var html = tpl(array[i]);
-      containerEl.append(html);
-    }
+    var html = tpl(item);
+    containerEl.append(html);
+  }
+
+  function renderArray(array, containerEl, templateName){
+    _.each(array, function(item){
+      renderArrayItem(item, containerEl, templateName);
+    });
   }
   // ROUTER
 
