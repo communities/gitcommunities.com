@@ -1,3 +1,7 @@
 {
-	
+	"GITHUB_CLIENT_ID": "bba39387bffdb36bdf54",
+	"GITHUB_CLIENT_SECRET": "201e8fe53f64ccaa9b117a65460734befdde66b9",
+	"GITHUB_CALLBACK_URL": "http://gitcommunities.com/auth/callback",
+	"GIHUB_ADMIN_USERNAME": "communities-admin",
+	"GIHUB_ADMIN_PASSWORD": "M5GR0ZDQSgwRYc2" 
 }
