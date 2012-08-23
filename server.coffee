@@ -308,4 +308,4 @@ app.get "/communities/:community/:topic", (req, res) ->
 
 port = process.env.PORT || 8090
 app.listen port
-console.log "server started on port 8090. Open http://localhost:8090 in your browser"  
+console.log "server started on port #{port}. Open http://localhost:#{port} in your browser"  
