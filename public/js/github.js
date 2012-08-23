@@ -292,7 +292,7 @@
 
       this.updateHead = function(head, commit, cb) {
         _request("PATCH", repoPath + "/git/refs/heads/" + head, { "sha": commit }, function(err, res) {
-          cb(err);
+          cb(err, commit);
         });
       };
 

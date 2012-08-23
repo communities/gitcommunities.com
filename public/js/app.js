@@ -113,18 +113,14 @@ $(function(){
       $createMessageBtn.on('click', function(e){
         e.preventDefault();
         var text = $('#new-message-form .new-message-content').val();
-        var fileName =  tree.length + '.md';
+        var fileName = tree.length + '.md';
         var authedRepo = getAuthRepo(community);
-        // authedRepo.write(topic, fileName, text, 'reply', function(err) {
-        //   console.log('yy', err);
-        // });
-        authedRepo.write(topic, fileName, text, 'start conversation', function(err) {
-          console.log('err', err);
+        authedRepo.write(topic, fileName, text, 'start conversation', function(err, sha) {
+          console.log("sha", sha);
           if(err){
             alert("Error hapenned");
           }
         });
-
       });
       console.log(tree);
       var workers = [];
