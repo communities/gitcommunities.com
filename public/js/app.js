@@ -111,14 +111,17 @@ $(function(){
 
       $createMessageBtn.on('click', function(e){
         e.preventDefault();
+        $messagesListEl.spin();
         var text = $('#new-message-form .new-message-content').val();
         var fileName = tree.length + '.md';
         var authedRepo = getAuthRepo(community);
         authedRepo.write(topic, fileName, text, 'start conversation', function(err, sha) {
           console.log("sha", sha);
           if(err){
+            $messagesListEl.spin(false);
             alert("Error hapenned");
           } else{
+            tree.push({path: fileName});
             var message = {
               html: makeHtml(text)
             };
@@ -130,6 +133,7 @@ $(function(){
               url: cUnity.user.profileUrl,
               avatar_url: cUnity.user.avatar
             };
+            $messagesListEl.spin(false);
             renderArrayItem(message, $messagesListEl, 'topic-page-message-tpl');
           }
         });
