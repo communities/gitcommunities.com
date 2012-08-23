@@ -256,7 +256,7 @@ app.post "/communities", (req, res) ->
   repo = 
     name: data.name
     description: data.description
-    homepage: ""
+    homepage: "http://gitcommunities.com/communities/#{data.name}"
     private: false
     has_issues: true
     has_wiki: true

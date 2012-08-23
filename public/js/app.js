@@ -31,12 +31,15 @@ $(function(){
 
   function renderCreateCommunityPage(){
     var $createCommunityBtn = $('#create-new-community-btn');
+    var $form = $('#new-community-page form');
     $createCommunityBtn.on('click', function(e){
       e.preventDefault();
+      $form.spin();
       var name = $("#new-community-name").val();
       var description = $("#new-community-description").val();
       $.post('/communities', {name: name, description: description}, function(data){
         console.log("repo created");
+        $form.spin(false);
         page('/communities/' + name);
       });
     });
@@ -75,10 +78,11 @@ $(function(){
  
   function renderCreateTopicPage(community){
     var editor = new EpicEditor({container: 'new-topic-message', basePath: '/epiceditor'}).load();
-   
     var $createTopicBtn = $('#create-new-topic-btn');
+    var $form = $('#new-topic-page form');
     $createTopicBtn.on('click', function(e){
       e.preventDefault();
+      $form.spin();
       var repo =  getAuthRepo(community);
       repo.getRef('heads/master', function(err, sha) {
         console.log('get branch', err, sha);
@@ -91,6 +95,7 @@ $(function(){
           var content = editor.getElement('editor').body.innerHTML;
           console.log('content', content);
           repo.write(topic, '1.md', content, 'start conversation', function(err) {
+            $form.spin(false);
             if(err){
               alert("Error hapenned");
             }else{
