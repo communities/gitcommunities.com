@@ -25,8 +25,13 @@ $(function(){
       page('create');
     });
     $communitiesListEl.on('click', '.join-community-btn', function(e){
+      var $item = $(e.currentTarget).closest('.community-item');
+      $item.spin();
       var name = $(e.currentTarget).data('name');
-      $.post('/communities/' + name + '/join');
+      $.post('/communities/' + name + '/join', function(){
+        // TODO (anton) we should update amount of members.
+        $item.spin(false);
+      });
     });
   }
 

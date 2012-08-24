@@ -38,7 +38,8 @@ html(lang="en")
       h1 Create new community here!
       form(onsubmit="false").logined-show  
         input(required,placeholder="Name of the commuinity")#new-community-name.input
-        textarea(required,placeholder="Short description for the community")#new-community-description.input
+        textarea(required,placeholder="Short description for the community")#new-community-short-description.input
+        textarea(required,placeholder="Description for the community")#new-community-description.input
         button#create-new-community-btn.action-btn.btn New Community
     #community-page.page.invisible
       section.details
@@ -68,7 +69,7 @@ html(lang="en")
       | <div class="metadata">
       |   Created <time pubdate datetime="<%= created_at %>"><%= created %></time>
       |   Updated <time datetime="<%= pushed_at %>"><%= pushed %></time>
-      |   Members <span><%= members_count %></span> Topics <span><%= topics_count %></span>
+      |   Members <span class="members-count"><%= members_count %></span> Topics <span class="topics-count"><%= topics_count %></span>
       |  </div>
       | </div>
       |</div>

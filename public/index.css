@@ -282,6 +282,9 @@ ul.participants li {
 ul.participants li img {
   width: 24px;
 }
+#new-community-description {
+  height: 300px;
+}
 #topic-page .message .user-info {
   position: absolute;
   right: 5px;
