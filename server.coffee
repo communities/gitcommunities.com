@@ -304,16 +304,28 @@ app.post "/communities/:community", (req, res) ->
 
 
 app.get "/", (req, res) ->
-  res.render "index", user: req.user or {}
+  params = 
+    user: req.user or {}
+    jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else  "/app.js"
+  res.render "index", params
 
 app.get "/create", (req, res) ->
-  res.render "index", user: req.user or {}
+  params = 
+    user: req.user or {}
+    jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else  "/app.js"  
+  res.render "index", params
 
 app.get "/communities/:community", (req, res) ->
-  res.render "index", user: req.user or {}
+  params = 
+    user: req.user or {}
+    jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else  "/app.js"  
+  res.render "index", params
 
 app.get "/communities/:community/:topic", (req, res) ->
-  res.render "index", user: req.user or {}
+  params = 
+    user: req.user or {}
+    jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else  "/app.js"  
+  res.render "index", params
 
 
 

@@ -1,5 +1,6 @@
+/*global cUnity: false, console: false, $: false, moment: false, _: false, page: false, async: false, alert: false, Showdown: false, EpicEditor: false, Github: false */
 $(function(){
-
+  
   function showPage(pageName, pageTitle, fn){
     $('.page.visible').removeClass('visible').addClass('invisible');
 
@@ -69,7 +70,7 @@ $(function(){
       });
       $page.find('.details h1').html(community.name);
       $page.find('.details h2').html(community.description);
-      renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');      
+      renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');
     });
     $('#goto-new-topic-page-btn').on('click', function(){
       page('/communities/' + community + '/create');
@@ -133,7 +134,7 @@ $(function(){
             message.commit = {
               published: moment().fromNow(),
               published_at: moment().format()
-            }; 
+            };
             message.commit.author = {
               url: cUnity.user.profileUrl,
               avatar_url: cUnity.user.avatar
@@ -218,13 +219,13 @@ $(function(){
     var pathes = ctx.path.split("/");
     var i = 1;
     for(; i < pathes.length; i++){
-      if(i != 1){
+      if(i !== 1){
         $breadcumbsEl.append("<li>></li>");
       }
       var html = '';
-      if(i == 1){
+      if(i === 1){
        html = "<li><a class='nav-link' href='/'>Home</a></li>";
-      } else if(i == 2){
+      } else if(i === 2){
        html = "<li><a class='nav-link' href='/communities/" + pathes[i] + "'>" + pathes[i] + "</a></li>";
       } else {
         html = "<li>" + pathes[i] + "</li>";
@@ -283,5 +284,4 @@ $(function(){
     var href = $(e.currentTarget).attr('href');
     page(href);
   });
-  
 });

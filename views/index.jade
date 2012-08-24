@@ -16,16 +16,7 @@ html(lang="en")
         displayName: '#{user.displayName}',
         accessToken: '#{user.accessToken}'
       };      
-    script(src="/js/jquery-1.8.0.js")
-    script(src="/js/underscore.js")
-    script(src="/js/async.min.js")
-    script(src="/js/moment.js")
-    script(src="/js/page.js")
-    script(src="/js/github.js")
-    script(src="/js/spin.js")
-    script(src="/js/showdown.js")
-    script(src="/js/epiceditor.js")
-    script(src="/js/app.js")
+    script(src="#{jsFile}")
   body
     header.app-header         
       nav.main-toolbar
