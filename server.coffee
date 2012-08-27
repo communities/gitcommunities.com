@@ -165,18 +165,35 @@ app.get "/auth/callback",
     res.redirect "/"
 
 
+
+
 app.get "/api/communities", (req, res) ->
-  gh = new GitHubApi version: "3.0.0"
-  gh.repos.getFromOrg {org: "communities"}, (err, repos) ->
-    repos = _.filter repos, (repo) -> repo.name != 'gitcommunities.com'
-    communitiesFetchFuncs = []
-    _.each repos, (repo) ->
-      communitiesFetchFuncs.push async.apply getCommunity, repo.name
-    async.parallel communitiesFetchFuncs, (err, repos) ->
-      if err
-        res.send 500, { error: "API call failed" }
-        return
-      res.json repos
+  getCommunities (err, repos) ->
+    if err
+      res.send 500, { error: "API call failed" }
+      return
+    res.json repos
+
+
+getCommunities = (callback) ->
+  rc.hgetall "communities", (err, hash) ->
+    repos = (JSON.parse(repo) for name, repo of hash)
+    if repos.length > 0
+      callback undefined, repos
+    else  
+      gh = new GitHubApi version: "3.0.0"
+      gh.repos.getFromOrg {org: "communities"}, (err, repos) ->
+        repos = _.filter repos, (repo) -> repo.name != 'gitcommunities.com'
+        communitiesFetchFuncs = []
+        _.each repos, (repo) ->
+          communitiesFetchFuncs.push async.apply getCommunity, repo.name
+        async.parallel communitiesFetchFuncs, (err, repos) ->
+          if err
+            callback err
+            return
+          hash = {}  
+          _.each repos, (repo) -> hash[repo.name] = JSON.stringify(repo)  
+          rc.hmset "communities", hash, callback
 
 app.get "/api/communities/:community", (req, res) ->
   community = req.params.community
