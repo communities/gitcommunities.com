@@ -13,6 +13,9 @@ gitty   = require "gitty"
 
 GitHubApi = require "github"
 
+redis = require "redis"
+rc    = redis.createClient()
+
 
 app = module.exports = express()
 
@@ -96,8 +99,8 @@ passport = require "passport"
 
 GitHubStrategy = require("passport-github").Strategy
 
-passport.serializeUser (user, done) -> done(null, user)
-passport.deserializeUser (obj, done) -> done(null, obj)
+passport.serializeUser (user, done) -> done null, user
+passport.deserializeUser (obj, done) -> done null, obj
 
 
 
@@ -111,7 +114,7 @@ passport.use new GitHubStrategy {
     process.nextTick ->
       profile.accessToken = accessToken
       profile.avatar = profile._json.avatar_url
-      return done(null, profile);
+      return done null, profile
 
 
 
@@ -170,11 +173,17 @@ app.get "/api/communities", (req, res) ->
     _.each repos, (repo) ->
       communitiesFetchFuncs.push async.apply getCommunity, repo.name
     async.parallel communitiesFetchFuncs, (err, repos) ->
+      if err
+        res.send 500, { error: "API call failed" }
+        return
       res.json repos
 
 app.get "/api/communities/:community", (req, res) ->
   community = req.params.community
   getCommunity community, (err, community) ->
+    if err
+      res.send 500, { error: "API call failed" }
+      return
     res.json community 
 
 
@@ -273,7 +282,9 @@ app.post "/communities", (req, res) ->
     has_wiki: true
     has_downloads: true
   createRepo repo, req.user.username, (err, repo) ->
-    console.log "repo was created with err", err
+    if err
+      res.send 500, { error: "API call failed" }
+      return
     res.json repo
 
 app.post "/communities/:community/join", (req, res) ->
@@ -285,11 +296,17 @@ app.post "/communities/:community/join", (req, res) ->
     console.log "membersTeam", membersTeam
     ghAdmin.put "/teams/#{membersTeam.id}/members/#{req.user.username}", {}, (err, status, resp) ->
       console.log "add new team member", err, status, resp
+      if err
+        res.send 500, { error: "API call failed" }
+        return      
       res.json resp
 
 app.get "/communities/:community/members", (req, res) ->
   community = req.params.community
   getMembers community, (err, members) ->
+    if err
+      res.send 500, { error: "API call failed" }
+      return
     res.json members
 
 
@@ -298,6 +315,9 @@ app.post "/communities/:community", (req, res) ->
   ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
   spec = {"ref": "refs/heads/test","sha": "496a6ddf94d1889a27e1979c9578f9e1257e40c3"}
   ghAdmin.post "/repos/communities/#{community}/git/refs", spec, (err, status, resp) ->
+    if err
+      res.send 500, { error: "API call failed" }
+      return
     res.json resp
 
 
