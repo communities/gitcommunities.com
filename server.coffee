@@ -302,6 +302,7 @@ app.post "/communities", (req, res) ->
     if err
       res.send 500, { error: "API call failed" }
       return
+    rc.hmset "communities", repo.name, JSON.stringify(repo)  
     res.json repo
 
 app.post "/communities/:community/join", (req, res) ->
