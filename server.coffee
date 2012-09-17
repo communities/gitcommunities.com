@@ -172,10 +172,7 @@ app.get "/api/communities", (req, res) ->
 
 getCommunities = (callback) ->
   rc.hgetall "communities", (err, hash) ->
-    repos = (JSON.parse(repo) for name, repo of hash)
-    if repos.length > 0
-      callback undefined, repos
-    else  
+    if err or Object.keys(hash) == 0
       ghRepos.getFromOrg {org: "communities"}, (err, repos) ->
         repos = _.filter repos, (repo) -> repo.name != "gitcommunities.com"
         communitiesFetchFuncs = []
@@ -189,6 +186,10 @@ getCommunities = (callback) ->
           _.each repos, (repo) -> hash[repo.name] = JSON.stringify(repo)  
           rc.hmset "communities", hash, (err) ->
             callback err, repos
+    else  
+      repos = (JSON.parse(repo) for name, repo of hash)
+      callback undefined, repos
+
 
 app.get "/api/communities/:community", (req, res) ->
   community = req.params.community
