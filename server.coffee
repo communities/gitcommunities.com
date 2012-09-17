@@ -216,15 +216,16 @@ getCommunity = (community, callback) ->
       return
     worker =
       topics: async.apply getTopics, community
-      members: async.apply getMembers, community
+      users: async.apply getMembers, community
     async.parallel worker, (err, results) ->
       if err
         callback err
         return
-      repo.topics = results.topics
-      repo.topics_count = results.topics.length
-      repo.members = results.members
-      repo.members_count = results.members.length
+      repo.topics = results.topics or []
+      repo.topics_count = if results.topic then results.topics.length else 0
+      repo.members = results.users.members or []
+      repo.admins = results.users.admins or []
+      repo.members_count = repo.members.length + repo.admins.length
       repo.created = moment(repo.created_at).fromNow()
       repo.pushed = moment(repo.pushed_at).fromNow()
   
@@ -262,15 +263,21 @@ getMembers = (community, callback) ->
       callback err
       return
     membersTeam = team for team in teams when team.name == "#{community}-members"
-    console.log "membersTeam", membersTeam, community
-    if not membersTeam
-      callback "Internal error. Teams is missing"
-      return
-    ghAdmin.get "/teams/#{membersTeam.id}/members", {}, (err, status, members) ->
-      if err
-        callback err
-        return
-      callback undefined, members 
+    adminsTeam = team for team in teams when team.name == "#{community}-admins"
+    workers = {}
+    if membersTeam
+      workers.members = async.apply getGitHubTeamMember, membersTeam.id
+    if adminsTeam
+      workers.admins = async.apply getGitHubTeamMember, adminsTeam.id
+    async.parallel workers, callback  
+
+
+getGitHubTeamMember = (id, callback) ->
+  ghAdmin.get "/teams/#{id}/members", {}, (err, status, members) ->
+  if err
+    callback err
+    return
+  callback undefined, members 
 
 
 getTopicMeta = (community, topic, callback) ->
@@ -323,14 +330,13 @@ app.post "/communities/:community/join", (req, res) ->
         return      
       res.json resp
 
-app.get "/communities/:community/members", (req, res) ->
-  community = req.params.community
-  getMembers community, (err, members) ->
-    if err
-      res.send 500, { error: "API call failed" }
-      return
-    res.json members
-
+# app.get "/communities/:community/members", (req, res) ->
+#   community = req.params.community
+#   getMembers community, (err, members) ->
+#     if err
+#       res.send 500, { error: "API call failed" }
+#       return
+#     res.json members
 
 app.post "/communities/:community", (req, res) ->
   community = req.params.community

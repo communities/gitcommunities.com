@@ -1,4 +1,4 @@
-/*! gitcommunities.com - v0.0.0 - 2012-08-24
+/*! gitcommunities.com - v0.0.0 - 2012-09-17
 * http://gitcommunities.com
 * Copyright (c) 2012 Anton Podviaznikov <anton@podviaznikov.com>; Licensed MIT */
 
