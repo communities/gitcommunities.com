@@ -82,19 +82,12 @@ createGitHubRepo = (repo, username, callback) ->
 createGitRepo = (repo, callback) ->
   {name} = repo
   gitty.create name, repo.description, __dirname + "/repos", (err, data) ->
-    # gitty.add __dirname + "/repos/#{name}", ["LICENSE"], (err, data) ->
-    #   console.log "added file", err, data
-    #   if err
-    #     callback err
-    #     return
-    gitty.commit __dirname + "/repos/#{name}", "initial", (err, data) ->
-      gitty.remote.add __dirname + "/repos/#{name}", "origin", "https://github.com/communities/#{name}.git", (err, data) ->
-        console.log "origin was added", err, data
-        gitty.push __dirname + "/repos/#{name}", "origin", "master", (err, data) ->
-          if err
-            callback err
-            return
-          callback undefined, data  
+    gitty.add __dirname + "/repos/#{name}", ["LICENSE"], (err, data) ->
+      gitty.commit __dirname + "/repos/#{name}", "initial", (err, data) ->
+        gitty.remote.add __dirname + "/repos/#{name}", "origin", "https://github.com/communities/#{name}.git", (err, data) ->
+          console.log "origin was added", err, data
+          gitty.push __dirname + "/repos/#{name}", "origin", "master", (err, data) ->
+            callback undefined, data  
 
 
 passport = require "passport"
@@ -194,7 +187,8 @@ getCommunities = (callback) ->
             return
           hash = {}  
           _.each repos, (repo) -> hash[repo.name] = JSON.stringify(repo)  
-          rc.hmset "communities", hash, callback
+          rc.hmset "communities", hash, (err) ->
+            callback err, repos
 
 app.get "/api/communities/:community", (req, res) ->
   community = req.params.community
