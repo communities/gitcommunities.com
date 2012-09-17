@@ -12,6 +12,8 @@ github  = require "octonode"
 gitty   = require "gitty"
 
 GitHubApi = require "github"
+ghRepos   = new GitHubApi({version: "3.0.0"}).repos
+
 
 redis = require "redis"
 rc    = redis.createClient()
@@ -87,7 +89,7 @@ createGitRepo = (repo, callback) ->
     #     return
     gitty.commit __dirname + "/repos/#{name}", "initial", (err, data) ->
       gitty.remote.add __dirname + "/repos/#{name}", "origin", "https://github.com/communities/#{name}.git", (err, data) ->
-        console.log "origin was add", err, data
+        console.log "origin was added", err, data
         gitty.push __dirname + "/repos/#{name}", "origin", "master", (err, data) ->
           if err
             callback err
@@ -181,9 +183,8 @@ getCommunities = (callback) ->
     if repos.length > 0
       callback undefined, repos
     else  
-      gh = new GitHubApi version: "3.0.0"
-      gh.repos.getFromOrg {org: "communities"}, (err, repos) ->
-        repos = _.filter repos, (repo) -> repo.name != 'gitcommunities.com'
+      ghRepos.getFromOrg {org: "communities"}, (err, repos) ->
+        repos = _.filter repos, (repo) -> repo.name != "gitcommunities.com"
         communitiesFetchFuncs = []
         _.each repos, (repo) ->
           communitiesFetchFuncs.push async.apply getCommunity, repo.name
@@ -205,8 +206,7 @@ app.get "/api/communities/:community", (req, res) ->
 
 
 getCommunity = (community, callback) ->
-  gh = new GitHubApi version: "3.0.0"
-  gh.repos.get {user: "communities", repo: community}, (err, repo) ->
+  ghRepos.get {user: "communities", repo: community}, (err, repo) ->
     if err
       callback err
       return
@@ -227,8 +227,7 @@ getCommunity = (community, callback) ->
       callback undefined, repo             
 
 getTopics = (community, callback) ->
-  gh = new GitHubApi version: "3.0.0"  
-  gh.repos.getBranches {user: "communities", repo: community}, (err, branches) ->
+  ghRepos.getBranches {user: "communities", repo: community}, (err, branches) ->
     if err
       callback err
       return
@@ -337,9 +336,6 @@ app.post "/communities/:community", (req, res) ->
       res.send 500, { error: "API call failed" }
       return
     res.json resp
-
-
-
 
 app.get "/", (req, res) ->
   params = 
