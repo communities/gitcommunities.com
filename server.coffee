@@ -256,8 +256,7 @@ getTopics = (community, callback) ->
         
 
 getMembers = (community, callback) ->
-  ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
-  ghAdmin.get "/orgs/communities/teams", (err, status, teams) ->
+  getGitHubTeams (err, teams) ->
     console.log("teams", teams);
     if err 
       callback err
@@ -266,19 +265,24 @@ getMembers = (community, callback) ->
     adminsTeam = team for team in teams when team.name == "#{community}-admins"
     workers = {}
     if membersTeam
-      workers.members = async.apply getGitHubTeamMember, membersTeam.id
+      workers.members = async.apply getGitHubTeamMembers, membersTeam.id
     if adminsTeam
-      workers.admins = async.apply getGitHubTeamMember, adminsTeam.id
+      workers.admins = async.apply getGitHubTeamMembers, adminsTeam.id
     async.parallel workers, callback  
 
-
-getGitHubTeamMember = (id, callback) ->
+getGitHubTeamMembers = (id, callback) ->
+  ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
   ghAdmin.get "/teams/#{id}/members", {}, (err, status, members) ->
   if err
     callback err
     return
   callback undefined, members 
 
+
+getGitHubTeams = (callback) ->
+  ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
+  ghAdmin.get "/orgs/communities/teams", (err, status, teams) ->
+    callback err, teams
 
 getTopicMeta = (community, topic, callback) ->
   github.client().get "/repos/communities/#{community}/git/refs/heads/#{topic}", {}, (err, status, ref) ->
@@ -319,7 +323,10 @@ app.post "/communities", (req, res) ->
 app.post "/communities/:community/join", (req, res) ->
   community = req.params.community
   ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
-  ghAdmin.get "/orgs/communities/teams", (err, status, teams) ->
+  getGitHubTeams (err, teams) ->
+    if err
+      res.send 500, { error: "API call failed" }
+      return
     console.log("teams", teams);
     membersTeam = team for team in teams when team.name == "#{community}-members"
     console.log "membersTeam", membersTeam
@@ -329,14 +336,6 @@ app.post "/communities/:community/join", (req, res) ->
         res.send 500, { error: "API call failed" }
         return      
       res.json resp
-
-# app.get "/communities/:community/members", (req, res) ->
-#   community = req.params.community
-#   getMembers community, (err, members) ->
-#     if err
-#       res.send 500, { error: "API call failed" }
-#       return
-#     res.json members
 
 app.post "/communities/:community", (req, res) ->
   community = req.params.community
