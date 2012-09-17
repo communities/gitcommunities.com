@@ -1,3 +1,4 @@
+fs      = require "fs"
 express = require "express"
 md      = require "markdown"
 async   = require "async"
@@ -82,12 +83,17 @@ createGitHubRepo = (repo, username, callback) ->
 createGitRepo = (repo, callback) ->
   {name} = repo
   gitty.create name, repo.description, __dirname + "/repos", (err, data) ->
+    license = """
+      All materials are licensed under the Creative Commons Attribution 3.0 License
+      http://creativecommons.org/licenses/by/3.0/
+    """
+    fs.writeFileSync __dirname + "/repos/#{name}/LICENSE", license
     gitty.add __dirname + "/repos/#{name}", ["LICENSE"], (err, data) ->
       gitty.commit __dirname + "/repos/#{name}", "initial", (err, data) ->
         gitty.remote.add __dirname + "/repos/#{name}", "origin", "https://github.com/communities/#{name}.git", (err, data) ->
           console.log "origin was added", err, data
           gitty.push __dirname + "/repos/#{name}", "origin", "master", (err, data) ->
-            callback undefined, data  
+            callback undefined, repo  
 
 
 passport = require "passport"
@@ -174,6 +180,9 @@ getCommunities = (callback) ->
   rc.hgetall "communities", (err, hash) ->
     if err or Object.keys(hash) == 0
       ghRepos.getFromOrg {org: "communities"}, (err, repos) ->
+        if err
+          callback err
+          return
         repos = _.filter repos, (repo) -> repo.name != "gitcommunities.com"
         communitiesFetchFuncs = []
         _.each repos, (repo) ->
