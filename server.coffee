@@ -330,12 +330,15 @@ app.post "/communities/:community/join", (req, res) ->
     console.log("teams", teams);
     membersTeam = team for team in teams when team.name == "#{community}-members"
     console.log "membersTeam", membersTeam
-    ghAdmin.put "/teams/#{membersTeam.id}/members/#{req.user.username}", {}, (err, status, resp) ->
-      console.log "add new team member", err, status, resp
-      if err
-        res.send 500, { error: "API call failed" }
-        return      
-      res.json resp
+    if membersTeam
+      ghAdmin.put "/teams/#{membersTeam.id}/members/#{req.user.username}", {}, (err, status, resp) ->
+        console.log "add new team member", err, status, resp
+        if err
+          res.send 500, { error: "API call failed" }
+          return      
+        res.json resp
+    else
+      res.send 500, {error: "Internal error"}
 
 app.post "/communities/:community", (req, res) ->
   community = req.params.community
