@@ -299,6 +299,7 @@ app.post "/communities", (req, res) ->
     has_downloads: true
   createRepo repo, req.user.username, (err, repo) ->
     if err
+      console.log "error", err
       res.send 500, { error: "API call failed" }
       return
     rc.hmset "communities", repo.name, JSON.stringify(repo)  
