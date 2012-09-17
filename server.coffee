@@ -336,6 +336,7 @@ app.post "/communities/:community/join", (req, res) ->
         if err
           res.send 500, { error: "API call failed" }
           return      
+        # TODO (anton) we need updated members property of the repo here.  
         res.json resp
     else
       res.send 500, {error: "Internal error"}
