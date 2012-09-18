@@ -337,7 +337,8 @@ app.post "/communities/:community/join", (req, res) ->
           res.send 500, { error: "API call failed" }
           return
         rc.hmget "communities", community, (err, reply) ->
-          if not err
+          console.log "repo from cache", err, reply
+          if not err and reply
             repo = JSON.parse reply
             repo.members.push req.user
             repo.members_count = repo.members.length + repo.admins.length
