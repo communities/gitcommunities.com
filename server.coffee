@@ -336,11 +336,12 @@ app.post "/communities/:community/join", (req, res) ->
         if err
           res.send 500, { error: "API call failed" }
           return
-        rc.hmget "communities", repo.name, (err, reply) ->
+        rc.hmget "communities", community, (err, reply) ->
           if not err
             repo = JSON.parse reply
             repo.members.push req.user
-            repo.members_count = repo.members.length + repo.admins.length         
+            repo.members_count = repo.members.length + repo.admins.length
+            rc.hmset "communities", repo.name, JSON.stringify(repo)           
           res.json resp
     else
       res.send 500, {error: "Internal error"}
