@@ -340,9 +340,10 @@ app.post "/communities/:community/join", (req, res) ->
           console.log "repo from cache", err, reply
           if not err and reply
             repo = JSON.parse reply
+            console.log "parsed repo", repo
             repo.members.push req.user
             repo.members_count = repo.members.length + repo.admins.length
-            rc.hmset "communities", repo.name, JSON.stringify(repo)           
+            rc.hmset "communities", community, JSON.stringify(repo)           
           res.json resp
     else
       res.send 500, {error: "Internal error"}
