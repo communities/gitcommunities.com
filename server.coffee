@@ -335,9 +335,13 @@ app.post "/communities/:community/join", (req, res) ->
         console.log "add new team member", err, status, resp
         if err
           res.send 500, { error: "API call failed" }
-          return      
-        # TODO (anton) we need updated members property of the repo here.  
-        res.json resp
+          return
+        rc.hmget "communities", repo.name, (err, reply) ->
+          if not err
+            repo = JSON.parse reply
+            repo.members.push req.user
+            repo.members_count = repo.members.length + repo.admins.length         
+          res.json resp
     else
       res.send 500, {error: "Internal error"}
 
@@ -351,29 +355,16 @@ app.post "/communities/:community", (req, res) ->
       return
     res.json resp
 
-app.get "/", (req, res) ->
+renderIndexPage = (req, res) ->
   params = 
     user: req.user or {}
     jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else  "/app.js"
   res.render "index", params
 
-app.get "/create", (req, res) ->
-  params = 
-    user: req.user or {}
-    jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else  "/app.js"  
-  res.render "index", params
-
-app.get "/communities/:community", (req, res) ->
-  params = 
-    user: req.user or {}
-    jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else  "/app.js"  
-  res.render "index", params
-
-app.get "/communities/:community/:topic", (req, res) ->
-  params = 
-    user: req.user or {}
-    jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else  "/app.js"  
-  res.render "index", params
+app.get "/", renderIndexPage
+app.get "/create", renderIndexPage
+app.get "/communities/:community", renderIndexPage
+app.get "/communities/:community/:topic", renderIndexPage
 
 
 
