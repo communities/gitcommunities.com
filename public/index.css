@@ -140,10 +140,12 @@ body {
   transition: border linear 0.2s, box-shadow linear 0.2s;
 }
 .input:focus {
-  border-color: #ff0;
+  border-color: #fff200;
 }
-a {
+a,
+a:visited {
   text-decoration: none;
+  color: #746e17;
 }
 textarea.input {
   overflow: hidden;
@@ -158,13 +160,13 @@ form .input {
 }
 .btn {
   display: inline-block;
-  background-color: #ff0;
+  background-color: #fff200;
+  color: #252525;
   -webkit-border-radius: 3px;
   border-radius: 3px;
   padding: 15px;
   padding-left: 25px;
   padding-right: 25px;
-  color: #000;
   text-transform: uppercase;
   font-weight: 800;
   letter-spacing: 1px;
@@ -178,8 +180,8 @@ form .input {
   cursor: pointer;
 }
 .btn:hover {
-  background-color: #02779e;
-  color: #fff;
+  background-color: #252525;
+  color: #fff200;
 }
 .panel {
   display: inline-block;
@@ -189,7 +191,6 @@ form .input {
   box-shadow: 1px 2px 2px rgba(0,0,0,0.15);
   -webkit-border-radius: 6px;
   border-radius: 6px;
-  border-top: 1px solid #fff;
   position: relative;
   min-height: 70px;
   overflow: hidden;
@@ -218,15 +219,15 @@ form .input {
   font-weight: bold;
 }
 .items-list > li:hover {
-  background-color: #02779e;
+  background-color: #252525;
   cursor: pointer;
-  color: #fff;
+  color: #fff200;
 }
 .items-list > li:hover h1,
 .items-list > li:hover p,
 .items-list > li:hover .metadata,
 .items-list > li:hover .counter span {
-  color: #fff;
+  color: #fff200;
 }
 .items-list > li .details {
   margin-left: 100px;
@@ -258,7 +259,7 @@ form .input {
   font-weight: bold;
   line-height: 1;
   vertical-align: middle;
-  color: #02779e;
+  color: #252525;
   letter-spacing: -0.05em;
 }
 .avatar {
@@ -313,17 +314,19 @@ header.app-header #user-toolbar {
   right: 10px;
 }
 footer.app-footer {
-  border-top: 2px solid #02779e;
+  border-top: 2px solid #252525;
   position: fixed;
   bottom: 0;
   width: 100%;
+  background-color: #252525;
+  color: #fff200;
 }
 footer.app-footer .footer-toggle {
   padding: 4px 12px;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
-  background-color: #02779e;
-  color: #fff;
+  background-color: #252525;
+  color: #fff200;
   position: absolute;
   bottom: 2px;
   left: 20px;
@@ -377,7 +380,7 @@ footer.app-footer.expanded .footer-toggle {
   color: #000;
 }
 .metadata span.label {
-  color: #818181;
+  color: #746e17;
 }
 ul.participants li {
   list-style: none;
