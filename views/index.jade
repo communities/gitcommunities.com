@@ -26,11 +26,13 @@ html(lang="en")
         #user-toolbar
           .logined-show
             a(href="/").nav-link.action-btn.btn Home
+            a(href="").goto-current-community-page-btn.nav-link.action-btn.btn Community
             a(href="/create")#goto-new-community-page-btn.nav-link.action-btn.btn New Community
             button#goto-new-topic-page-btn.action-btn.btn New Topic
             a(href="/logout").action-btn.btn Logout
           .unlogined-show
             a(href="/").nav-link.action-btn.btn Home
+            a(href="").goto-current-community-page-btn.nav-link.action-btn.btn Community
             a(href="/auth")#login-btn.action-btn.btn Login          
     #home-page.page.invisible 
       ul#communities-list.items-list

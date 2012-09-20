@@ -112,6 +112,8 @@ $(function(){
     var repo = getRepo(community);
     var $createMessageBtn = $('#create-new-message-btn');
     var $messagesListEl = $('#messages-list').empty();
+    var communityLink = '/communities/' + community;
+    $('a.goto-current-community-page-btn').attr('href', communityLink);
     $messagesListEl.spin();
     repo.getTree(topic, function(err, tree){
 

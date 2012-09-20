@@ -164,6 +164,8 @@ form
 .page
   min-height: 100%;
   position: relative;
+  & > form
+    margin-bottom: 10px;
 
   & > footer
     position: absolute;
@@ -195,7 +197,7 @@ header.app-header
     & .join-community-btn
       position: absolute;
       right: 10px;
-      top: 10px;
+      top: 20px;
 
 .metadata
   font-size: 13px;
@@ -215,10 +217,14 @@ ul.participants
   height: 300px;
 
 #goto-new-topic-page-btn
+.goto-current-community-page-btn
   display: none;
 
 html[data-page-name="community-page"]
   & #goto-new-topic-page-btn
+    display: inline-block;
+html[data-page-name="topic-page"]
+  & .goto-current-community-page-btn
     display: inline-block;
 
 #community-page

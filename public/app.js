@@ -1,4 +1,4 @@
-/*! gitcommunities.com - v0.0.0 - 2012-09-20
+/*! gitcommunities.com - v0.0.0 - 2012-09-21
 * http://gitcommunities.com
 * Copyright (c) 2012 Anton Podviaznikov <anton@podviaznikov.com>; Licensed MIT */
 
@@ -14577,6 +14577,8 @@ $(function(){
     var repo = getRepo(community);
     var $createMessageBtn = $('#create-new-message-btn');
     var $messagesListEl = $('#messages-list').empty();
+    var communityLink = '/communities/' + community;
+    $('a.goto-current-community-page-btn').attr('href', communityLink);
     $messagesListEl.spin();
     repo.getTree(topic, function(err, tree){
 
