@@ -157,6 +157,7 @@ form
     opacity: 1;
 
 .app-header
+.app-footer .container
 .page
   width: 1020px;
   margin: 5px auto;
@@ -167,9 +168,6 @@ form
   & > form
     margin-bottom: 10px;
 
-  & > footer
-    position: absolute;
-    bottom: 0;
 
 header.app-header
   & .main-toolbar
@@ -192,6 +190,19 @@ header.app-header
     position: absolute;
     right: 10px;
 
+footer.app-footer
+  border-top: 1px solid #E0E0E0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  & .container
+    margin-top: 20px;
+    & p
+      display: inline-block;
+      vertical-align: top;
+      margin: 10px 10px 0 0;
+
 #home-page.page
   & .community-item
     & .join-community-btn
@@ -201,9 +212,11 @@ header.app-header
 
 .metadata
   font-size: 13px;
-  color: #818181;
   position: absolute;
   bottom: 10px;
+  color: black;
+  & span.label
+    color: #818181;
 
 ul.participants
   & li

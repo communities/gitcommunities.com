@@ -59,7 +59,9 @@ html(lang="en")
         textarea(required).new-message-content.input
         button#create-new-message-btn.action-btn.btn Post
       section#messages-list.items-list
-      footer
+    footer.app-footer
+      .container
+        p GitCommunities.com is not affiliated with <a href="http://github.com/">GitHub</a>.
         p Except as otherwise noted, the content of this page is licensed under the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
     script(type="text/template")#home-page-community-tpl
       |<li class="community-item"><a class="nav-link" href="/communities/<%= name %>">
@@ -69,9 +71,10 @@ html(lang="en")
       |<div class="community-content">
       | <p><%= description %>
       | <div class="metadata">
-      |   Created <time pubdate datetime="<%= created_at %>"><%= created %></time>
-      |   Updated <time datetime="<%= pushed_at %>"><%= pushed %></time>
-      |   Members <span class="members-count"><%= members_count %></span> Topics <span class="topics-count"><%= topics_count %></span>
+      |   <span class="label">Created </span><time pubdate datetime="<%= created_at %>"><%= created %></time>
+      |   <span class="label">Updated </span><time datetime="<%= pushed_at %>"><%= pushed %></time>
+      |   <span class="label">Members </span><span class="members-count"><%= members_count %></span>
+      |   <span class="label">Topics </span><span class="topics-count"><%= topics_count %></span>
       |  </div>
       | </div>
       |</div>
@@ -84,8 +87,8 @@ html(lang="en")
       |   <h1><%= name %></h1>
       |   <div class="topic-content">
       |     <div class="metadata">
-      |   Created <time pubdate datetime="<%= created_at %>"><%= createdWhen %></time>
-      |   Updated <time datetime="<%= updated_at %>"><%= updatedWhen %></time>      
+      |   <span class="label">Created </span><time pubdate datetime="<%= created_at %>"><%= createdWhen %></time>
+      |   <span class="label">Updated </span><time datetime="<%= updated_at %>"><%= updatedWhen %></time>      
       |     </div>
       |     <ul class="participants">
       |       <% _.each(participants, function(participant) { %> <li><img src="<%= participant.avatar_url %>" alt="<%= participant.login %>"></li> <% }); %>  
