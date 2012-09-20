@@ -27,7 +27,10 @@ body
 
 .breadcrumbs ul li
   display: inline-block;
-  text-transform: uppercase;
+  & a
+    text-transform: uppercase;
+    font-size: 18px;
+    line-height: 27px;
 
 
 .input
@@ -112,6 +115,9 @@ form
     & h1
     & p
       color: black;
+    & h1
+      font-weight: bold;
+      opacity: 0.9;
     &:hover
       background-color: #02779E;
       opacity: 0.8;
@@ -195,14 +201,10 @@ header.app-header
 
 #home-page.page
   & .community-item
-    & h1
-      font-weight: bold;
-      opacity: 0.9;
     & .join-community-btn
       position: absolute;
       right: 10px;
       top: 10px;
-
 
 .metadata
   font-size: 13px;
@@ -220,6 +222,18 @@ ul.participants
 
 #new-community-description
   height: 300px;
+
+#community-page
+  & .details 
+    & > h1
+      font-size: 28px;
+      line-height: 42px;
+    & > p
+      font-size: 15px;
+      line-height: 23px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      color: #4D4D4D;  
 
 #topic-page
   & .message

@@ -117,7 +117,11 @@ body {
 }
 .breadcrumbs ul li {
   display: inline-block;
+}
+.breadcrumbs ul li a {
   text-transform: uppercase;
+  font-size: 18px;
+  line-height: 27px;
 }
 .input {
   display: inline-block;
@@ -217,6 +221,12 @@ form .input {
 .items-list > li p {
   color: #000;
 }
+.items-list > li h1 {
+  font-weight: bold;
+  opacity: 0.9;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
+  filter: alpha(opacity=90);
+}
 .items-list > li:hover {
   background-color: #02779e;
   opacity: 0.8;
@@ -315,12 +325,6 @@ header.app-header #user-toolbar {
   position: absolute;
   right: 10px;
 }
-#home-page.page .community-item h1 {
-  font-weight: bold;
-  opacity: 0.9;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
-  filter: alpha(opacity=90);
-}
 #home-page.page .community-item .join-community-btn {
   position: absolute;
   right: 10px;
@@ -341,6 +345,17 @@ ul.participants li img {
 }
 #new-community-description {
   height: 300px;
+}
+#community-page .details > h1 {
+  font-size: 28px;
+  line-height: 42px;
+}
+#community-page .details > p {
+  font-size: 15px;
+  line-height: 23px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #4d4d4d;
 }
 #topic-page .message .user-info {
   position: absolute;

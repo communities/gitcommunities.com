@@ -76,10 +76,10 @@ html(lang="en")
       |<button class="join-community-btn action-btn btn logined-show" data-name="<%= name %>">Join</button>
       |</a></li>
     script(type="text/template")#community-page-topic-tpl
-      |<li class="topic-item">
+      |<li class="topic-item"><a class="nav-link" href="/communities/<%= community %>/<%= name %>">
       | <div class="messages-count counter"><span><%= commits.length %></span></div>
       | <div class="details">
-      |   <a class="nav-link" href="/communities/<%= community %>/<%= name %>"><%= name %></a> 
+      |   <h1><%= name %></h1>
       |   <div class="topic-content">
       |     <div class="metadata">
       |   Created <time pubdate datetime="<%= created_at %>"><%= createdWhen %></time>
@@ -90,7 +90,7 @@ html(lang="en")
       |     </ul>
       |   </div>
       |</div>
-      |</li> 
+      |</a> </li> 
     script(type="text/template")#topic-page-message-tpl
       |<li class="message">
       | <div class="message-content">
