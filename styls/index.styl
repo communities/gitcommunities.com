@@ -2,6 +2,7 @@
 global-reset();
 *
   box-sizing: border-box;
+  outline: 0;
 
 
 html
@@ -21,10 +22,12 @@ html
 
 body
   height: 100%;
+  background-color: white;
 
 
 .breadcrumbs ul li
   display: inline-block;
+  text-transform: uppercase;
 
 
 .input
@@ -63,23 +66,25 @@ form
     margin-bottom: 20px;
 .btn
   display: inline-block;
-  padding: 0.4em 0.9em;
-  text-align: center;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  vertical-align: middle;
-  margin: 0;
-  border-radius: 0.25em;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  background-color: #127EAF;
-  background: -webkit-linear-gradient(top, #25A8E3 0%, #1C92C8 50%, #188BC1 50.1%, #127EAF 100%);
-  background: -moz-linear-gradient(top, #25A8E3 0%, #1C92C8 50%, #188BC1 50.1%, #127EAF 100%);
-  font-size: 14px;
-  line-height: normal;
-  font-weight: 500;
+  background-color: #FA8F0E;
+  border-radius: 3px;
+  padding: 15px;
+  padding-left: 25px;
+  padding-right: 25px;
   color: white;
-  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.4);
-  text-decoration: none;
-
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-size: 15px;
+  border: 0;
+  line-height: 1;
+  vertical-align: baseline;
+  margin: 0 2px;
+  font-weight: normal;
+  font-family: arial;
+  cursor: pointer;
+  &:hover
+    background-color: #02779E;
 
 .panel
   display: inline-block;
@@ -95,28 +100,38 @@ form
 .items-list
   min-height: 150px;
   & > li
+    margin: 0;
     padding: 10px 20px;
-    background: #F4F4F0;
-    margin: 0 0 20px 0;
-    box-shadow: 1px 2px 2px rgba(0, 0, 0, .15);
-    border-radius: 6px;
+    background: white;
+    box-shadow: inset 0 1px #E3E3E3;
+    border-radius: 0;
     border-top: 1px solid white;
     position: relative;
-    min-height: 100px;
+    min-height: 80px;
     list-style: none;
+    & h1
+    & p
+      color: black;
     &:hover
-      background: white;
+      background-color: #02779E;
+      opacity: 0.8;
       cursor: pointer;
+      color: white;
+      & h1
+      & p
+      & .metadata
+      & .counter span
+        color: white;
+
     & .details
       margin-left: 100px;
     & .counter
       min-width: 88px;
       border-bottom-right-radius: 6px;
       border-bottom-left-radius: 6px;
-      background: #FA8F0E;
       display: inline-block;
       position: absolute;
-      bottom: 10px;
+      bottom: 0;
       left: 20px;
       transition: all .20s ease-in-out;
       cursor: pointer;
@@ -128,18 +143,16 @@ form
       & span
         display: inline-block;
         padding: 3px 0;
-        font-size: 5.2em;
+        font-size: 76px;
         font-family: sans-serif;
         font-weight: bold;
         line-height: 1;
         vertical-align: middle;
-        color: white;
-        text-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0;
+        color: #02779E;
         letter-spacing: -0.05em; 
 
 .avatar
-  box-shadow: rgba(0, 0, 0, 0.1) 0 2px 5px;
-  border: 2px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.15);
   margin-right: 10px;
   opacity: .8;
   width: 45px;
@@ -167,18 +180,31 @@ header.app-header
     position: absolute;
     left: 10px;
     & .avatar
-      width: 30px;
+      width: 45px;
+      height: 45px;
+    & .avatar
+    & span
+      vertical-align: top;  
   #user-toolbar
     position: absolute;
     right: 10px;
 
 #home-page.page
   & .community-item
+    & h1
+      font-weight: bold;
+      opacity: 0.9;
     & .join-community-btn
       position: absolute;
       right: 10px;
       top: 10px;
 
+
+.metadata
+  font-size: 13px;
+  color: #818181;
+  position: absolute;
+  bottom: 10px;
 
 ul.participants
   & li

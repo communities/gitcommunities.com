@@ -244,14 +244,15 @@ getTopics = (community, callback) ->
         workers.push async.apply getTopicMeta, community, branch.name
     async.parallel workers, (errors, meta) ->
       for i in [0...topics.length]
-        topics[i].sha = meta[i].sha
-        commits = meta[i].commits
-        topics[i].commits = _.first(commits, commits.length - 1)
-        topics[i].created = _.last topics[i].commits
-        topics[i].updated = _.first topics[i].commits 
-        participants = (commit.author for commit in topics[i].commits)
-        participants = _.uniq participants, false, (participant) -> participant.id
-        topics[i].participants = participants
+        if meta[i] and topics[i]
+          topics[i].sha = meta[i].sha
+          commits = meta[i].commits
+          topics[i].commits = _.first(commits, commits.length - 1)
+          topics[i].created = _.last topics[i].commits
+          topics[i].updated = _.first topics[i].commits 
+          participants = (commit.author for commit in topics[i].commits)
+          participants = _.uniq participants, false, (participant) -> participant.id
+          topics[i].participants = participants
       callback undefined, topics    
         
 
@@ -347,16 +348,6 @@ app.post "/communities/:community/join", (req, res) ->
           res.json resp
     else
       res.send 500, {error: "Internal error"}
-
-app.post "/communities/:community", (req, res) ->
-  community = req.params.community
-  ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
-  spec = {"ref": "refs/heads/test","sha": "496a6ddf94d1889a27e1979c9578f9e1257e40c3"}
-  ghAdmin.post "/repos/communities/#{community}/git/refs", spec, (err, status, resp) ->
-    if err
-      res.send 500, { error: "API call failed" }
-      return
-    res.json resp
 
 renderIndexPage = (req, res) ->
   params = 

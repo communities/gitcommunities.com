@@ -93,6 +93,7 @@ a img {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  outline: 0;
 }
 html {
   height: 100%;
@@ -112,9 +113,11 @@ html.logined .unlogined-show {
 }
 body {
   height: 100%;
+  background-color: #fff;
 }
 .breadcrumbs ul li {
   display: inline-block;
+  text-transform: uppercase;
 }
 .input {
   display: inline-block;
@@ -159,23 +162,27 @@ form .input {
 }
 .btn {
   display: inline-block;
-  padding: 0.4em 0.9em;
-  text-align: center;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  vertical-align: middle;
-  margin: 0;
-  -webkit-border-radius: 0.25em;
-  border-radius: 0.25em;
-  border: 1px solid rgba(0,0,0,0.2);
-  background-color: #127eaf;
-  background: -webkit-linear-gradient(top, #25a8e3 0%, #1c92c8 50%, #188bc1 50.1%, #127eaf 100%);
-  background: -moz-linear-gradient(top, #25a8e3 0%, #1c92c8 50%, #188bc1 50.1%, #127eaf 100%);
-  font-size: 14px;
-  line-height: normal;
-  font-weight: 500;
+  background-color: #fa8f0e;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  padding: 15px;
+  padding-left: 25px;
+  padding-right: 25px;
   color: #fff;
-  text-shadow: 0 -1px 1px rgba(0,0,0,0.4);
-  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-size: 15px;
+  border: 0;
+  line-height: 1;
+  vertical-align: baseline;
+  margin: 0 2px;
+  font-weight: normal;
+  font-family: arial;
+  cursor: pointer;
+}
+.btn:hover {
+  background-color: #02779e;
 }
 .panel {
   display: inline-block;
@@ -194,21 +201,35 @@ form .input {
   min-height: 150px;
 }
 .items-list > li {
+  margin: 0;
   padding: 10px 20px;
-  background: #f4f4f0;
-  margin: 0 0 20px 0;
-  -webkit-box-shadow: 1px 2px 2px rgba(0,0,0,0.15);
-  box-shadow: 1px 2px 2px rgba(0,0,0,0.15);
-  -webkit-border-radius: 6px;
-  border-radius: 6px;
+  background: #fff;
+  -webkit-box-shadow: inset 0 1px #e3e3e3;
+  box-shadow: inset 0 1px #e3e3e3;
+  -webkit-border-radius: 0;
+  border-radius: 0;
   border-top: 1px solid #fff;
   position: relative;
-  min-height: 100px;
+  min-height: 80px;
   list-style: none;
 }
+.items-list > li h1,
+.items-list > li p {
+  color: #000;
+}
 .items-list > li:hover {
-  background: #fff;
+  background-color: #02779e;
+  opacity: 0.8;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
+  filter: alpha(opacity=80);
   cursor: pointer;
+  color: #fff;
+}
+.items-list > li:hover h1,
+.items-list > li:hover p,
+.items-list > li:hover .metadata,
+.items-list > li:hover .counter span {
+  color: #fff;
 }
 .items-list > li .details {
   margin-left: 100px;
@@ -217,10 +238,9 @@ form .input {
   min-width: 88px;
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
-  background: #fa8f0e;
   display: inline-block;
   position: absolute;
-  bottom: 10px;
+  bottom: 0;
   left: 20px;
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
@@ -236,19 +256,16 @@ form .input {
 .items-list > li .counter span {
   display: inline-block;
   padding: 3px 0;
-  font-size: 5.2em;
+  font-size: 76px;
   font-family: sans-serif;
   font-weight: bold;
   line-height: 1;
   vertical-align: middle;
-  color: #fff;
-  text-shadow: rgba(0,0,0,0.2) 0 -1px 0;
+  color: #02779e;
   letter-spacing: -0.05em;
 }
 .avatar {
-  -webkit-box-shadow: rgba(0,0,0,0.1) 0 2px 5px;
-  box-shadow: rgba(0,0,0,0.1) 0 2px 5px;
-  border: 2px solid rgba(0,0,0,0.15);
+  border: 1px solid rgba(0,0,0,0.15);
   margin-right: 10px;
   opacity: 0.8;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
@@ -282,16 +299,33 @@ header.app-header #user-profile {
   left: 10px;
 }
 header.app-header #user-profile .avatar {
-  width: 30px;
+  width: 45px;
+  height: 45px;
+}
+header.app-header #user-profile .avatar,
+header.app-header #user-profile span {
+  vertical-align: top;
 }
 header.app-header #user-toolbar {
   position: absolute;
   right: 10px;
 }
+#home-page.page .community-item h1 {
+  font-weight: bold;
+  opacity: 0.9;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
+  filter: alpha(opacity=90);
+}
 #home-page.page .community-item .join-community-btn {
   position: absolute;
   right: 10px;
   top: 10px;
+}
+.metadata {
+  font-size: 13px;
+  color: #818181;
+  position: absolute;
+  bottom: 10px;
 }
 ul.participants li {
   list-style: none;

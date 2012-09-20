@@ -60,10 +60,10 @@ html(lang="en")
       footer
         p Except as otherwise noted, the content of this page is licensed under the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
     script(type="text/template")#home-page-community-tpl
-      |<li class="community-item">
+      |<li class="community-item"><a class="nav-link" href="/communities/<%= name %>">
       |<div class="members-count counter"><span><%= members_count %></span></div>
       |<div class="details">
-      |<a class="nav-link" href="/communities/<%= name %>"><h1><%= name %></h1></a>
+      |<h1><%= name %></h1>
       |<div class="community-content">
       | <p><%= description %>
       | <div class="metadata">
@@ -74,7 +74,7 @@ html(lang="en")
       | </div>
       |</div>
       |<button class="join-community-btn action-btn btn logined-show" data-name="<%= name %>">Join</button>
-      |</li>
+      |</a></li>
     script(type="text/template")#community-page-topic-tpl
       |<li class="topic-item">
       | <div class="messages-count counter"><span><%= commits.length %></span></div>
