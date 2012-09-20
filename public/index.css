@@ -94,6 +94,10 @@ a img {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+html {
+  height: 100%;
+  overflow-x: hidden;
+}
 html.unlogined .unlogined-show {
   display: block;
 }
@@ -105,6 +109,9 @@ html.logined .logined-show {
 }
 html.logined .unlogined-show {
   display: none;
+}
+body {
+  height: 100%;
 }
 .breadcrumbs ul li {
   display: inline-block;
@@ -183,6 +190,9 @@ form .input {
   min-height: 80px;
   overflow: hidden;
 }
+.items-list {
+  min-height: 150px;
+}
 .items-list > li {
   padding: 10px 20px;
   background: #f4f4f0;
@@ -254,6 +264,14 @@ form .input {
 .page {
   width: 1020px;
   margin: 0 auto;
+}
+.page {
+  min-height: 100%;
+  position: relative;
+}
+.page > footer {
+  position: absolute;
+  bottom: 0;
 }
 header.app-header .main-toolbar {
   position: relative;
