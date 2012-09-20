@@ -6,7 +6,6 @@ html(lang="en")
     meta(name="description", content="TODO")
     meta(name="keywords", content="TODO")
     meta(name="author", content="Anton Podviaznikov")
-    link(rel="stylesheet", href="/index.css")
     script
       var cUnity = {};
       cUnity.user =  {
@@ -16,6 +15,7 @@ html(lang="en")
         displayName: '#{user.displayName}',
         accessToken: '#{user.accessToken}'
       };      
+    link(rel="stylesheet", href="/index.css")    
     script(src="#{jsFile}")
   body
     header.app-header         

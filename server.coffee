@@ -227,7 +227,7 @@ getCommunity = (community, callback) ->
         callback err
         return
       repo.topics = results.topics or []
-      repo.topics_count = if results.topic then results.topics.length else 0
+      repo.topics_count = repo.topics.length
       repo.members = results.users.members or []
       repo.admins = results.users.admins or []
       repo.members_count = repo.members.length + repo.admins.length
