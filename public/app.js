@@ -14737,4 +14737,14 @@ $(function(){
   $('#goto-new-topic-page-btn').on('click', function(){
     page('/communities/' + $('html').attr('data-community-name') + '/create');
   });
+
+  $('.footer-toggle').on('click', function(){
+    var footer = $('footer.app-footer').toggleClass("expanded");
+    if(footer.hasClass('expanded')){
+      footer.find('.footer-toggle').html('&#x25BC;');
+    } else{
+      footer.find('.footer-toggle').html('&#x25B2;');
+    }
+
+  });
 });
