@@ -292,7 +292,7 @@ form .input {
 }
 header.app-header .main-toolbar {
   position: relative;
-  height: 40px;
+  height: 50px;
 }
 header.app-header #user-profile {
   position: absolute;
@@ -301,6 +301,11 @@ header.app-header #user-profile {
 header.app-header #user-profile .avatar {
   width: 45px;
   height: 45px;
+}
+header.app-header #user-profile span {
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: bold;
 }
 header.app-header #user-profile .avatar,
 header.app-header #user-profile span {

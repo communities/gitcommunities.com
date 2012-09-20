@@ -274,10 +274,10 @@ getMembers = (community, callback) ->
 getGitHubTeamMembers = (id, callback) ->
   ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
   ghAdmin.get "/teams/#{id}/members", {}, (err, status, members) ->
-  if err
-    callback err
-    return
-  callback undefined, members 
+    if err
+      callback err
+      return
+    callback undefined, members 
 
 
 getGitHubTeams = (callback) ->
