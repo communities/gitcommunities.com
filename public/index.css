@@ -111,17 +111,13 @@ html.logined .logined-show {
 html.logined .unlogined-show {
   display: none;
 }
+html,
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+}
 body {
   height: 100%;
   background-color: #fff;
-}
-.breadcrumbs ul li {
-  display: inline-block;
-}
-.breadcrumbs ul li a {
-  text-transform: uppercase;
-  font-size: 18px;
-  line-height: 27px;
 }
 .input {
   display: inline-block;
@@ -134,8 +130,8 @@ body {
   line-height: 18px;
   color: #393c3d;
   border: 1px solid #ccc;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
   outline: none;
   -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
   -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -144,11 +140,7 @@ body {
   transition: border linear 0.2s, box-shadow linear 0.2s;
 }
 .input:focus {
-  border-color: rgba(237,29,137,0.8);
-  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 4px rgba(237,29,137,0.8), 0 0 0 #000;
-  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 4px rgba(237,29,137,0.8), 0 0 0 #000;
-  outline: 0;
-  outline: thin dotted 9;
+  border-color: #ff0;
 }
 a {
   text-decoration: none;
@@ -166,13 +158,13 @@ form .input {
 }
 .btn {
   display: inline-block;
-  background-color: #fa8f0e;
+  background-color: #ff0;
   -webkit-border-radius: 3px;
   border-radius: 3px;
   padding: 15px;
   padding-left: 25px;
   padding-right: 25px;
-  color: #fff;
+  color: #000;
   text-transform: uppercase;
   font-weight: 800;
   letter-spacing: 1px;
@@ -187,6 +179,7 @@ form .input {
 }
 .btn:hover {
   background-color: #02779e;
+  color: #fff;
 }
 .panel {
   display: inline-block;
@@ -198,7 +191,7 @@ form .input {
   border-radius: 6px;
   border-top: 1px solid #fff;
   position: relative;
-  min-height: 80px;
+  min-height: 70px;
   overflow: hidden;
 }
 .items-list {
@@ -223,15 +216,9 @@ form .input {
 }
 .items-list > li h1 {
   font-weight: bold;
-  opacity: 0.9;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
-  filter: alpha(opacity=90);
 }
 .items-list > li:hover {
   background-color: #02779e;
-  opacity: 0.8;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
-  filter: alpha(opacity=80);
   cursor: pointer;
   color: #fff;
 }
@@ -265,7 +252,7 @@ form .input {
 }
 .items-list > li .counter span {
   display: inline-block;
-  padding: 3px 0;
+  padding: 3px 0 0;
   font-size: 76px;
   font-family: sans-serif;
   font-weight: bold;
@@ -290,7 +277,7 @@ form .input {
 .app-header,
 .page {
   width: 1020px;
-  margin: 0 auto;
+  margin: 5px auto;
 }
 .page {
   min-height: 100%;
@@ -314,7 +301,7 @@ header.app-header #user-profile .avatar {
 }
 header.app-header #user-profile span {
   font-size: 20px;
-  line-height: 30px;
+  line-height: 45px;
   font-weight: bold;
 }
 header.app-header #user-profile .avatar,
@@ -346,11 +333,17 @@ ul.participants li img {
 #new-community-description {
   height: 300px;
 }
-#community-page .details > h1 {
+#goto-new-topic-page-btn {
+  display: none;
+}
+html[data-page-name="community-page"] #goto-new-topic-page-btn {
+  display: inline-block;
+}
+#community-page > .details > h1 {
   font-size: 28px;
   line-height: 42px;
 }
-#community-page .details > p {
+#community-page > .details > p {
   font-size: 15px;
   line-height: 23px;
   margin-top: 20px;

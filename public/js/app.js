@@ -6,6 +6,7 @@ $(function(){
 
     $('#' + pageName).removeClass('invisible').addClass('visible');
     document.title = pageTitle;
+    $('html').attr("data-page-name", pageName);
     if(fn){
       fn();
     }
@@ -19,10 +20,6 @@ $(function(){
     $.get('/api/communities', function(repos){
       $communitiesListEl.spin(false);
       renderArray(repos, $communitiesListEl, 'home-page-community-tpl');
-    });
-    
-    $('#goto-new-community-page-btn').on('click', function(){
-      page('create');
     });
     $communitiesListEl.on('click', '.join-community-btn', function(e){
       var $item = $(e.currentTarget).closest('.community-item');
@@ -52,6 +49,7 @@ $(function(){
   }
 
   function renderCommunityPage(community){
+    $('html').attr("data-community-name", community);
     var $page = $('#community-page');
     var $topicsListEl = $('#topics-list').empty();
     $topicsListEl.spin();
@@ -76,9 +74,6 @@ $(function(){
       $page.find('.details h1').html(community.name);
       $page.find('.details h2').html(community.description);
       renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');
-    });
-    $('#goto-new-topic-page-btn').on('click', function(){
-      page('/communities/' + community + '/create');
     });
   }
  
@@ -220,24 +215,6 @@ $(function(){
       $('#user-profile img').attr('src', cUnity.user.avatar);
       $('#user-profile span').text(cUnity.user.username);
     }
-    var $breadcumbsEl = $('.app-header nav.breadcrumbs ul').empty();
-    var pathes = ctx.path.split("/");
-    var i = 1;
-    for(; i < pathes.length; i++){
-      if(i !== 1){
-        $breadcumbsEl.append("<li>></li>");
-      }
-      var html = '';
-      if(i === 1){
-       html = "<li><a class='nav-link' href='/'>Home</a></li>";
-      } else if(i === 2){
-       html = "<li><a class='nav-link' href='/communities/" + pathes[i] + "'>" + pathes[i] + "</a></li>";
-      } else {
-        html = "<li>" + pathes[i] + "</li>";
-      }
-
-      $breadcumbsEl.append(html);
-    }
     next();
   }
 
@@ -288,5 +265,9 @@ $(function(){
     e.preventDefault();
     var href = $(e.currentTarget).attr('href');
     page(href);
+  });
+
+  $('#goto-new-topic-page-btn').on('click', function(){
+    page('/communities/' + $('html').attr('data-community-name') + '/create');
   });
 });

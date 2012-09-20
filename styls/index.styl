@@ -19,19 +19,14 @@ html
     & .unlogined-show
       display: none;
 
+html
+body
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+
 
 body
   height: 100%;
   background-color: white;
-
-
-.breadcrumbs ul li
-  display: inline-block;
-  & a
-    text-transform: uppercase;
-    font-size: 18px;
-    line-height: 27px;
-
 
 .input
   display: inline-block;
@@ -44,14 +39,11 @@ body
   line-height: 18px;
   color: #393C3D;
   border: 1px solid #CCC;
-  border-radius: 3px;
+  border-radius: 2px;
   outline: none;
-  transition: border linear 0.2s,box-shadow linear 0.2s;
+  transition: border linear 0.2s, box-shadow linear 0.2s;
   &:focus
-    border-color: rgba(237, 29, 137, 0.8);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 4px rgba(237, 29, 137, 0.8),0 0 0 black;
-    outline: 0;
-    outline: thin dotted 9;
+    border-color: yellow;
 
 a
   text-decoration: none;
@@ -69,12 +61,12 @@ form
     margin-bottom: 20px;
 .btn
   display: inline-block;
-  background-color: #FA8F0E;
+  background-color: yellow;
   border-radius: 3px;
   padding: 15px;
   padding-left: 25px;
   padding-right: 25px;
-  color: white;
+  color: black;
   text-transform: uppercase;
   font-weight: 800;
   letter-spacing: 1px;
@@ -88,6 +80,7 @@ form
   cursor: pointer;
   &:hover
     background-color: #02779E;
+    color: white;
 
 .panel
   display: inline-block;
@@ -97,7 +90,7 @@ form
   border-radius: 6px;
   border-top: 1px solid white;
   position: relative;
-  min-height: 80px;
+  min-height: 70px;
   overflow: hidden;
 
 .items-list
@@ -117,10 +110,8 @@ form
       color: black;
     & h1
       font-weight: bold;
-      opacity: 0.9;
     &:hover
       background-color: #02779E;
-      opacity: 0.8;
       cursor: pointer;
       color: white;
       & h1
@@ -148,7 +139,7 @@ form
 
       & span
         display: inline-block;
-        padding: 3px 0;
+        padding: 3px 0 0;
         font-size: 76px;
         font-family: sans-serif;
         font-weight: bold;
@@ -168,7 +159,7 @@ form
 .app-header
 .page
   width: 1020px;
-  margin: 0 auto;
+  margin: 5px auto;
 
 .page
   min-height: 100%;
@@ -190,7 +181,7 @@ header.app-header
       height: 45px;
     & span
       font-size: 20px;
-      line-height: 30px;
+      line-height: 45px;
       font-weight: bold;  
     & .avatar
     & span
@@ -223,8 +214,15 @@ ul.participants
 #new-community-description
   height: 300px;
 
+#goto-new-topic-page-btn
+  display: none;
+
+html[data-page-name="community-page"]
+  & #goto-new-topic-page-btn
+    display: inline-block;
+
 #community-page
-  & .details 
+  & > .details 
     & > h1
       font-size: 28px;
       line-height: 42px;

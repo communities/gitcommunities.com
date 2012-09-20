@@ -166,8 +166,6 @@ app.get "/auth/callback",
     res.redirect "/"
 
 
-
-
 app.get "/api/communities", (req, res) ->
   getCommunities (err, repos) ->
     if err
@@ -178,7 +176,7 @@ app.get "/api/communities", (req, res) ->
 
 getCommunities = (callback) ->
   rc.hgetall "communities", (err, hash) ->
-    if err or Object.keys(hash) == 0
+    if err or not hash or Object.keys(hash) == 0
       ghRepos.getFromOrg {org: "communities"}, (err, repos) ->
         if err
           callback err

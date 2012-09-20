@@ -25,13 +25,13 @@ html(lang="en")
           span
         #user-toolbar
           .logined-show
-            a(href="/create")#goto-new-community-page-btn.action-btn.btn New Community
+            a(href="/").nav-link.action-btn.btn Home
+            a(href="/create")#goto-new-community-page-btn.nav-link.action-btn.btn New Community
             button#goto-new-topic-page-btn.action-btn.btn New Topic
             a(href="/logout").action-btn.btn Logout
           .unlogined-show
-            a(href="/auth")#login-btn.action-btn.btn Login
-      nav.breadcrumbs
-        ul            
+            a(href="/").nav-link.action-btn.btn Home
+            a(href="/auth")#login-btn.action-btn.btn Login          
     #home-page.page.invisible 
       ul#communities-list.items-list
     #new-community-page.page.invisible
