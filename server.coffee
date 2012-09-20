@@ -121,12 +121,18 @@ passport.use new GitHubStrategy {
 
 # stylus compile function
 compile = (str, path) ->
-  return stylus(str)
+
+  func = stylus(str)
     .define("url", stylus.url({ paths: [__dirname + "/public"] }))
     .set("filename", path)
     .set("warn", true)
-    .set("compress", false)
     .use(nib())
+  
+  if nconf.get("NODE_ENV") == "production"
+    func.set("compress", true)
+  else
+    func.set("compress", false)
+  return func  
 
 app.configure ->
   # stylus middleware
