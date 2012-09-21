@@ -419,6 +419,9 @@ html[data-page-name="community-page"] #goto-new-topic-page-btn {
 html[data-page-name="topic-page"] .goto-current-community-page-btn {
   display: inline-block !important;
 }
+#community-page > .details {
+  margin-top: 20px;
+}
 #community-page > .details > h1 {
   font-size: 24px;
   line-height: 36px;
@@ -433,6 +436,7 @@ html[data-page-name="topic-page"] .goto-current-community-page-btn {
 }
 #community-page > .details > h2 {
   margin-top: 20px;
+  min-height: 16px;
 }
 #community-page > .details > p {
   font-size: 15px;
