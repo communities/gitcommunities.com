@@ -26,6 +26,7 @@ html(lang="en")
         #user-toolbar
           .logined-show
             a(href="/").nav-link.action-btn.btn Home
+            a(href="/communities").nav-link.action-btn.btn My communities
             a(href="").goto-current-community-page-btn.nav-link.action-btn.btn Community
             a(href="/create")#goto-new-community-page-btn.nav-link.action-btn.btn New Community
             button#goto-new-topic-page-btn.action-btn.btn New Topic
@@ -36,6 +37,8 @@ html(lang="en")
             a(href="/auth")#login-btn.action-btn.btn Login          
     #home-page.page.invisible 
       ul#communities-list.items-list
+    #my-communities-page.page.invisible 
+      ul#my-communities-list.items-list      
     #new-community-page.page.invisible
       h1 Create new community here!
       form(onsubmit="false").logined-show  
@@ -81,6 +84,22 @@ html(lang="en")
       |</div>
       |<button class="join-community-btn action-btn btn logined-show" data-name="<%= name %>">Join</button>
       |</a></li>
+    script(type="text/template")#my-communities-page-community-tpl
+      |<li class="community-item"><a class="nav-link" href="/communities/<%= name %>">
+      |<div class="members-count counter"><span><%= members_count %></span></div>
+      |<div class="details">
+      |<h1><%= name %></h1>
+      |<div class="community-content">
+      | <p><%= description %>
+      | <div class="metadata">
+      |   <span class="label">Created </span><time pubdate datetime="<%= created_at %>"><%= created %></time>
+      |   <span class="label">Updated </span><time datetime="<%= pushed_at %>"><%= pushed %></time>
+      |   <span class="label">Members </span><span class="members-count"><%= members_count %></span>
+      |   <span class="label">Topics </span><span class="topics-count"><%= topics_count %></span>
+      |  </div>
+      | </div>
+      |</div>
+      |</a></li>      
     script(type="text/template")#community-page-topic-tpl
       |<li class="topic-item"><a class="nav-link" href="/communities/<%= community %>/<%= name %>">
       | <div class="messages-count counter"><span><%= commits.length %></span></div>

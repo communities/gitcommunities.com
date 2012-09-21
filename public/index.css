@@ -120,13 +120,13 @@ body {
   background-color: #fff;
 }
 ::-moz-selection {
-  background: #23252d;
-  color: #fff;
+  background: #fff200;
+  color: #252525;
   text-shadow: none;
 }
 ::selection {
-  background: transparent;
-  color: #f1f1f1;
+  background: #fff200;
+  color: #252525;
   text-shadow: none;
 }
 .input {

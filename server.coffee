@@ -180,6 +180,13 @@ app.get "/api/communities", (req, res) ->
       return
     res.json repos
 
+app.get "/api/:username/communities", (req, res) ->
+  getCommunities (err, repos) ->
+    if err
+      res.send 500, { error: "API call failed" }
+      return
+    res.json repos
+
 
 getCommunities = (callback) ->
   rc.hgetall "communities", (err, hash) ->
@@ -361,6 +368,7 @@ renderIndexPage = (req, res) ->
   res.render "index", params
 
 app.get "/", renderIndexPage
+app.get "/communities", renderIndexPage
 app.get "/create", renderIndexPage
 app.get "/communities/:community", renderIndexPage
 app.get "/communities/:community/:topic", renderIndexPage

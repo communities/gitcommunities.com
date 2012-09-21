@@ -34,6 +34,16 @@ $(function(){
     });
   }
 
+  function renderMyCommunitiesPage(){
+    var $communitiesListEl = $('#my-communities-list').empty();
+    $communitiesListEl.spin();
+    var url = '/api/' + cUnity.user.username + '/communities';
+    $.get(url, function(repos){
+      $communitiesListEl.spin(false);
+      renderArray(repos, $communitiesListEl, 'my-communities-page-community-tpl');
+    });
+  }
+
   function renderCreateCommunityPage(){
     var $createCommunityBtn = $('#create-new-community-btn');
     var $form = $('#new-community-page form');
@@ -238,6 +248,10 @@ $(function(){
 
   page('', renderHeader, function(){
     showPage('home-page', 'Communities', renderHomePage);
+  });
+
+  page('/communities', renderHeader, function(){
+    showPage('my-communities-page', 'My Communities', renderMyCommunitiesPage);
   });
   
   page('/create', renderHeader, function(){
