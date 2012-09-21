@@ -14487,6 +14487,8 @@ $(function(){
       renderArray(repos, $communitiesListEl, 'home-page-community-tpl');
     });
     $communitiesListEl.on('click', '.join-community-btn', function(e){
+      e.preventDefault();
+      e.stopPropagation();
       var $item = $(e.currentTarget).closest('.community-item');
       $item.spin();
       var name = $(e.currentTarget).data('name');
