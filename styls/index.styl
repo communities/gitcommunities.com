@@ -8,6 +8,7 @@ global-reset();
 $firstColor = #FFF200;
 $secondColor = #252525;
 $thirdColor = #746E17;
+$fourthColor = #555555;
 
 html
   height: 100%;
@@ -32,6 +33,15 @@ body
   height: 100%;
   background-color: white;
 
+
+::-moz-selection
+  background: #23252d; 
+  color: #fff; text-shadow: none;
+::selection
+  background: transparent;
+  color: #f1f1f1;
+  text-shadow: none;
+
 .input
   display: inline-block;
   width: 210px;
@@ -52,7 +62,7 @@ body
 a
 a:visited
   text-decoration: none;
-  color: $thirdColor;
+  color: white;
 
 
 textarea.input
@@ -66,6 +76,8 @@ form
     display: block;
     width: 100%;
     margin-bottom: 20px;
+
+a.btn    
 .btn
   display: inline-block;
   background-color: $firstColor;
@@ -106,9 +118,8 @@ form
     margin: 0;
     padding: 10px 20px;
     background: white;
-    box-shadow: inset 0 1px $thirdColor;
     border-radius: 0;
-    border-top: 1px solid white;
+    border-top: 1px solid $thirdColor;
     position: relative;
     min-height: 80px;
     list-style: none;
@@ -118,14 +129,15 @@ form
     & h1
       font-weight: bold;
     &:hover
-      background-color: $secondColor;
+      background-color: $fourthColor;
       cursor: pointer;
-      color: $firstColor;
+      color: white;
       & h1
       & p
       & .metadata
       & .counter span
-        color: $firstColor;
+      & span.label
+        color: white;
 
     & .details
       margin-left: 100px;
@@ -172,6 +184,7 @@ form
 .page
   min-height: 100%;
   position: relative;
+  padding-bottom: 20px;
   & > form
     margin-bottom: 10px;
 
@@ -198,18 +211,18 @@ header.app-header
     right: 10px;
 
 footer.app-footer
-  border-top: 2px solid $secondColor;
+  border-top: 2px solid $fourthColor;
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: $secondColor;
-  color: $firstColor;
+  background-color: $fourthColor;
+  color: white;
   & .footer-toggle
     padding: 4px 12px;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
-    background-color: $secondColor;
-    color: $firstColor;
+    background-color: $fourthColor;
+    color: white;
     position: absolute;
     bottom: 2px;
     left: 20px;
@@ -244,7 +257,7 @@ footer.app-footer
   bottom: 10px;
   color: black;
   & span.label
-    color: $thirdColor;
+    color: $fourthColor;
 
 ul.participants
   & li
@@ -259,14 +272,14 @@ ul.participants
 
 #goto-new-topic-page-btn
 .goto-current-community-page-btn
-  display: none;
+  display: none!important;
 
 html[data-page-name="community-page"]
   & #goto-new-topic-page-btn
-    display: inline-block;
+    display: inline-block!important;
 html[data-page-name="topic-page"]
   & .goto-current-community-page-btn
-    display: inline-block;
+    display: inline-block!important;
 
 #community-page
   & > .details 
