@@ -192,8 +192,8 @@ a.btn,
 }
 a.btn:hover,
 .btn:hover {
-  background-color: #252525;
-  color: #fff200;
+  background-color: #555;
+  color: #fff;
 }
 .panel {
   display: inline-block;
@@ -385,6 +385,10 @@ footer.app-footer.expanded .footer-toggle {
   position: absolute;
   right: 10px;
   top: 20px;
+}
+#home-page.page .community-item .join-community-btn:hover {
+  background-color: #252525;
+  color: #fff200;
 }
 .metadata {
   font-size: 13px;

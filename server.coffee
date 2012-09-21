@@ -174,18 +174,24 @@ app.get "/auth/callback",
 
 
 app.get "/api/communities", (req, res) ->
-  getCommunities (err, repos) ->
+  getCommunities (err, communities) ->
     if err
       res.send 500, { error: "API call failed" }
       return
-    res.json repos
+    res.json communities
 
 app.get "/api/:username/communities", (req, res) ->
-  getCommunities (err, repos) ->
+  getCommunities (err, communities) ->
     if err
       res.send 500, { error: "API call failed" }
       return
-    res.json repos
+    username = req.params.username
+    communities = _.filter communities, (community) ->
+      isMember = _.any community.members, (member) -> member.login == username
+      isAdmin = _.any community.admins, (admin) -> admin.login == username
+      console.log "isMember and isAdmin", isMember, isAdmin, username, community.members, "admins", community.admins
+      return isMember or isAdmin
+    res.json communities
 
 
 getCommunities = (callback) ->
