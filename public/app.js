@@ -14529,6 +14529,7 @@ $(function(){
     $('html').attr("data-community-name", community);
     var $page = $('#community-page');
     var $topicsListEl = $('#topics-list').empty();
+    $page.find('.details h1').html(community);
     $topicsListEl.spin();
     
      var repo = getRepo(community);
@@ -14548,7 +14549,6 @@ $(function(){
         topic.updated_at = topic.updated.commit.author.date;
         topic.updatedWhen = moment(topic.updated_at).fromNow();
       });
-      $page.find('.details h1').html(community.name);
       $page.find('.details h2').html(community.description);
       renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');
     });

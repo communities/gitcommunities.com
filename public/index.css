@@ -420,8 +420,19 @@ html[data-page-name="topic-page"] .goto-current-community-page-btn {
   display: inline-block !important;
 }
 #community-page > .details > h1 {
-  font-size: 28px;
-  line-height: 42px;
+  font-size: 24px;
+  line-height: 36px;
+  text-transform: uppercase;
+}
+#community-page > .details > h1:after {
+  margin-top: -2px;
+  content: "";
+  display: block;
+  border-bottom: 2px solid #252525;
+  width: 300px;
+}
+#community-page > .details > h2 {
+  margin-top: 20px;
 }
 #community-page > .details > p {
   font-size: 15px;
