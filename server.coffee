@@ -1,4 +1,5 @@
 fs      = require "fs"
+spdy    = require "spdy"
 express = require "express"
 md      = require "markdown"
 async   = require "async"
@@ -20,7 +21,6 @@ redis = require "redis"
 rc    = redis.createClient()
 
 http  = require "http"
-https = require "https"
 
 sslOptions = 
   key: fs.readFileSync __dirname + "/configs/ssl.key"
@@ -221,6 +221,7 @@ getCommunities = (callback) ->
           hash = {}  
           _.each repos, (repo) -> hash[repo.name] = JSON.stringify(repo)  
           rc.hmset "communities", hash, (err) ->
+            rc.expire "communities", 200, redis.print
             callback err, repos
     else  
       repos = (JSON.parse(repo) for name, repo of hash)
@@ -397,5 +398,5 @@ else
   proxyServer.get "*", (req, res) -> 
     res.redirect "https://gitcommunities.com" + req.url
   proxyServer.listen 80  
-  https.createServer(sslOptions, app).listen 443
+  spdy.createServer(sslOptions, app).listen 443
 console.log "server started on port"

@@ -29,7 +29,8 @@
     "stylus": ">=0.28.0",
     "nib": ">=0.8.0",
     "gitty": ">=0.0.0",
-    "redis": ">=0.7.2"
+    "redis": ">=0.7.2",
+    "spdy": ">=1.3.4"
   },
   "devDependencies": {},
   "optionalDependencies": {},
