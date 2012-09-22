@@ -29,7 +29,6 @@ html(lang="en")
             a(href="/communities").nav-link.action-btn.btn My communities
             a(href="").goto-current-community-page-btn.nav-link.action-btn.btn Community
             a(href="/create")#goto-new-community-page-btn.nav-link.action-btn.btn New Community
-            button#goto-new-topic-page-btn.action-btn.btn New Topic
             a(href="/logout").action-btn.btn Logout
           .unlogined-show
             a(href="/").nav-link.action-btn.btn Home
@@ -46,10 +45,13 @@ html(lang="en")
         textarea(required,placeholder="Long description for the community")#new-community-long-description.input
         button#create-new-community-btn.action-btn.btn New Community
     #community-page.page.invisible
-      section.details
+      header.page-header
         h1
         h2
-        p
+        .page-toolbar
+          button#goto-new-topic-page-btn.action-btn.btn.small New Topic
+          button#join-community-btn.action-btn.btn.small Join
+      p.community-intro
       ul#topics-list.items-list
     #new-topic-page.page.invisible
       form(onsubmit="false")

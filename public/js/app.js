@@ -78,7 +78,7 @@ $(function(){
     $('html').attr("data-community-name", community);
     var $page = $('#community-page');
     var $topicsListEl = $('#topics-list').empty();
-    $page.find('.details h1').html(community);
+    $page.find('.page-header h1').html(community);
     $topicsListEl.spin();
     
      var repo = getRepo(community);
@@ -86,7 +86,7 @@ $(function(){
      repo.read('master', 'README.md', function(err, content){
        if(!err && content){
           var html = makeHtml(content);
-          $page.find('.details p').html(html);
+          $page.find('.community-intro').html(html);
         }
      });
 
@@ -98,7 +98,7 @@ $(function(){
         topic.updated_at = topic.updated.commit.author.date;
         topic.updatedWhen = moment(topic.updated_at).fromNow();
       });
-      $page.find('.details h2').html(community.description);
+      $page.find('.page-header h2').html(community.description);
       renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');
     });
   }

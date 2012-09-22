@@ -27,6 +27,7 @@ html
 html
 body
   font-family: Helvetica, arial, freesans, clean, sans-serif;
+  -webkit-font-smoothing: antialiased;
 
 
 body
@@ -87,7 +88,7 @@ a.btn
   background-color: $firstColor;
   color: $secondColor;
   border-radius: 3px;
-  padding: 12px 22px;
+  padding: 14px 28px;
   text-transform: uppercase;
   font-weight: 800;
   letter-spacing: 1px;
@@ -102,6 +103,8 @@ a.btn
   &:hover
     background-color: $fourthColor;
     color: white;
+  &.small
+    padding: 9px 18px;  
 
 .panel
   display: inline-block;
@@ -190,6 +193,13 @@ a.btn
   & > form
     margin-bottom: 10px;
 
+  & .page-header
+    position: relative;
+  & .page-toolbar
+    position: absolute;
+    top: 0;
+    right: 0;
+
 
 header.app-header
   & .main-toolbar
@@ -210,7 +220,7 @@ header.app-header
       vertical-align: top;  
   #user-toolbar
     position: absolute;
-    right: 10px;
+    right: 0;
 
 footer.app-footer
   border-top: 2px solid $fourthColor;
@@ -246,6 +256,7 @@ footer.app-footer
     & .footer-toggle
       bottom: 82px;  
       transition: bottom 0.2s;
+
 #home-page.page
   & .community-item
     & .join-community-btn
@@ -272,22 +283,24 @@ ul.participants
       width: 24px;
 
 
-#new-community-description
+#new-community-long-description
   height: 300px;
 
 #goto-new-topic-page-btn
+#join-community-btn
 .goto-current-community-page-btn
   display: none!important;
 
-html[data-page-name="community-page"]
+html[data-page-name="community-page"].logined
   & #goto-new-topic-page-btn
+  & #join-community-btn
     display: inline-block!important;
 html[data-page-name="topic-page"]
   & .goto-current-community-page-btn
     display: inline-block!important;
 
 #community-page
-  & > .details 
+  & .page-header 
     margin-top: 20px;
     & > h1
       font-size: 24px;
@@ -302,12 +315,12 @@ html[data-page-name="topic-page"]
     & > h2
       margin-top: 20px;    
       min-height: 16px;
-    & > p
-      font-size: 15px;
-      line-height: 23px;
-      margin-top: 20px;
-      margin-bottom: 20px;
-      color: #4D4D4D;  
+  & .community-intro
+    font-size: 15px;
+    line-height: 23px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #4D4D4D;  
 
 #topic-page
   & .message
