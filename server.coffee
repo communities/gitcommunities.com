@@ -188,7 +188,8 @@ app.get "/api/communities", (req, res) ->
       res.send 500, { error: "API call failed" }
       return
     _.each communities, (community) ->
-      community.isMember = isMemberOf community, req.user
+      if community
+        community.isMember = isMemberOf community, req.user
     res.json communities
 
 app.get "/api/:username/communities", (req, res) ->
@@ -244,7 +245,8 @@ app.get "/api/communities/:community", (req, res) ->
     if err
       res.send 500, { error: "API call failed" }
       return
-    community.isMember = isMemberOf community, req.user
+    if community  
+      community.isMember = isMemberOf community, req.user
     res.json community 
 
 
