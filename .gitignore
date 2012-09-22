@@ -17,3 +17,8 @@ npm-debug.log
 *.sublime*
 repos/*
 configs/*.json
+*.pem
+
+*.key
+
+*.crt

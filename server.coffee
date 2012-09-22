@@ -19,6 +19,15 @@ ghRepos   = new GitHubApi({version: "3.0.0"}).repos
 redis = require "redis"
 rc    = redis.createClient()
 
+http  = require "http"
+https = require "https"
+
+sslOptions = 
+  key: fs.readFileSync __dirname + "/configs/ssl.key"
+  cert: fs.readFileSync __dirname + "/configs/ssl.crt"
+  ca: fs.readFileSync __dirname + "/configs/ca.pem"
+
+
 
 app = module.exports = express()
 
@@ -382,5 +391,8 @@ app.get "/communities/:community/:topic", renderIndexPage
 
 
 port = process.env.PORT || 8090
-app.listen port
+if nconf.get("NODE_ENV") == "development"
+  http.createServer(app).listen port
+else
+  https.createServer(options, app).listen port
 console.log "server started on port #{port}. Open http://localhost:#{port} in your browser"  
