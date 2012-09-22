@@ -91,7 +91,7 @@ createGitHubRepo = (repo, username, callback) ->
 
 createGitRepo = (repo, callback) ->
   {name} = repo
-  gitty.create name, repo.description, __dirname + "/repos", (err, data) ->
+  gitty.create name, repo.longDescription, __dirname + "/repos", (err, data) ->
     license = """
       All materials are licensed under the Creative Commons Attribution 3.0 License
       http://creativecommons.org/licenses/by/3.0/
@@ -335,6 +335,7 @@ app.post "/communities", (req, res) ->
   repo = 
     name: data.name
     description: data.description
+    longDescription: data.longDescription
     homepage: "http://gitcommunities.com/communities/#{data.name}"
     private: false
     has_issues: true

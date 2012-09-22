@@ -1,4 +1,4 @@
-/*! gitcommunities.com - v0.0.0 - 2012-09-21
+/*! gitcommunities.com - v0.0.0 - 2012-09-22
 * http://gitcommunities.com
 * Copyright (c) 2012 Anton Podviaznikov <anton@podviaznikov.com>; Licensed MIT */
 
@@ -14512,16 +14512,30 @@ $(function(){
   function renderCreateCommunityPage(){
     var $createCommunityBtn = $('#create-new-community-btn');
     var $form = $('#new-community-page form');
+    var $communityName = $("#new-community-name");
+    var $communityDescription = $("#new-community-description");
+    var $communityLongDescription = $("#new-community-long-description");
+    clearFieldErrors($form);
+    // clear controls
+    $communityName.val('');
+    $communityDescription.val('');
+    $communityLongDescription.val('');
+    // setup listeners
     $createCommunityBtn.on('click', function(e){
       e.preventDefault();
-      $form.spin();
-      var name = $("#new-community-name").val();
-      var description = $("#new-community-description").val();
-      $.post('/communities', {name: name, description: description}, function(data){
-        console.log("repo created");
-        $form.spin(false);
-        page('/communities/' + name);
-      });
+      var isValid = validateFields($form);
+      if(isValid){
+        $form.spin();
+        var name = communityName.val();
+        var description = communityDescription.val();
+        var longDescription = communityLongDescription.val();
+        var inputData = {name: name, description: description, longDescription: longDescription};
+        $.post('/communities', inputData, function(data){
+          console.log("repo created");
+          $form.spin(false);
+          page('/communities/' + name);
+        });
+      }
     });
   }
 
@@ -14557,31 +14571,40 @@ $(function(){
   function renderCreateTopicPage(community){
     var editor = new EpicEditor({container: 'new-topic-message', basePath: '/epiceditor'}).load();
     var $createTopicBtn = $('#create-new-topic-btn');
+    var $newTopicName = $('#new-topic-name');
     var $form = $('#new-topic-page form');
+    clearFieldErrors($form);
+    // clear controls
+    $newTopicName.val('');
+    editor.getElement('editor').body.innerHTML = '';
+    // setup listeners
     $createTopicBtn.on('click', function(e){
       e.preventDefault();
-      $form.spin();
-      var repo =  getAuthRepo(community);
-      repo.getRef('heads/master', function(err, sha) {
-        console.log('get branch', err, sha);
-        var topic = $('#new-topic-name').val();
-        var refSpec = {
-          ref: 'refs/heads/' + topic,
-          sha: sha
-        };
-        repo.createRef(refSpec, function(err) {
-          var content = editor.getElement('editor').body.innerHTML;
-          console.log('content', content);
-          repo.write(topic, '1.md', content, 'start conversation', function(err) {
-            $form.spin(false);
-            if(err){
-              alert("Error hapenned");
-            }else{
-              page("/communities/" + community + "/" + topic);
-            }
+      var isValid = validateFields($form);
+      if(isValid){
+        $form.spin();
+        var repo =  getAuthRepo(community);
+        repo.getRef('heads/master', function(err, sha) {
+          console.log('get branch', err, sha);
+          var topic = $newTopicName.val();
+          var refSpec = {
+            ref: 'refs/heads/' + topic,
+            sha: sha
+          };
+          repo.createRef(refSpec, function(err) {
+            var content = editor.getElement('editor').body.innerHTML;
+            console.log('content', content);
+            repo.write(topic, '1.md', content, 'start conversation', function(err) {
+              $form.spin(false);
+              if(err){
+                alert("Error hapenned");
+              }else{
+                page("/communities/" + community + "/" + topic);
+              }
+            });
           });
         });
-      });
+      }  
     });
   }
 
@@ -14600,7 +14623,7 @@ $(function(){
         var text = $('#new-message-form .new-message-content').val();
         var fileName = tree.length + '.md';
         var authedRepo = getAuthRepo(community);
-        authedRepo.write(topic, fileName, text, 'start conversation', function(err, sha) {
+        authedRepo.write(topic, fileName, text, 'reply', function(err, sha) {
           console.log("sha", sha);
           if(err){
             $messagesListEl.spin(false);
@@ -14661,18 +14684,36 @@ $(function(){
             $messagesListEl.spin(false);
             renderArray(files, $messagesListEl, 'topic-page-message-tpl');
           });
-        
-          });
-
-
         });
+      });
     });
-        
   }
   function makeHtml(md){
     var mdConverter = new Showdown.converter();
     return mdConverter.makeHtml(md);
   }
+
+  function validateFields(selector){
+    var valid = true;
+    var elements = selector.find('input,textarea').get();
+    for(var i = 0; i < elements.length; i++){
+      var el = elements[i];
+      var elValid = el.checkValidity();
+      if(elValid){
+        $(el).removeClass('error');
+      } else{
+        $(el).addClass('error');
+        valid = false;
+      }
+    }
+    return valid;
+  }
+
+  function clearFieldErrors(selector){
+    selector.find('input,textarea').removeClass('error');
+  }
+    
+
 
   function getAuthRepo(community){
     var gh = new Github({
@@ -14709,6 +14750,7 @@ $(function(){
       renderArrayItem(item, containerEl, templateName);
     });
   }
+
   // ROUTER
 
   page('', renderHeader, function(){

@@ -41,9 +41,9 @@ html(lang="en")
       ul#my-communities-list.items-list      
     #new-community-page.page.invisible
       form(onsubmit="false").logined-show  
-        input(required,placeholder="Name of the commuinity")#new-community-name.input
-        textarea(required,placeholder="Short description for the community")#new-community-short-description.input
+        input(required,placeholder="Name of the commuinity",pattern="^[A-Za-z0-9-]{1,127}$",title="Characters, numbers and hypen are allowed.")#new-community-name.input
         textarea(required,placeholder="Description for the community")#new-community-description.input
+        textarea(required,placeholder="Long description for the community")#new-community-long-description.input
         button#create-new-community-btn.action-btn.btn New Community
     #community-page.page.invisible
       section.details
@@ -53,7 +53,7 @@ html(lang="en")
       ul#topics-list.items-list
     #new-topic-page.page.invisible
       form(onsubmit="false")
-        input(required)#new-topic-name.input.logined-show
+        input(required,placeholder="Topic name",pattern="^[A-Za-z0-9-]{1,127}$",title="Characters, numbers and hypen are allowed.")#new-topic-name.input.logined-show
         #new-topic-message.message.markdown-editor
         button#create-new-topic-btn.action-btn.btn.logined-show New Topic
     #topic-page.page.invisible 
