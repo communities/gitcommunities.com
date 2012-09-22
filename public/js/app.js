@@ -32,6 +32,17 @@ $(function(){
         $item.spin(false);
       });
     });
+    $communitiesListEl.on('click', '.leave-community-btn', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      var $item = $(e.currentTarget).closest('.community-item');
+      $item.spin();
+      var name = $(e.currentTarget).data('name');
+      $.post('/communities/' + name + '/leave', function(){
+        // TODO (anton) we should update amount of members.
+        $item.spin(false);
+      });
+    });
   }
 
   function renderMyCommunitiesPage(){
@@ -78,6 +89,8 @@ $(function(){
     $('html').attr("data-community-name", community);
     var $page = $('#community-page');
     var $topicsListEl = $('#topics-list').empty();
+    var $joinCommunityBtn = $('#join-community-btn');
+    var $leaveCommunityBtn = $('#leave-community-btn');
     $page.find('.page-header h1').html(community);
     $topicsListEl.spin();
     
@@ -92,6 +105,11 @@ $(function(){
 
     $.get("/api/communities/" + community, function(community){
       $topicsListEl.spin(false);
+      if(community.isMember){
+        $leaveCommunityBtn.attr('style', 'display: inline-block!important');
+      } else{
+        $joinCommunityBtn.attr('style', 'display: inline-block!important');
+      }
       _.each(community.topics, function(topic){
         topic.created_at = topic.created.commit.author.date;
         topic.createdWhen = moment(topic.created_at).fromNow();
@@ -101,6 +119,7 @@ $(function(){
       $page.find('.page-header h2').html(community.description);
       renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');
     });
+    // TODO add listeners for join and leave buttons.
   }
  
   function renderCreateTopicPage(community){

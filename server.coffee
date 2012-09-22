@@ -398,6 +398,34 @@ app.post "/communities/:community/join", (req, res) ->
     else
       res.send 500, {error: "Internal error"}
 
+app.post "/communities/:community/leave", (req, res) ->
+  community = req.params.community
+  ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
+  getGitHubTeams (err, teams) ->
+    if err
+      res.send 500, { error: "API call failed" }
+      return
+    console.log("teams", teams);
+    membersTeam = team for team in teams when team.name == "#{community}-members"
+    console.log "membersTeam", membersTeam
+    if membersTeam
+      ghAdmin.delete "/teams/#{membersTeam.id}/members/#{req.user.username}", {}, (err, status, resp) ->
+        console.log "add new team member", err, status, resp
+        if err
+          res.send 500, { error: "API call failed" }
+          return
+        rc.hmget "communities", community, (err, reply) ->
+          console.log "repo from cache", err, reply
+          if not err and reply
+            repo = JSON.parse reply
+            console.log "parsed repo", repo
+            repo.members = _.reject repo.members, (member) -> member.username == req.user.username
+            repo.members_count = repo.members.length + repo.admins.length
+            rc.hmset "communities", community, JSON.stringify(repo)           
+          res.json resp
+    else
+      res.send 500, {error: "Internal error"}      
+
 renderIndexPage = (req, res) ->
   params = 
     user: req.user or {}

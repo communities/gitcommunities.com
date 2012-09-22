@@ -136,7 +136,7 @@ a.btn
       color: black;
     & h1
       font-weight: bold;
-    &:hover
+    &.selectable:hover
       background-color: $fourthColor;
       cursor: pointer;
       color: white;
@@ -148,7 +148,8 @@ a.btn
       & a
       & a:visited      
         color: white;
-
+    &:not(.selectable) a
+      color: $fourthColor;
     & .details
       margin-left: 100px;
     & .counter
@@ -264,6 +265,8 @@ footer.app-footer
 
 #home-page.page
   & .community-item
+    & .metadata
+      left: 118px;
     & .join-community-btn
     & .leave-community-btn
       position: absolute;
@@ -295,6 +298,7 @@ ul.participants
 
 #goto-new-topic-page-btn
 #join-community-btn
+#leave-community-btn
 .goto-current-community-page-btn
   display: none!important;
 

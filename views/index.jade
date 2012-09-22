@@ -51,6 +51,7 @@ html(lang="en")
         .page-toolbar
           button#goto-new-topic-page-btn.action-btn.btn.small New Topic
           button#join-community-btn.action-btn.btn.small Join
+          button#leave-community-btn.action-btn.btn.small Leave
       p.community-intro
       ul#topics-list.items-list
     #new-topic-page.page.invisible
@@ -69,7 +70,7 @@ html(lang="en")
         p GitCommunities.com is not affiliated with <a href="http://github.com/">GitHub</a>.
         p Except as otherwise noted, the content of this page is licensed under the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
     script(type="text/template")#home-page-community-tpl
-      |<li class="community-item"><a class="nav-link" href="/communities/<%= name %>">
+      |<li class="community-item selectable"><a class="nav-link" href="/communities/<%= name %>">
       |<div class="members-count counter"><span><%= members_count %></span></div>
       |<div class="details">
       |<h1><%= name %></h1>
@@ -90,7 +91,7 @@ html(lang="en")
       |<% } %>
       |</a></li>
     script(type="text/template")#my-communities-page-community-tpl
-      |<li class="community-item"><a class="nav-link" href="/communities/<%= name %>">
+      |<li class="community-item selectable"><a class="nav-link" href="/communities/<%= name %>">
       |<div class="members-count counter"><span><%= members_count %></span></div>
       |<div class="details">
       |<h1><%= name %></h1>
@@ -106,7 +107,7 @@ html(lang="en")
       |</div>
       |</a></li>      
     script(type="text/template")#community-page-topic-tpl
-      |<li class="topic-item"><a class="nav-link" href="/communities/<%= community %>/<%= name %>">
+      |<li class="topic-item selectable"><a class="nav-link" href="/communities/<%= community %>/<%= name %>">
       | <div class="messages-count counter"><span><%= commits.length %></span></div>
       | <div class="details">
       |   <h1><%= name %></h1>
