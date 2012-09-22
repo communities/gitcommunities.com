@@ -130,6 +130,9 @@ a.btn
     list-style: none;
     & h1
     & p
+    & a
+    & a:visited
+      color: black;    
       color: black;
     & h1
       font-weight: bold;
@@ -142,6 +145,8 @@ a.btn
       & .metadata
       & .counter span
       & span.label
+      & a
+      & a:visited      
         color: white;
 
     & .details
@@ -260,6 +265,7 @@ footer.app-footer
 #home-page.page
   & .community-item
     & .join-community-btn
+    & .leave-community-btn
       position: absolute;
       right: 10px;
       top: 20px;
@@ -271,6 +277,7 @@ footer.app-footer
   font-size: 13px;
   position: absolute;
   bottom: 10px;
+  right: 10px;
   color: black;
   & span.label
     color: $fourthColor;
@@ -293,7 +300,6 @@ ul.participants
 
 html[data-page-name="community-page"].logined
   & #goto-new-topic-page-btn
-  & #join-community-btn
     display: inline-block!important;
 html[data-page-name="topic-page"]
   & .goto-current-community-page-btn
@@ -328,6 +334,7 @@ html[data-page-name="topic-page"]
       position: absolute;
       right: 5px;  
       top: 5px;
+  
 .visible
   display: block;
 .inline-visible

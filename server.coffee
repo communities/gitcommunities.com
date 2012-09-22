@@ -187,6 +187,8 @@ app.get "/api/communities", (req, res) ->
     if err
       res.send 500, { error: "API call failed" }
       return
+    _.each communities, (community) ->
+      community.isMember = isMemberOf community, req.user
     res.json communities
 
 app.get "/api/:username/communities", (req, res) ->
@@ -195,13 +197,21 @@ app.get "/api/:username/communities", (req, res) ->
       res.send 500, { error: "API call failed" }
       return
     username = req.params.username
-    communities = _.filter communities, (community) ->
-      isMember = _.any community.members, (member) -> member.login == username
-      isAdmin = _.any community.admins, (admin) -> admin.login == username
-      console.log "isMember and isAdmin", isMember, isAdmin, username, community.members, "admins", community.admins
-      return isMember or isAdmin
+    # TODO we should check that username equals req.user.username
+    communities = _.filter communities, (community) -> isMemberOf community, req.user
     res.json communities
 
+isMemberOf = (community, user) ->
+  if user and user.username and user.username.length > 0
+    return _isMember community, user.username
+  else
+    return false  
+
+_isMember = (community, username) ->
+  isMember = _.any community.members, (member) -> member.login == username
+  isAdmin = _.any community.admins, (admin) -> admin.login == username
+  console.log "isMember and isAdmin", isMember, isAdmin, username, community.members, "admins", community.admins
+  return isMember or isAdmin 
 
 getCommunities = (callback) ->
   rc.hgetall "communities", (err, hash) ->
@@ -234,6 +244,7 @@ app.get "/api/communities/:community", (req, res) ->
     if err
       res.send 500, { error: "API call failed" }
       return
+    community.isMember = isMemberOf community, req.user
     res.json community 
 
 

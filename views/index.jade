@@ -83,7 +83,11 @@ html(lang="en")
       |  </div>
       | </div>
       |</div>
-      |<button class="join-community-btn action-btn btn logined-show" data-name="<%= name %>">Join</button>
+      |<% if(isMember){ %>
+      |  <button class="leave-community-btn action-btn btn logined-show" data-name="<%= name %>">Leave</button>
+      |<% } else{ %>
+      |  <button class="join-community-btn action-btn btn logined-show" data-name="<%= name %>">Join</button>
+      |<% } %>
       |</a></li>
     script(type="text/template")#my-communities-page-community-tpl
       |<li class="community-item"><a class="nav-link" href="/communities/<%= name %>">
