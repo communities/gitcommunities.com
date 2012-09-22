@@ -389,10 +389,12 @@ app.get "/communities/:community", renderIndexPage
 app.get "/communities/:community/:topic", renderIndexPage
 
 
-
-port = process.env.PORT || 8090
 if nconf.get("NODE_ENV") == "development"
-  http.createServer(app).listen port
+  http.createServer(app).listen 8090
 else
+  proxyServer = express.createServer()
+  proxyServer.get "*", (req, res) -> 
+    res.redirect "https://gitcommunities.com" + req.url
+  proxyServer.listen 80  
   https.createServer(sslOptions, app).listen 443
-console.log "server started on port #{port}. Open http://localhost:#{port} in your browser"  
+console.log "server started on port"
