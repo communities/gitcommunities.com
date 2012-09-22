@@ -22,3 +22,5 @@ configs/*.json
 *.key
 
 *.crt
+
+public/index.css

@@ -394,5 +394,5 @@ port = process.env.PORT || 8090
 if nconf.get("NODE_ENV") == "development"
   http.createServer(app).listen port
 else
-  https.createServer(options, app).listen port
+  https.createServer(sslOptions, app).listen 443
 console.log "server started on port #{port}. Open http://localhost:#{port} in your browser"  
