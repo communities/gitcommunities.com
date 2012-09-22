@@ -235,8 +235,15 @@ getCommunities = (callback) ->
             rc.expire "communities", 200, redis.print
             callback err, repos
     else  
-      repos = (JSON.parse(repo) for name, repo of hash)
-      callback undefined, repos
+      repos = for name, repo of hash
+        json = null
+        try
+          json = JSON.parse(repo) 
+        catch error
+          console.log "cannot parse data for repo", name, repo
+        json
+      communities = _.compact repos       
+      callback undefined, communities
 
 
 app.get "/api/communities/:community", (req, res) ->
