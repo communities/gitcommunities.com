@@ -195,6 +195,7 @@ a.btn
   width: 1020px;
   margin: 5px auto;
 
+
 .page
   min-height: 100%;
   position: relative;
@@ -249,6 +250,8 @@ footer.app-footer
     left: 20px;
     transition: bottom 0.2s;
     cursor: pointer;
+    &:hover
+      color: $firstColor;
   & .container
     margin-top: 0;
     margin-bottom: 0;
@@ -341,6 +344,9 @@ html[data-page-name="topic-page"]
       position: absolute;
       right: 5px;  
       top: 5px;
+    & .author
+      font-weight: bold;
+      opacity: 0.8;  
   
 .visible
   display: block;

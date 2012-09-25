@@ -166,6 +166,7 @@ $(function(){
     var repo = getRepo(community);
     var $createMessageBtn = $('#create-new-message-btn');
     var $form = $('#new-message-form');
+    var $postInput = $form.find('.new-message-content');
     var $messagesListEl = $('#messages-list').empty();
     var communityLink = '/communities/' + community;
     $('a.goto-current-community-page-btn').attr('href', communityLink);
@@ -175,7 +176,7 @@ $(function(){
       $createMessageBtn.on('click', function(e){
         e.preventDefault();
         $form.spin();
-        var text = $form.find('.new-message-content').val();
+        var text = $postInput.val();
         var fileName = tree.length + '.md';
         var authedRepo = getAuthRepo(community);
         authedRepo.write(topic, fileName, text, 'reply', function(err, sha) {
@@ -197,6 +198,7 @@ $(function(){
               avatar_url: cUnity.user.avatar
             };
             $form.spin(false);
+            $postInput.val('');
             renderArrayItem(message, $messagesListEl, 'topic-page-message-tpl');
           }
         });
@@ -235,7 +237,6 @@ $(function(){
                 file.html = makeHtml(file.content);
               }
             }
-            console.log("new files", files);
             $messagesListEl.spin(false);
             renderArray(files, $messagesListEl, 'topic-page-message-tpl');
           });
