@@ -1,4 +1,4 @@
-/*! gitcommunities.com - v0.0.0 - 2012-09-23
+/*! gitcommunities.com - v0.0.0 - 2012-09-25
 * http://gitcommunities.com
 * Copyright (c) 2012 Anton Podviaznikov <anton@podviaznikov.com>; Licensed MIT */
 
@@ -14537,9 +14537,9 @@ $(function(){
       var isValid = validateFields($form);
       if(isValid){
         $form.spin();
-        var name = communityName.val();
-        var description = communityDescription.val();
-        var longDescription = communityLongDescription.val();
+        var name = $communityName.val();
+        var description = $communityDescription.val();
+        var longDescription = $communityLongDescription.val();
         var inputData = {name: name, description: description, longDescription: longDescription};
         $.post('/communities', inputData, function(data){
           console.log("repo created");
@@ -14584,6 +14584,7 @@ $(function(){
       $page.find('.page-header h2').html(community.description);
       renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');
     });
+    // TODO add listeners for join and leave buttons.
   }
  
   function renderCreateTopicPage(community){
@@ -14622,13 +14623,14 @@ $(function(){
             });
           });
         });
-      }  
+      }
     });
   }
 
   function renderTopicPage(community, topic){
     var repo = getRepo(community);
     var $createMessageBtn = $('#create-new-message-btn');
+    var $form = $('#new-message-form');
     var $messagesListEl = $('#messages-list').empty();
     var communityLink = '/communities/' + community;
     $('a.goto-current-community-page-btn').attr('href', communityLink);
@@ -14637,14 +14639,14 @@ $(function(){
 
       $createMessageBtn.on('click', function(e){
         e.preventDefault();
-        $messagesListEl.spin();
-        var text = $('#new-message-form .new-message-content').val();
+        $form.spin();
+        var text = $form.find('.new-message-content').val();
         var fileName = tree.length + '.md';
         var authedRepo = getAuthRepo(community);
         authedRepo.write(topic, fileName, text, 'reply', function(err, sha) {
           console.log("sha", sha);
           if(err){
-            $messagesListEl.spin(false);
+            $form.spin(false);
             alert("Error hapenned");
           } else{
             tree.push({path: fileName});
@@ -14659,7 +14661,7 @@ $(function(){
               url: cUnity.user.profileUrl,
               avatar_url: cUnity.user.avatar
             };
-            $messagesListEl.spin(false);
+            $form.spin(false);
             renderArrayItem(message, $messagesListEl, 'topic-page-message-tpl');
           }
         });

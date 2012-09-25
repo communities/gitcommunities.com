@@ -137,17 +137,20 @@ a.btn
     & h1
       font-weight: bold;
     &.selectable:hover
-      background-color: $fourthColor;
-      cursor: pointer;
-      color: white;
-      & h1
-      & p
-      & .metadata
-      & .counter span
-      & span.label
-      & a
-      & a:visited      
-        color: white;
+      border-left: 7px solid $fourthColor;
+      & .details
+        margin-left: 93px;
+      // background-color: $fourthColor;
+      // cursor: pointer;
+      // color: white;
+      // & h1
+      // & p
+      // & .metadata
+      // & .counter span
+      // & span.label
+      // & a
+      // & a:visited      
+      //   color: white;
     &:not(.selectable) a
       color: $fourthColor;
     & .details
@@ -272,9 +275,9 @@ footer.app-footer
       position: absolute;
       right: 10px;
       top: 20px;
-      &:hover
-        background-color: $secondColor;
-        color: $firstColor;  
+      // &:hover
+      //   background-color: $secondColor;
+      //   color: $firstColor;  
 
 .metadata
   font-size: 13px;
