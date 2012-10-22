@@ -14,7 +14,7 @@ github  = require "octonode"
 gitty   = require "gitty"
 
 GitHubApi = require "github"
-ghRepos   = new GitHubApi({version: "3.0.0"}).repos
+githubApi = new GitHubApi({version: "3.0.0"})
 
 
 redis = require "redis"
@@ -45,8 +45,13 @@ github.auth.config({
 }).login ["user", "repo", "gist"], (err, id, token) ->
   if err or not token
     throw new Error("Cannot connect to GitHub")
+  console.log "github auth token was set"  
   nconf.set "GIHUB_ADMIN_TOKEN", token  
 
+
+ghRepos = ->
+  githubApi.authenticate {type: "oauth", token: nconf.get("GIHUB_ADMIN_TOKEN")}
+  githubApi.repos
 
 
 createRepo = (repo, username, callback) ->
@@ -217,7 +222,7 @@ _isMember = (community, username) ->
 getCommunities = (callback) ->
   rc.hgetall "communities", (err, hash) ->
     if err or not hash or Object.keys(hash) == 0
-      ghRepos.getFromOrg {org: "communities"}, (err, repos) ->
+      ghRepos().getFromOrg {org: "communities"}, (err, repos) ->
         if err
           callback err
           return
@@ -258,7 +263,7 @@ app.get "/api/communities/:community", (req, res) ->
 
 
 getCommunity = (community, callback) ->
-  ghRepos.get {user: "communities", repo: community}, (err, repo) ->
+  ghRepos().get {user: "communities", repo: community}, (err, repo) ->
     if err
       callback err
       return
@@ -280,7 +285,7 @@ getCommunity = (community, callback) ->
       callback undefined, repo             
 
 getTopics = (community, callback) ->
-  ghRepos.getBranches {user: "communities", repo: community}, (err, branches) ->
+  ghRepos().getBranches {user: "communities", repo: community}, (err, branches) ->
     if err
       callback err
       return
