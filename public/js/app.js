@@ -279,8 +279,12 @@ $(function(){
     return gh.getRepo("communities", community);
   }
   function getRepo(community){
-    var gh = new Github({});
-    return gh.getRepo("communities", community);
+    if(_.isEmpty(cUnity.user.accessToken)){
+      var gh = new Github({});
+      return gh.getRepo("communities", community);
+    } else{
+      return getAuthRepo(community);
+    }
   }
 
   function renderHeader(ctx, next){

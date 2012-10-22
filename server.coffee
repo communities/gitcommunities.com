@@ -340,7 +340,7 @@ getGitHubTeams = (callback) ->
 
 getTopicMeta = (community, topic, callback) ->
   github.client().get "/repos/communities/#{community}/git/refs/heads/#{topic}", {}, (err, status, ref) ->
-    if err
+    if err or not ref? or not ref.object?
       callback err
       return
     getCommits community, ref.object.sha, (err, commits) ->
@@ -350,7 +350,7 @@ getTopicMeta = (community, topic, callback) ->
       resp =
         sha: ref.object.sha
         commits: commits
-      callback undefined, resp    
+      callback undefined, resp       
 
 getCommits = (community, sha, callback) ->
   github.client().get "/repos/communities/#{community}/commits?sha=#{sha}", {}, (err, status, commits) ->
