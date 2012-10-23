@@ -203,7 +203,9 @@ app.get "/api/:username/communities", (req, res) ->
       res.send 500, { error: "API call failed" }
       return
     username = req.params.username
-    # TODO we should check that username equals req.user.username
+    if req.user.username != username
+      res.send 403, { error: "Access denied" }
+      return
     communities = _.filter communities, (community) -> isMemberOf community, req.user
     res.json communities
 
@@ -339,7 +341,8 @@ getGitHubTeams = (callback) ->
     callback err, teams
 
 getTopicMeta = (community, topic, callback) ->
-  github.client().get "/repos/communities/#{community}/git/refs/heads/#{topic}", {}, (err, status, ref) ->
+  ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
+  ghAdmin.get "/repos/communities/#{community}/git/refs/heads/#{topic}", {}, (err, status, ref) ->
     if err or not ref? or not ref.object?
       callback err
       return
@@ -353,7 +356,8 @@ getTopicMeta = (community, topic, callback) ->
       callback undefined, resp       
 
 getCommits = (community, sha, callback) ->
-  github.client().get "/repos/communities/#{community}/commits?sha=#{sha}", {}, (err, status, commits) ->
+  ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
+  ghAdmin.get "/repos/communities/#{community}/commits?sha=#{sha}", {}, (err, status, commits) ->
     callback err, commits
 
 app.post "/communities", (req, res) ->

@@ -3,8 +3,8 @@ html(lang="en")
   head
     meta(charset="utf-8")
     title Communities
-    meta(name="description", content="TODO")
-    meta(name="keywords", content="TODO")
+    meta(name="description", content="Online communities build on top of Git.")
+    meta(name="keywords", content="communities, git, groups, mailing list")
     meta(name="author", content="Anton Podviaznikov")
     script
       var cUnity = {};
@@ -18,22 +18,7 @@ html(lang="en")
     link(rel="stylesheet", href="/index.css")    
     script(src="#{jsFile}")
   body
-    header.app-header         
-      nav.main-toolbar
-        #user-profile.logined-show
-          img.avatar
-          span
-        #user-toolbar
-          .logined-show
-            a(href="/").nav-link.action-btn.btn Home
-            a(href="/communities").nav-link.action-btn.btn My communities
-            a(href="").goto-current-community-page-btn.nav-link.action-btn.btn Community
-            a(href="/create")#goto-new-community-page-btn.nav-link.action-btn.btn New Community
-            a(href="/logout").action-btn.btn Logout
-          .unlogined-show
-            a(href="/").nav-link.action-btn.btn Home
-            a(href="").goto-current-community-page-btn.nav-link.action-btn.btn Community
-            a(href="/auth")#login-btn.action-btn.btn Login          
+    include header        
     #home-page.page.invisible 
       ul#communities-list.items-list
     #my-communities-page.page.invisible 
@@ -64,11 +49,7 @@ html(lang="en")
         textarea(required).new-message-content.input
         button#create-new-message-btn.action-btn.btn Post
       section#messages-list.items-list
-    footer.app-footer
-      span.footer-toggle &#x25B2;
-      .container
-        p GitCommunities.com is not affiliated with <a href="http://github.com/">GitHub</a>.
-        p Except as otherwise noted, the content of this page is licensed under the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+    include footer
     script(type="text/template")#home-page-community-tpl
       |<li class="community-item selectable"><a class="nav-link" href="/communities/<%= name %>">
       |<div class="members-count counter"><span><%= members_count %></span></div>
