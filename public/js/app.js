@@ -20,6 +20,9 @@ $(function(){
     $.get('/api/communities', function(repos){
       $communitiesListEl.spin(false);
       renderArray(repos, $communitiesListEl, 'home-page-community-tpl');
+    }).error(function(){
+      console.log("Failed to load communities");
+      $communitiesListEl.spin(false);
     });
     $communitiesListEl.on('click', '.join-community-btn', function(e){
       e.preventDefault();
@@ -29,6 +32,9 @@ $(function(){
       var name = $(e.currentTarget).data('name');
       $.post('/communities/' + name + '/join', function(){
         // TODO (anton) we should update amount of members.
+        $item.spin(false);
+      }).error(function(){
+        console.log("failed to join community");
         $item.spin(false);
       });
     });
@@ -41,6 +47,9 @@ $(function(){
       $.post('/communities/' + name + '/leave', function(){
         // TODO (anton) we should update amount of members.
         $item.spin(false);
+      }).error(function(){
+        console.log("failed to leave community");
+        $item.spin(false);
       });
     });
   }
@@ -52,6 +61,9 @@ $(function(){
     $.get(url, function(repos){
       $communitiesListEl.spin(false);
       renderArray(repos, $communitiesListEl, 'my-communities-page-community-tpl');
+    }).error(function(){
+      console.log("Failed to load my communities");
+      $communitiesListEl.spin(false);
     });
   }
 
@@ -80,6 +92,9 @@ $(function(){
           console.log("repo created");
           $form.spin(false);
           page('/communities/' + name);
+        }).error(function(){
+          alert("Impossible to create community with such data");
+          $form.spin(false);
         });
       }
     });
@@ -103,7 +118,7 @@ $(function(){
         }
      });
 
-    $.get("/api/communities/" + community, function(community){
+    $.get('/api/communities/'' + community, function(community){
       $topicsListEl.spin(false);
       if(community.isMember){
         $leaveCommunityBtn.attr('style', 'display: inline-block!important');
@@ -118,6 +133,9 @@ $(function(){
       });
       $page.find('.page-header h2').html(community.description);
       renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');
+    }).error(function(){
+      console.log('Failed to load community info');
+      $topicsListEl.spin(false);
     });
     // TODO add listeners for join and leave buttons.
   }
@@ -151,9 +169,9 @@ $(function(){
             repo.write(topic, '1.md', content, 'start conversation', function(err) {
               $form.spin(false);
               if(err){
-                alert("Error hapenned");
+                alert('Error hapenned');
               }else{
-                page("/communities/" + community + "/" + topic);
+                page('/communities/' + community + '/' + topic);
               }
             });
           });
@@ -219,7 +237,7 @@ $(function(){
       }
       async.parallel(workers, function(erros, files){
         files = _.first(files, files.length - 1);
-        console.log("files", files);
+        console.log('files', files);
         repo.getRef('heads/' + topic, function(err, sha){
 
           repo.commits(sha, function(err, commits){
@@ -274,14 +292,14 @@ $(function(){
   function getAuthRepo(community){
     var gh = new Github({
         token: cUnity.user.accessToken,
-        auth: "oauth"
+        auth: 'oauth'
     });
-    return gh.getRepo("communities", community);
+    return gh.getRepo('communities', community);
   }
   function getRepo(community){
     if(_.isEmpty(cUnity.user.accessToken)){
       var gh = new Github({});
-      return gh.getRepo("communities", community);
+      return gh.getRepo('communities', community);
     } else{
       return getAuthRepo(community);
     }

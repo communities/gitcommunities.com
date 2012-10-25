@@ -439,7 +439,14 @@ renderIndexPage = (req, res) ->
   params = 
     user: req.user or {}
     jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else  "/app.js"
-  res.render "index", params
+  getCommunities (err, communities) ->
+    if !err
+      params.communitiesCount = communities.length
+      topicsSumFunc = (memo, community) -> return memo + community.topics_count
+      params.topicsCount = _.reduce communities, topicsSumFunc, 0
+      membersSumFunc = (memo, community) -> return memo + community.members_count
+      params.membersCount = _.reduce communities, membersSumFunc, 0
+    res.render "index", params
 
 app.get "/", renderIndexPage
 app.get "/communities", renderIndexPage
