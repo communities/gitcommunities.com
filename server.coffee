@@ -55,7 +55,7 @@ ghRepos = ->
 
 
 createRepo = (repo, username, callback) ->
-  createGitHubRepo repo, username, (err, repo) ->
+  createGitHubRepo repo, username, (err, resp) ->
     if err
       callback err
       return
@@ -96,19 +96,35 @@ createGitHubRepo = (repo, username, callback) ->
 
 createGitRepo = (repo, callback) ->
   {name} = repo
-  gitty.create name, repo.longDescription, __dirname + "/repos", (err, data) ->
+  path = __dirname + "/repos/" + name
+  fs.mkdirSync path
+  gitRepo = new gitty.Repository path
+  gitRepo.init ->
     license = """
-      All materials are licensed under the Creative Commons Attribution 3.0 License
-      http://creativecommons.org/licenses/by/3.0/
+       All materials are licensed under the Creative Commons Attribution 3.0 License
+       http://creativecommons.org/licenses/by/3.0/.
     """
+    readme = """
+      # #{name}
+      
+      Visit our page at [gitcommunities.com](#{repo.homepage}).
+      
+      #{repo.longDescription}
+      ## License
+      #{license}
+    """
+    fs.writeFileSync __dirname + "/repos/#{name}/README.md", readme
     fs.writeFileSync __dirname + "/repos/#{name}/LICENSE", license
-    gitty.add __dirname + "/repos/#{name}", ["LICENSE"], (err, data) ->
-      gitty.commit __dirname + "/repos/#{name}", "initial", (err, data) ->
-        gitty.remote.add __dirname + "/repos/#{name}", "origin", "https://github.com/communities/#{name}.git", (err, data) ->
-          console.log "origin was added", err, data
-          gitty.push __dirname + "/repos/#{name}", "origin", "master", (err, data) ->
-            callback undefined, repo  
-
+    gitRepo.add ["README.md", "LICENSE"], ->
+      gitRepo.commit "initial commit", ->
+        gitRemoteAdd = new gitty.Command path, "remote add", [], "origin https://github.com/communities/#{name}.git"
+        gitRemoteAdd.exec (error, stdout, stderr) ->
+          err = error || stderr;
+          console.log "adding remote", err, stdout
+          gitRepo.push path, "origin", "master", (err, data) ->
+            console.log "pushing origin", err, data
+            callback undefined, repo 
+          , { user : nconf.get("GIHUB_ADMIN_USERNAME"), pass : nconf.get("GIHUB_ADMIN_PASSWORD")}    
 
 passport = require "passport"
 
@@ -365,7 +381,7 @@ app.post "/communities", (req, res) ->
   repo = 
     name: data.name
     description: data.description
-    longDescription: data.longDescription
+    longDescription: data.longDescription or ""
     homepage: "http://gitcommunities.com/communities/#{data.name}"
     private: false
     has_issues: true
