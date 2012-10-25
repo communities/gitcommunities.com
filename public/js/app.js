@@ -118,7 +118,7 @@ $(function(){
         }
      });
 
-    $.get('/api/communities/'' + community, function(community){
+    $.get('/api/communities/' + community, function(community){
       $topicsListEl.spin(false);
       if(community.isMember){
         $leaveCommunityBtn.attr('style', 'display: inline-block!important');
