@@ -194,76 +194,77 @@ $(function(){
     $('a.goto-current-community-page-btn').attr('href', communityLink);
     $messagesListEl.spin();
     repo.getTree(topic, function(err, tree){
-
-      $createMessageBtn.on('click', function(e){
-        e.preventDefault();
-        $form.spin();
-        var text = $postInput.val();
-        var fileName = tree.length + '.md';
-        var authedRepo = getAuthRepo(community);
-        authedRepo.write(topic, fileName, text, 'reply', function(err, sha) {
-          console.log("sha", sha);
-          if(err){
-            $form.spin(false);
-            alert("Error hapenned");
-          } else{
-            tree.push({path: fileName});
-            var message = {
-              html: makeHtml(text)
-            };
-            message.commit = {
-              published: moment().fromNow(),
-              published_at: moment().format()
-            };
-            message.commit.author = {
-              url: cUnity.user.profileUrl,
-              avatar_url: cUnity.user.avatar
-            };
-            $form.spin(false);
-            $postInput.val('');
-            renderArrayItem(message, $messagesListEl, 'topic-page-message-tpl');
-          }
-        });
-      });
-      console.log(tree);
-      var workers = [];
-      var i = 0;
-      for(; i < tree.length; i++){
-        var node = tree[i];
-        (function(node){
-          var worker = function(callback){
-            repo.read(topic, node.path, function(err, data, sha){
-              callback(err, {content: data, topic: topic, path: node.path, sha: sha});
-            });
-          };
-          workers.push(worker);
-        })(node);
-      }
-      async.parallel(workers, function(erros, files){
-        files = _.first(files, files.length - 1);
-        console.log('files', files);
-        repo.getRef('heads/' + topic, function(err, sha){
-
-          repo.commits(sha, function(err, commits){
-            commits = _.first(commits, commits.length - 1);
-            console.log("commits", commits);
-            var i = 0;
-            for(; i < commits.length; i++){
-              var k = commits.length - i - 1;
-              var file = files[k];
-              if(file){
-                var commit = commits[i];
-                commit.published_at = commit.commit.author.date;
-                commit.published = moment(commit.published_at).fromNow();
-                file.commit = commit;
-                file.html = makeHtml(file.content);
-              }
+      if(!err && tree){
+        $createMessageBtn.on('click', function(e){
+          e.preventDefault();
+          $form.spin();
+          var text = $postInput.val();
+          var fileName = tree.length + '.md';
+          var authedRepo = getAuthRepo(community);
+          authedRepo.write(topic, fileName, text, 'reply', function(err, sha) {
+            console.log("sha", sha);
+            if(err){
+              $form.spin(false);
+              alert("Error hapenned");
+            } else{
+              tree.push({path: fileName});
+              var message = {
+                html: makeHtml(text)
+              };
+              message.commit = {
+                published: moment().fromNow(),
+                published_at: moment().format()
+              };
+              message.commit.author = {
+                url: cUnity.user.profileUrl,
+                avatar_url: cUnity.user.avatar
+              };
+              $form.spin(false);
+              $postInput.val('');
+              renderArrayItem(message, $messagesListEl, 'topic-page-message-tpl');
             }
-            $messagesListEl.spin(false);
-            renderArray(files, $messagesListEl, 'topic-page-message-tpl');
           });
         });
-      });
+        console.log(tree);
+        var workers = [];
+        var i = 0;
+        for(; i < tree.length; i++){
+          var node = tree[i];
+          (function(node){
+            var worker = function(callback){
+              repo.read(topic, node.path, function(err, data, sha){
+                callback(err, {content: data, topic: topic, path: node.path, sha: sha});
+              });
+            };
+            workers.push(worker);
+          })(node);
+        }
+        async.parallel(workers, function(error, files){
+          files = _.first(files, files.length - 1);
+          console.log('files', files);
+          repo.getRef('heads/' + topic, function(err, sha){
+
+            repo.commits(sha, function(err, commits){
+              commits = _.first(commits, commits.length - 1);
+              console.log("commits", commits);
+              var i = 0;
+              for(; i < commits.length; i++){
+                var k = commits.length - i - 1;
+                var file = files[k];
+                if(file){
+                  var commit = commits[i];
+                  commit.published_at = commit.commit.author.date;
+                  commit.published = moment(commit.published_at).fromNow();
+                  file.commit = commit;
+                  file.html = makeHtml(file.content);
+                }
+              }
+              $messagesListEl.spin(false);
+              renderArray(files, $messagesListEl, 'topic-page-message-tpl');
+            });
+          });
+        });
+      }
     });
   }
   function makeHtml(md){
@@ -359,10 +360,15 @@ $(function(){
     });
   });
 
-
   page('/communities/:community/:topic', renderHeader, function(ctx){
     showPage('topic-page', ctx.params.community + ': ' + ctx.params.topic, function(){
       renderTopicPage(ctx.params.community, ctx.params.topic);
+    });
+  });
+
+  page('/members/:username', renderHeader, function(ctx){
+    showPage('member-page',ctx.params.username + ': profile' , function(){
+      
     });
   });
 

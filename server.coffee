@@ -203,6 +203,11 @@ app.get "/auth/callback",
     res.redirect "/"
 
 
+app.get "/api/members/:username", (req, res) ->
+  profile = {}
+  res.json profile
+
+
 app.get "/api/communities", (req, res) ->
   getCommunities (err, communities) ->
     if err
@@ -469,7 +474,7 @@ app.get "/communities", renderIndexPage
 app.get "/create", renderIndexPage
 app.get "/communities/:community", renderIndexPage
 app.get "/communities/:community/:topic", renderIndexPage
-
+app.get "/members/:username", renderIndexPage
 
 if nconf.get("NODE_ENV") == "development"
   http.createServer(app).listen 8090
