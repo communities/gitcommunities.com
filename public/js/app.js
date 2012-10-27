@@ -53,6 +53,22 @@ $(function(){
       });
     });
   }
+  function renderMemberPage(username){
+    var $page = $('#member-page');
+    $page.spin();
+    getUserProfile(username, function(err, profile){
+       $page.spin(false);
+      if(err){
+        console.log('error hapenned');
+      } else{
+        $page.find('img.avatar').attr('src', profile.avatar_url);
+        $page.find('.name').html(profile.name);
+        $page.find('.bio').html(profile.bio);
+        $page.find('.location').html(profile.location);
+        $page.find('.blog').html(profile.blog);
+      }
+    });
+  }
 
   function renderMyCommunitiesPage(){
     var $communitiesListEl = $('#my-communities-list').empty();
@@ -309,6 +325,19 @@ $(function(){
       return getAuthRepo(community);
     }
   }
+  
+  function getUserProfile(username, callback){
+    var gh;
+    if(_.isEmpty(cUnity.user.accessToken)){
+      gh = new Github({});
+    } else{
+      gh = new Github({
+        token: cUnity.user.accessToken,
+        auth: 'oauth'
+      });
+    }
+    return gh.getUser().show(username, callback);
+  }
 
   function renderHeader(ctx, next){
     if(_.isEmpty(cUnity.user.username)){
@@ -368,7 +397,7 @@ $(function(){
 
   page('/members/:username', renderHeader, function(ctx){
     showPage('member-page',ctx.params.username + ': profile' , function(){
-      
+      renderMemberPage(ctx.params.username);
     });
   });
 
