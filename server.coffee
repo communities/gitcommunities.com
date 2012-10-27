@@ -318,7 +318,7 @@ getTopics = (community, callback) ->
         if meta[i] and topics[i]
           topics[i].sha = meta[i].sha
           commits = meta[i].commits
-          topics[i].commits = _.first(commits, commits.length - 1)
+          topics[i].commits = _.first commits, commits.length - 1
           topics[i].created = _.last topics[i].commits
           topics[i].updated = _.first topics[i].commits 
           participants = (commit.author for commit in topics[i].commits)

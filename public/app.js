@@ -1,4 +1,4 @@
-/*! gitcommunities.com - v0.0.0 - 2012-09-25
+/*! gitcommunities.com - v0.0.0 - 2012-10-27
 * http://gitcommunities.com
 * Copyright (c) 2012 Anton Podviaznikov <anton@podviaznikov.com>; Licensed MIT */
 
@@ -14485,6 +14485,9 @@ $(function(){
     $.get('/api/communities', function(repos){
       $communitiesListEl.spin(false);
       renderArray(repos, $communitiesListEl, 'home-page-community-tpl');
+    }).error(function(){
+      console.log("Failed to load communities");
+      $communitiesListEl.spin(false);
     });
     $communitiesListEl.on('click', '.join-community-btn', function(e){
       e.preventDefault();
@@ -14494,6 +14497,9 @@ $(function(){
       var name = $(e.currentTarget).data('name');
       $.post('/communities/' + name + '/join', function(){
         // TODO (anton) we should update amount of members.
+        $item.spin(false);
+      }).error(function(){
+        console.log("failed to join community");
         $item.spin(false);
       });
     });
@@ -14506,6 +14512,9 @@ $(function(){
       $.post('/communities/' + name + '/leave', function(){
         // TODO (anton) we should update amount of members.
         $item.spin(false);
+      }).error(function(){
+        console.log("failed to leave community");
+        $item.spin(false);
       });
     });
   }
@@ -14517,6 +14526,9 @@ $(function(){
     $.get(url, function(repos){
       $communitiesListEl.spin(false);
       renderArray(repos, $communitiesListEl, 'my-communities-page-community-tpl');
+    }).error(function(){
+      console.log("Failed to load my communities");
+      $communitiesListEl.spin(false);
     });
   }
 
@@ -14545,6 +14557,9 @@ $(function(){
           console.log("repo created");
           $form.spin(false);
           page('/communities/' + name);
+        }).error(function(){
+          alert("Impossible to create community with such data");
+          $form.spin(false);
         });
       }
     });
@@ -14568,7 +14583,7 @@ $(function(){
         }
      });
 
-    $.get("/api/communities/" + community, function(community){
+    $.get('/api/communities/' + community, function(community){
       $topicsListEl.spin(false);
       if(community.isMember){
         $leaveCommunityBtn.attr('style', 'display: inline-block!important');
@@ -14576,13 +14591,20 @@ $(function(){
         $joinCommunityBtn.attr('style', 'display: inline-block!important');
       }
       _.each(community.topics, function(topic){
-        topic.created_at = topic.created.commit.author.date;
-        topic.createdWhen = moment(topic.created_at).fromNow();
-        topic.updated_at = topic.updated.commit.author.date;
-        topic.updatedWhen = moment(topic.updated_at).fromNow();
+        if(topic.created){
+          topic.created_at = topic.created.commit.author.date;
+          topic.createdWhen = moment(topic.created_at).fromNow();
+        }
+        if(topic.updated){
+          topic.updated_at = topic.updated.commit.author.date;
+          topic.updatedWhen = moment(topic.updated_at).fromNow();
+        }
       });
       $page.find('.page-header h2').html(community.description);
       renderArray(community.topics, $topicsListEl, 'community-page-topic-tpl');
+    }).error(function(){
+      console.log('Failed to load community info');
+      $topicsListEl.spin(false);
     });
     // TODO add listeners for join and leave buttons.
   }
@@ -14616,9 +14638,9 @@ $(function(){
             repo.write(topic, '1.md', content, 'start conversation', function(err) {
               $form.spin(false);
               if(err){
-                alert("Error hapenned");
+                alert('Error hapenned');
               }else{
-                page("/communities/" + community + "/" + topic);
+                page('/communities/' + community + '/' + topic);
               }
             });
           });
@@ -14631,6 +14653,7 @@ $(function(){
     var repo = getRepo(community);
     var $createMessageBtn = $('#create-new-message-btn');
     var $form = $('#new-message-form');
+    var $postInput = $form.find('.new-message-content');
     var $messagesListEl = $('#messages-list').empty();
     var communityLink = '/communities/' + community;
     $('a.goto-current-community-page-btn').attr('href', communityLink);
@@ -14640,7 +14663,7 @@ $(function(){
       $createMessageBtn.on('click', function(e){
         e.preventDefault();
         $form.spin();
-        var text = $form.find('.new-message-content').val();
+        var text = $postInput.val();
         var fileName = tree.length + '.md';
         var authedRepo = getAuthRepo(community);
         authedRepo.write(topic, fileName, text, 'reply', function(err, sha) {
@@ -14662,6 +14685,7 @@ $(function(){
               avatar_url: cUnity.user.avatar
             };
             $form.spin(false);
+            $postInput.val('');
             renderArrayItem(message, $messagesListEl, 'topic-page-message-tpl');
           }
         });
@@ -14682,7 +14706,7 @@ $(function(){
       }
       async.parallel(workers, function(erros, files){
         files = _.first(files, files.length - 1);
-        console.log("files", files);
+        console.log('files', files);
         repo.getRef('heads/' + topic, function(err, sha){
 
           repo.commits(sha, function(err, commits){
@@ -14700,7 +14724,6 @@ $(function(){
                 file.html = makeHtml(file.content);
               }
             }
-            console.log("new files", files);
             $messagesListEl.spin(false);
             renderArray(files, $messagesListEl, 'topic-page-message-tpl');
           });
@@ -14738,13 +14761,17 @@ $(function(){
   function getAuthRepo(community){
     var gh = new Github({
         token: cUnity.user.accessToken,
-        auth: "oauth"
+        auth: 'oauth'
     });
-    return gh.getRepo("communities", community);
+    return gh.getRepo('communities', community);
   }
   function getRepo(community){
-    var gh = new Github({});
-    return gh.getRepo("communities", community);
+    if(_.isEmpty(cUnity.user.accessToken)){
+      var gh = new Github({});
+      return gh.getRepo('communities', community);
+    } else{
+      return getAuthRepo(community);
+    }
   }
 
   function renderHeader(ctx, next){
