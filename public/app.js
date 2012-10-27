@@ -14532,6 +14532,11 @@ $(function(){
         $page.find('.location').html(profile.location);
         $page.find('.blog').html(profile.blog);
       }
+      $('#follow-member-btn').on('click', function(){
+        // TODO Maryna should implement this.
+        // post to GitHub.
+        // update followers amoun on page.
+      });
     });
   }
 

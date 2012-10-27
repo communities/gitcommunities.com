@@ -190,8 +190,28 @@ a.btn
     opacity: 1;
 
 #member-page
+  padding-top: 20px;
   & .avatar
     width: 130px;
+    height: 130px;
+  & .name
+    height: 30px;
+    margin: 10px 0;
+    text-align: center;
+    font-weight: bold; 
+    width: 130px; 
+  & .basics
+  & .details
+    display: inline-block;
+    vertical-align: top;  
+  & .basics
+    & > *
+      display: block; 
+  & .details
+    & aside
+      border-top: 1px solid $thirdColor;
+      padding-top: 20px;
+      margin-top: 20px;
 
 .app-header
 .app-footer .container
