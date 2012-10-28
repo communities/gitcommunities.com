@@ -364,10 +364,12 @@ getGitHubTeams = (callback) ->
 getTopicMeta = (community, topic, callback) ->
   ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
   ghAdmin.get "/repos/communities/#{community}/git/refs/heads/#{topic}", {}, (err, status, ref) ->
+    console.log "topic meta1", err, status, ref
     if err or not ref? or not ref.object?
       callback err
       return
     getCommits community, ref.object.sha, (err, commits) ->
+      console.log "topic meta: commits", err, commits
       if err
         callback err
         return
@@ -459,7 +461,7 @@ app.post "/communities/:community/leave", (req, res) ->
 renderIndexPage = (req, res) ->
   params = 
     user: req.user or {}
-    jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else  "/app.js"
+    jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else "/app.js"
   getCommunities (err, communities) ->
     if !err
       params.communitiesCount = communities.length
