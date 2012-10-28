@@ -20,32 +20,8 @@ html(lang="en")
     script(src="#{jsFile}")
   body
     include header        
-    #home-page.page.invisible 
-      section.welcome-section.unlogined-show
-        .stats-section
-          .stats-item.topics-count
-            strong= topicsCount
-            span Topics
-          .stats-item.members-count
-            strong= membersCount
-            span Members
-          .stats-item.communities-count
-            strong= communitiesCount
-            span Communities
-      ul#communities-list.items-list
-    #member-page.page.invisible
-      .basics
-        img.avatar
-        span.name
-        button#follow-member-btn.action-btn.btn Follow
-      .details
-        p.bio
-        aside
-          span.location
-          span.blog
-        .member-stats
-          span.followers-count
-          span.following-count
+    include home-page
+    include member-page
     #my-communities-page.page.invisible 
       ul#my-communities-list.items-list      
     #new-community-page.page.invisible
@@ -54,16 +30,7 @@ html(lang="en")
         textarea(required,placeholder="Description for the community")#new-community-description.input
         textarea(required,placeholder="Long description for the community")#new-community-long-description.input
         button#create-new-community-btn.action-btn.btn New Community
-    #community-page.page.invisible
-      header.page-header
-        h1
-        h2
-        .page-toolbar
-          button#goto-new-topic-page-btn.action-btn.btn.small New Topic
-          button#join-community-btn.action-btn.btn.small Join
-          button#leave-community-btn.action-btn.btn.small Leave
-      p.community-intro
-      ul#topics-list.items-list
+    include community-page
     #new-topic-page.page.invisible
       form(onsubmit="return false;")
         input(required,placeholder="Topic name",pattern="^[A-Za-z0-9-]{1,127}$",title="Characters, numbers and hypen are allowed.")#new-topic-name.input.logined-show
