@@ -73,6 +73,8 @@ $(function(){
         $page.find('.bio').html(profile.bio);
         $page.find('.location').html(profile.location);
         $page.find('.blog').html(profile.blog);
+        $page.find('.followers-count').html(profile.followers);
+        $page.find('.following-count').html(profile.following);
       }
       $('#follow-member-btn').on('click', function(){
         // TODO Maryna should implement this.

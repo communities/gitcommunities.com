@@ -1,0 +1,65 @@
+script(type="text/template")#home-page-community-tpl
+  |<li class="community-item selectable"><a class="nav-link" href="/communities/<%= name %>">
+  |<div class="members-count counter"><span><%= members_count %></span></div>
+  |<div class="details">
+  |<h1><%= name %></h1>
+  |<div class="community-content">
+  | <p><%= description %>
+  | <div class="metadata">
+  |   <span class="label">Created </span><time pubdate datetime="<%= created_at %>"><%= created %></time>
+  |   <span class="label">Updated </span><time datetime="<%= pushed_at %>"><%= pushed %></time>
+  |   <span class="label">Members </span><span class="members-count"><%= members_count %></span>
+  |   <span class="label">Topics </span><span class="topics-count"><%= topics_count %></span>
+  |  </div>
+  | </div>
+  |</div>
+  |<% if(isMember){ %>
+  |  <button class="leave-community-btn action-btn btn logined-show" data-name="<%= name %>">Leave</button>
+  |<% } else{ %>
+  |  <button class="join-community-btn action-btn btn logined-show" data-name="<%= name %>">Join</button>
+  |<% } %>
+  |</a></li>
+script(type="text/template")#my-communities-page-community-tpl
+  |<li class="community-item selectable"><a class="nav-link" href="/communities/<%= name %>">
+  |<div class="members-count counter"><span><%= members_count %></span></div>
+  |<div class="details">
+  |<h1><%= name %></h1>
+  |<div class="community-content">
+  | <p><%= description %>
+  | <div class="metadata">
+  |   <span class="label">Created </span><time pubdate datetime="<%= created_at %>"><%= created %></time>
+  |   <span class="label">Updated </span><time datetime="<%= pushed_at %>"><%= pushed %></time>
+  |   <span class="label">Members </span><span class="members-count"><%= members_count %></span>
+  |   <span class="label">Topics </span><span class="topics-count"><%= topics_count %></span>
+  |  </div>
+  | </div>
+  |</div>
+  |</a></li>      
+script(type="text/template")#community-page-topic-tpl
+  |<li class="topic-item selectable"><a class="nav-link" href="/communities/<%= community %>/<%= name %>">
+  | <div class="messages-count counter"><span><%= commits.length %></span></div>
+  | <div class="details">
+  |   <h1><%= name %></h1>
+  |   <div class="topic-content">
+  |     <div class="metadata">
+  |   <span class="label">Created </span><time pubdate datetime="<%= created_at %>"><%= createdWhen %></time>
+  |   <span class="label">Updated </span><time datetime="<%= updated_at %>"><%= updatedWhen %></time>      
+  |     </div>
+  |     <ul class="participants">
+  |       <% _.each(participants, function(participant) { %> <li><a href="/members/<%= participant.login %>"><img src="<%= participant.avatar_url %>" alt="<%= participant.login %>"></a></li> <% }); %>  
+  |     </ul>
+  |   </div>
+  |</div>
+  |</a> </li> 
+script(type="text/template")#topic-page-message-tpl
+  |<li class="message">
+  | <div class="message-content">
+  |  <p><%= html %></p>
+  |  <div class="metadata">by <span class='author'><%= commit.author.login %></span> <time pubdate datetime="<%= commit.published_at %>"><%= commit.published %></time></div>
+  | </div>
+  | <div class="user-info">
+  | <a href="/members/<%= commit.author.login %>" target="_blank">
+  |   <img src="<%= commit.author.avatar_url %>" class="avatar avatar-small">
+  | </a>
+  | </div>
+  |</li>  
