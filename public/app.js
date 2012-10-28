@@ -14477,6 +14477,13 @@ $(function(){
     }
   }
 
+  function subscribreToRealTimeUpdates(community){
+    var socket = io.connect('http://gitcommunities.com');
+    socket.on(community, function (data) {
+      console.log('message from server',data);
+    });
+  }  
+
   // RENDERERS
 
   function renderHomePage(){
@@ -14544,9 +14551,12 @@ $(function(){
     var $communitiesListEl = $('#my-communities-list').empty();
     $communitiesListEl.spin();
     var url = '/api/' + cUnity.user.username + '/communities';
-    $.get(url, function(repos){
+    $.get(url, function(communities){
       $communitiesListEl.spin(false);
-      renderArray(repos, $communitiesListEl, 'my-communities-page-community-tpl');
+      renderArray(communities, $communitiesListEl, 'my-communities-page-community-tpl');
+      _.each(communities, function(community){
+        subscribreToRealTimeUpdates(community.name);
+      });
     }).error(function(){
       console.log("Failed to load my communities");
       $communitiesListEl.spin(false);
@@ -14873,6 +14883,7 @@ $(function(){
 
   page.start({ click: false });
 
+
   $('html').on('click', 'a.nav-link', function(e){
     e.preventDefault();
     var href = $(e.currentTarget).attr('href');
@@ -14890,6 +14901,5 @@ $(function(){
     } else{
       footer.find('.footer-toggle').html('&#x25B2;');
     }
-
   });
 });

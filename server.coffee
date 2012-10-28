@@ -84,7 +84,7 @@ createGitHubRepo = (repo, username, callback) ->
             "name": "web",
             "active": true,
             "config": {
-              "url": "http://gitcommunities.com/webhook"
+              "url": "http://gitcommunities.com/webhook/#{repo.name}"
             }
           }  
           ghAdmin.post "/repos/communities/#{repo.name}/hooks", hook, (err) ->
@@ -355,7 +355,6 @@ getGitHubTeamMembers = (id, callback) ->
       return
     callback undefined, members 
 
-
 getGitHubTeams = (callback) ->
   ghAdmin = github.client nconf.get "GIHUB_ADMIN_TOKEN"
   ghAdmin.get "/orgs/communities/teams", (err, status, teams) ->
@@ -463,7 +462,7 @@ renderIndexPage = (req, res) ->
     user: req.user or {}
     jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else "/app.js"
   getCommunities (err, communities) ->
-    if !err
+    if !err and communities?
       params.communitiesCount = communities.length
       topicsSumFunc = (memo, community) -> return memo + community.topics_count
       params.topicsCount = _.reduce communities, topicsSumFunc, 0
@@ -478,8 +477,23 @@ app.get "/communities/:community", renderIndexPage
 app.get "/communities/:community/:topic", renderIndexPage
 app.get "/members/:username", renderIndexPage
 
+
+app.post "/webhook/:community", (req, res) ->
+  payload  = req.body;
+  console.log "Hook was called", payload, req.params.community
+  topic = payload.ref.split("/")[2]
+  channel = req.params.community
+  payload.topic = topic
+  console.log "channel name", topic
+  io.sockets.emit channel, payload
+  res.send()
+
+socketIo = require "socket.io"
+io = null
 if nconf.get("NODE_ENV") == "development"
-  http.createServer(app).listen 8090
+  server = http.createServer(app)
+  io = socketIo.listen server
+  server.listen 8090
 else
   proxyServer = express.createServer()
   proxyServer.get "*", (req, res) -> 
