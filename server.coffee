@@ -489,8 +489,8 @@ else
   proxyServer = express.createServer()
   proxyServer.get "*", (req, res) -> 
     res.redirect "https://gitcommunities.com" + req.url
-  proxyServer.listen 80  
+  proxyServer.listen 80
   spdyServer = spdy.createServer(sslOptions, app)
   io = socketIo.listen spdyServer
   spdyServer.listen 443
-console.log "server started on port"
+console.log "server started"
