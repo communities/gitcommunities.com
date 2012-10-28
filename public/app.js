@@ -1,4 +1,4 @@
-/*! gitcommunities.com - v0.0.0 - 2012-10-27
+/*! gitcommunities.com - v0.0.0 - 2012-10-28
 * http://gitcommunities.com
 * Copyright (c) 2012 Anton Podviaznikov <anton@podviaznikov.com>; Licensed MIT */
 
@@ -14689,8 +14689,8 @@ $(function(){
           var authedRepo = getAuthRepo(community);
           authedRepo.write(topic, fileName, text, 'reply', function(err, sha) {
             console.log("sha", sha);
+            $form.spin(false);
             if(err){
-              $form.spin(false);
               alert("Error hapenned");
             } else{
               tree.push({path: fileName});

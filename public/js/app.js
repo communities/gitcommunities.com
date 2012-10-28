@@ -224,8 +224,8 @@ $(function(){
           var authedRepo = getAuthRepo(community);
           authedRepo.write(topic, fileName, text, 'reply', function(err, sha) {
             console.log("sha", sha);
+            $form.spin(false);
             if(err){
-              $form.spin(false);
               alert("Error hapenned");
             } else{
               tree.push({path: fileName});
