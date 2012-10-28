@@ -76,10 +76,36 @@ $(function(){
         $page.find('.followers-count').html(profile.followers);
         $page.find('.following-count').html(profile.following);
       }
+
       $('#follow-member-btn').on('click', function(){
-        // TODO Maryna should implement this.
-        // post to GitHub.
-        // update followers amoun on page.
+        var url = 'https://api.github.com/user/following/'+ username + '?access_token=' + cUnity.user.accessToken;
+        if ($('#follow-member-btn').text() == 'Follow') {
+          // start following user
+          $.ajax({
+            accept: 'application/vnd.github.raw',
+            type: 'PUT',
+            url: url,
+            contentType: "application/json"
+          }).done(function(){
+            var followersCount = parseInt($('.followers-count').text(), 10);
+            followersCount += 1;
+            $('.followers-count').text(followersCount);
+          });
+        } else {
+          // unfollow user
+          $.ajax({
+            accept: 'application/vnd.github.raw',
+            type: 'DELETE',
+            url: url,
+            contentType: "application/json"
+          }).done(function(){
+            var followersCount = parseInt($('.followers-count').text(), 10);
+            followersCount -= 1;
+            $('.followers-count').text(followersCount);
+          });
+            
+        }
+        // update followers amount on page.
       });
     });
   }
@@ -351,6 +377,17 @@ $(function(){
       gh = new Github({
         token: cUnity.user.accessToken,
         auth: 'oauth'
+      });
+      // show follow or unfollow btn
+      var url = 'https://api.github.com/user/following/'+ username + '?access_token=' + cUnity.user.accessToken;
+      $.get(url, function(){
+        // you are following this user
+        $('#follow-member-btn').text('Following');
+        $('#follow-member-btn').hover(function(){
+          $(this).text('Unfollow');
+        }, function(){
+          $(this).text('Following');
+        });
       });
     }
     return gh.getUser().show(username, callback);
