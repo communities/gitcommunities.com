@@ -84,7 +84,7 @@ createGitHubRepo = (repo, username, callback) ->
             "name": "web",
             "active": true,
             "config": {
-              "url": "http://gitcommunities.com/webhook/#{repo.name}"
+              "url": "https://gitcommunities.com/webhook/#{repo.name}"
             }
           }  
           ghAdmin.post "/repos/communities/#{repo.name}/hooks", hook, (err) ->
@@ -95,37 +95,27 @@ createGitHubRepo = (repo, username, callback) ->
 
 
 createGitRepo = (repo, callback) ->
-  gitty   = require "gitty"
-  {name} = repo
-  path = __dirname + "/repos/" + name
-  fs.mkdirSync path
-  gitRepo = new gitty.Repository path
-  gitRepo.init ->
-    license = """
-       All materials are licensed under the Creative Commons Attribution 3.0 License
-       http://creativecommons.org/licenses/by/3.0/.
-    """
-    readme = """
-      # #{name}
-      
-      Visit our page at [gitcommunities.com](#{repo.homepage}).
-      
-      #{repo.longDescription}
-      ## License
-      #{license}
-    """
-    fs.writeFileSync __dirname + "/repos/#{name}/README.md", readme
-    fs.writeFileSync __dirname + "/repos/#{name}/LICENSE", license
-    gitRepo.add ["README.md", "LICENSE"], ->
-      gitRepo.commit "initial commit", ->
-        gitRemoteAdd = new gitty.Command path, "remote add", [], "origin https://github.com/communities/#{name}.git"
-        gitRemoteAdd.exec (error, stdout, stderr) ->
-          err = error || stderr;
-          console.log "adding remote", err, stdout
-          gitRepo.push path, "origin", "master", (err, data) ->
-            console.log "pushing origin", err, data
-            callback undefined, repo 
-          , { user : nconf.get("GIHUB_ADMIN_USERNAME"), pass : nconf.get("GIHUB_ADMIN_PASSWORD")}    
+  ghRepoCreate = require "gh-repo-create"
+  license = """
+     All materials are licensed under the Creative Commons Attribution 3.0 License
+     http://creativecommons.org/licenses/by/3.0/.
+  """
+  readme = """
+    # #{name}
+    
+    Visit our page at [gitcommunities.com](#{repo.homepage}).
+    
+    #{repo.longDescription}
+    ## License
+    #{license}
+    """  
+  options = 
+    baseDir: __dirname + "/repos/"
+    license: license
+    readme: readme
+    remote: "https://github.com/communities/#{name}.git"
+  ghRepoCreate name, options, callback
+ 
 
 passport = require "passport"
 
