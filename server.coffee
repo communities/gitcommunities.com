@@ -11,7 +11,7 @@ stylus  = require "stylus"
 nib     = require "nib"
 
 github  = require "octonode"
-gitty   = require "gitty"
+
 
 GitHubApi = require "github"
 githubApi = new GitHubApi({version: "3.0.0"})
@@ -95,6 +95,7 @@ createGitHubRepo = (repo, username, callback) ->
 
 
 createGitRepo = (repo, callback) ->
+  gitty   = require "gitty"
   {name} = repo
   path = __dirname + "/repos/" + name
   fs.mkdirSync path
