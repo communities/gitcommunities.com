@@ -86,13 +86,13 @@
       }
 
       this.follow = function(username, cb) {
-        _request("PUT", "/users/following/"+username, null, function(err, res) {
+        _request("PUT", "/user/following/"+username, null, function(err, res) {
           cb(err, res);
         });
       }
 
        this.unfollow = function(username, cb) {
-        _request("DELETE", "/users/following/"+username, null, function(err, res) {
+        _request("DELETE", "/user/following/"+username, null, function(err, res) {
           cb(err, res);
         });
       }

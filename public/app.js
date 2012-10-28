@@ -14560,28 +14560,42 @@ $(function(){
         var url = 'https://api.github.com/user/following/'+ username + '?access_token=' + cUnity.user.accessToken;
         if ($('#follow-member-btn').text() == 'Follow') {
           // start following user
-          $.ajax({
-            accept: 'application/vnd.github.raw',
-            type: 'PUT',
-            url: url,
-            contentType: "application/json"
-          }).done(function(){
-            var followersCount = parseInt($('.followers-count').text(), 10);
-            followersCount += 1;
-            $('.followers-count').text(followersCount);
+          var gh = new Github({
+            token: cUnity.user.accessToken,
+            auth: 'oauth'
           });
+          gh.getUser().follow(username, function(){
+            console.log('start following');
+          })
+          // $.ajax({
+          //   accept: 'application/vnd.github.raw',
+          //   type: 'PUT',
+          //   url: url,
+          //   contentType: "application/json"
+          // }).done(function(){
+          //   var followersCount = parseInt($('.followers-count').text(), 10);
+          //   followersCount += 1;
+          //   $('.followers-count').text(followersCount);
+          // });
         } else {
           // unfollow user
-          $.ajax({
-            accept: 'application/vnd.github.raw',
-            type: 'DELETE',
-            url: url,
-            contentType: "application/json"
-          }).done(function(){
-            var followersCount = parseInt($('.followers-count').text(), 10);
-            followersCount -= 1;
-            $('.followers-count').text(followersCount);
+          var gh = new Github({
+            token: cUnity.user.accessToken,
+            auth: 'oauth'
           });
+          gh.getUser().unfollow(username, function(){
+            console.log('unfollowed');
+          })
+          // $.ajax({
+          //   accept: 'application/vnd.github.raw',
+          //   type: 'DELETE',
+          //   url: url,
+          //   contentType: "application/json"
+          // }).done(function(){
+          //   var followersCount = parseInt($('.followers-count').text(), 10);
+          //   followersCount -= 1;
+          //   $('.followers-count').text(followersCount);
+          // });
             
         }
         // update followers amount on page.
