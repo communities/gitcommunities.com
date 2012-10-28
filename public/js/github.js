@@ -85,6 +85,18 @@
         });
       }
 
+      this.follow = function(username, cb) {
+        _request("PUT", "/users/following/"+username, null, function(err, res) {
+          cb(err, res);
+        });
+      }
+
+       this.unfollow = function(username, cb) {
+        _request("DELETE", "/users/following/"+username, null, function(err, res) {
+          cb(err, res);
+        });
+      }
+
       // List user repositories
       // -------
 
@@ -172,6 +184,8 @@
       this.deleteRef = function(ref, cb) {
         _request("DELETE", repoPath + "/git/refs/"+ref, options, cb);
       };
+
+
 
       // List all branches of a repository
       // -------
