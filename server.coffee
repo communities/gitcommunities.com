@@ -500,5 +500,7 @@ else
   proxyServer.get "*", (req, res) -> 
     res.redirect "https://gitcommunities.com" + req.url
   proxyServer.listen 80  
-  spdy.createServer(sslOptions, app).listen 443
+  spdyServer = spdy.createServer(sslOptions, app)
+  io = socketIo.listen spdyServer
+  spdyServer.listen 443
 console.log "server started on port"
