@@ -11679,13 +11679,13 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       }
 
       this.follow = function(username, cb) {
-        _request("PUT", "/users/following/"+username, null, function(err, res) {
+        _request("PUT", "/user/following/"+username, null, function(err, res) {
           cb(err, res);
         });
       }
 
        this.unfollow = function(username, cb) {
-        _request("DELETE", "/users/following/"+username, null, function(err, res) {
+        _request("DELETE", "/user/following/"+username, null, function(err, res) {
           cb(err, res);
         });
       }
@@ -14560,42 +14560,28 @@ $(function(){
         var url = 'https://api.github.com/user/following/'+ username + '?access_token=' + cUnity.user.accessToken;
         if ($('#follow-member-btn').text() == 'Follow') {
           // start following user
-          var gh = new Github({
-            token: cUnity.user.accessToken,
-            auth: 'oauth'
+          $.ajax({
+            accept: 'application/vnd.github.raw',
+            type: 'PUT',
+            url: url,
+            contentType: "application/json"
+          }).done(function(){
+            var followersCount = parseInt($('.followers-count').text(), 10);
+            followersCount += 1;
+            $('.followers-count').text(followersCount);
           });
-          gh.getUser().follow(username, function(){
-            console.log('start following');
-          })
-          // $.ajax({
-          //   accept: 'application/vnd.github.raw',
-          //   type: 'PUT',
-          //   url: url,
-          //   contentType: "application/json"
-          // }).done(function(){
-          //   var followersCount = parseInt($('.followers-count').text(), 10);
-          //   followersCount += 1;
-          //   $('.followers-count').text(followersCount);
-          // });
         } else {
           // unfollow user
-          var gh = new Github({
-            token: cUnity.user.accessToken,
-            auth: 'oauth'
+          $.ajax({
+            accept: 'application/vnd.github.raw',
+            type: 'DELETE',
+            url: url,
+            contentType: "application/json"
+          }).done(function(){
+            var followersCount = parseInt($('.followers-count').text(), 10);
+            followersCount -= 1;
+            $('.followers-count').text(followersCount);
           });
-          gh.getUser().unfollow(username, function(){
-            console.log('unfollowed');
-          })
-          // $.ajax({
-          //   accept: 'application/vnd.github.raw',
-          //   type: 'DELETE',
-          //   url: url,
-          //   contentType: "application/json"
-          // }).done(function(){
-          //   var followersCount = parseInt($('.followers-count').text(), 10);
-          //   followersCount -= 1;
-          //   $('.followers-count').text(followersCount);
-          // });
             
         }
         // update followers amount on page.
