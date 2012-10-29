@@ -1,4 +1,4 @@
-/*! gitcommunities.com - v0.0.0 - 2012-10-29
+/*! gitcommunities.com - v0.0.0 - 2012-10-30
 * http://gitcommunities.com
 * Copyright (c) 2012 Anton Podviaznikov <anton@podviaznikov.com>; Licensed MIT */
 
@@ -14904,7 +14904,13 @@ $(function(){
   // ROUTER
 
   page('', renderHeader, function(){
-    showPage('home-page', 'Communities', renderHomePage);
+    var lastUrl = localStorage.getItem('lastUrl');
+    if(lastUrl){
+      localStorage.removeItem('lastUrl');
+      document.location.pathname = lastUrl;
+    } else {
+      showPage('home-page', 'Communities', renderHomePage);
+    }
   });
 
   page('/communities', renderHeader, function(){
@@ -14953,6 +14959,12 @@ $(function(){
       history.back();
     }
   });
+  $('.login-btn').on('click', function(e){
+      e.preventDefault();
+      var pathName = document.location.pathname;
+      localStorage.setItem('lastUrl', pathName);
+      page("/auth");
+    });
   $('#goto-new-topic-page-btn').on('click', function(){
     page('/communities/' + $('html').attr('data-community-name') + '/create');
   });
