@@ -254,15 +254,7 @@ getCommunities = (callback) ->
             # rc.expire "communities", 200, redis.print
             callback err, repos
     else  
-      repos = for name, repo of hash
-        json = null
-        try
-          json = JSON.parse(repo) 
-        catch error
-          console.log "cannot parse data for repo", name, repo
-        json
-      communities = _.compact repos       
-      callback undefined, communities
+      parseCache hash, callback
 
 
 app.get "/api/communities/:community", (req, res) ->
@@ -334,15 +326,18 @@ getTopics = (community, callback) ->
             # rc.expire "communities", 200, redis.print         
             callback undefined, topics    
     else  
-      topics = for name, topic of hash
-        json = null
-        try
-          json = JSON.parse(topic) 
-        catch error
-          console.log "cannot parse data for repo", name, topic
-        json
-      topics = _.compact topics       
-      callback undefined, topics          
+      parseCache hash, callback    
+
+parseCache = (hash, callback) ->
+  items = for name, item of hash
+    json = null
+    try
+      json = JSON.parse(item) 
+    catch error
+      console.log "cannot parse data for items", name, item
+    json
+  items = _.compact items       
+  callback undefined, items      
 
 
 getMembers = (community, callback) ->
