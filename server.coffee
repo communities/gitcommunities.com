@@ -488,8 +488,14 @@ app.get "/members/:username", renderIndexPage
 
 handlePushWebHook = (req, res) ->
   {payload}  = req.body
-  console.log "Hook was called", payload, req.params.community
+  payload = JSON.parse payload
+  topic = payload.ref.split("/")[2]
+  console.log "Hook was called", payload, req.params.community, topic
   channel = req.params.community
+  rc.hmget "#{channel}:topics", topic, (err, reply) ->
+    console.log "getting topic", err, reply
+    if not err and not reply?
+      console.log "testing"
   io.sockets.emit channel, payload
   res.send()
 
