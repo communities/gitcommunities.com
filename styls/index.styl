@@ -85,6 +85,7 @@ form
 a.btn    
 .btn
   display: inline-block;
+  vertical-align: middle!important;
   background-color: $firstColor;
   color: $secondColor;
   border-radius: 3px;
@@ -240,9 +241,16 @@ header.app-header
   & .main-toolbar
     position: relative;
     height: 50px;
-  #user-profile
+  .left-menu
     position: absolute;
     left: 10px;
+  .right-menu
+    position: absolute;
+    right: 0;  
+  #user-profile
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 20px;  
     & .avatar
       width: 45px;
       height: 45px;
@@ -253,9 +261,23 @@ header.app-header
     & .avatar
     & span
       vertical-align: top;  
-  #user-toolbar
-    position: absolute;
-    right: 0;
+
+
+  .iconed-btn
+      background-repeat: no-repeat;
+      width: 43px;
+      height: 43px;
+      padding: 10px;
+      background-position: center;
+
+  #login-btn
+    background-image: url('images/login.png');
+    
+  #logout-btn
+    background-image: url('images/logout.png');
+
+  .home-btn
+    background-image: url('images/home.png');
 
 footer.app-footer
   border-top: 2px solid $fourthColor;
@@ -355,6 +377,7 @@ html[data-page-name="community-page"].logined
 html[data-page-name="topic-page"]
   & .goto-current-community-page-btn
     display: inline-block!important;
+
 
 #community-page
   & .page-header 

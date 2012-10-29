@@ -30,12 +30,14 @@ html(lang="en")
         textarea(required,placeholder="Description for the community")#new-community-description.input
         textarea(required,placeholder="Long description for the community")#new-community-long-description.input
         button#create-new-community-btn.action-btn.btn New Community
+        button.cancel-btn.action-btn.btn Cancel
     include community-page
     #new-topic-page.page.invisible
       form(onsubmit="return false;")
         input(required,placeholder="Topic name",pattern="^[A-Za-z0-9-]{1,127}$",title="Characters, numbers and hypen are allowed.")#new-topic-name.input.logined-show
         #new-topic-message.message.markdown-editor
         button#create-new-topic-btn.action-btn.btn.logined-show New Topic
+        button.cancel-btn.action-btn.btn Cancel
     #topic-page.page.invisible 
       section#messages-list.items-list
       form#new-message-form(onsubmit="return false;").logined-show

@@ -14479,7 +14479,8 @@ if (typeof module !== 'undefined') {
 
 /*global cUnity: false, console: false, $: false, moment: false, _: false, page: false, async: false, alert: false, Showdown: false, EpicEditor: false, Github: false */
 $(function(){
-  
+  var socket = io.connect('https://gitcommunities.com');
+
   function showPage(pageName, pageTitle, fn){
     $('.page.visible').removeClass('visible').addClass('invisible');
 
@@ -14492,11 +14493,10 @@ $(function(){
   }
 
   function subscribreToRealTimeUpdates(community){
-    var socket = io.connect('http://gitcommunities.com');
     socket.on(community, function (data) {
       console.log('message from server',data);
     });
-  }  
+  }
 
   // RENDERERS
 
@@ -14942,7 +14942,12 @@ $(function(){
     var href = $(e.currentTarget).attr('href');
     page(href);
   });
-
+  $('html').on('click', '.cancel-btn', function(e){
+    e.preventDefault();
+    if(history){
+      history.back();
+    }
+  });
   $('#goto-new-topic-page-btn').on('click', function(){
     page('/communities/' + $('html').attr('data-community-name') + '/create');
   });

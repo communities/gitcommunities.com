@@ -1,16 +1,18 @@
 header.app-header         
   nav.main-toolbar
-    #user-profile.logined-show
-      img.avatar
-      span
-    #user-toolbar
+    .left-menu
       .logined-show
-        a(href="/").nav-link.action-btn.btn Home
         a(href="/communities").nav-link.action-btn.btn My communities
         a(href="").goto-current-community-page-btn.nav-link.action-btn.btn Community
         a(href="/create")#goto-new-community-page-btn.nav-link.action-btn.btn New Community
-        a(href="/logout").action-btn.btn Logout
+    #user-toolbar.right-menu
+      .logined-show
+        #user-profile
+          img.avatar
+          span      
+        a(href="/").home-btn.nav-link.action-btn.btn.iconed-btn
+        a(href="/logout")#logout-btn.action-btn.btn.iconed-btn
       .unlogined-show
-        a(href="/").nav-link.action-btn.btn Home
+        a(href="/").home-btn.nav-link.action-btn.btn.iconed-btn
         a(href="").goto-current-community-page-btn.nav-link.action-btn.btn Community
-        a(href="/auth")#login-btn.action-btn.btn Login  
+        a(href="/auth")#login-btn.action-btn.btn.iconed-btn  
