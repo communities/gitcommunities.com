@@ -251,7 +251,7 @@ getCommunities = (callback) ->
           hash = {}  
           _.each repos, (repo) -> hash[repo.name] = JSON.stringify(repo)  
           rc.hmset "communities", hash, (err) ->
-            rc.expire "communities", 200, redis.print
+            # rc.expire "communities", 200, redis.print
             callback err, repos
     else  
       repos = for name, repo of hash
@@ -295,33 +295,55 @@ getCommunity = (community, callback) ->
       repo.members_count = repo.members.length + repo.admins.length
       repo.created = moment(repo.created_at).fromNow()
       repo.pushed = moment(repo.pushed_at).fromNow()
-  
       callback undefined, repo             
 
 getTopics = (community, callback) ->
-  ghRepos().getBranches {user: "communities", repo: community}, (err, branches) ->
-    if err
-      callback err
-      return
-    topics = []
-    workers = []
-    _.each branches, (branch) ->
-      if branch.name != "master"
-        topics.push name: branch.name, community: community
-        workers.push async.apply getTopicMeta, community, branch.name
-    async.parallel workers, (errors, meta) ->
-      for i in [0...topics.length]
-        if meta[i] and topics[i]
-          topics[i].sha = meta[i].sha
-          commits = meta[i].commits
-          topics[i].commits = _.first commits, commits.length - 1
-          topics[i].created = _.last topics[i].commits
-          topics[i].updated = _.first topics[i].commits 
-          participants = (commit.author for commit in topics[i].commits)
-          participants = _.uniq participants, false, (participant) -> participant.id
-          topics[i].participants = participants
-      callback undefined, topics    
-        
+  rc.hgetall "#{community}:topics", (err, hash) ->
+    if err or not hash or Object.keys(hash) == 0  
+      ghRepos().getBranches {user: "communities", repo: community}, (err, branches) ->
+        if err
+          callback err
+          return
+        topics = []
+        workers = []
+        _.each branches, (branch) ->
+          if branch.name != "master"
+            topics.push name: branch.name, community: community
+            workers.push async.apply getTopicMeta, community, branch.name
+        async.parallel workers, (errors, meta) ->
+          if errors
+            callback errors
+            return
+          for i in [0...topics.length]
+            if meta[i] and topics[i]
+              topics[i].sha = meta[i].sha
+              commits = meta[i].commits
+              topics[i].commits = _.first commits, commits.length - 1
+              if topics[i].commits.length > 0
+                topics[i].created = _.last topics[i].commits
+                topics[i].updated = _.first topics[i].commits
+              else
+                 topics[i].created = {}
+                 topics[i].updated = {}
+              participants = (commit.author for commit in topics[i].commits)
+              participants = _.uniq participants, false, (participant) -> participant.id
+              topics[i].participants = participants
+          hash = {}  
+          _.each topics, (topic) -> hash[topic.name] = JSON.stringify(topic)  
+          rc.hmset "#{community}:topics", hash, (err) ->
+            # rc.expire "communities", 200, redis.print         
+            callback undefined, topics    
+    else  
+      topics = for name, topic of hash
+        json = null
+        try
+          json = JSON.parse(topic) 
+        catch error
+          console.log "cannot parse data for repo", name, topic
+        json
+      topics = _.compact topics       
+      callback undefined, topics          
+
 
 getMembers = (community, callback) ->
   getGitHubTeams (err, teams) ->
