@@ -472,7 +472,6 @@ app.get "/members/:username", renderIndexPage
 handlePushWebHook = (req, res) ->
   {payload}  = req.body
   console.log "Hook was called", payload, req.params.community
-  topic = payload.ref.split("/")[2]
   channel = req.params.community
   io.sockets.emit channel, payload
   res.send()
