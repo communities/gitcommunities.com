@@ -490,7 +490,7 @@ else
   proxyServer.post "/webhook/:community", handlePushWebHook
   proxyServer.get "*", (req, res) -> 
     res.redirect "https://gitcommunities.com" + req.url
-  proxyServer.listen 8091
+  proxyServer.listen 80
   spdyServer = spdy.createServer(sslOptions, app)
   io = socketIo.listen spdyServer
   spdyServer.listen 443
