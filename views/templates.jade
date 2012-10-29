@@ -55,7 +55,7 @@ script(type="text/template")#topic-page-message-tpl
   |<li class="message">
   | <div class="message-content">
   |  <p><%= html %></p>
-  |  <div class="metadata">by <span class='author'><%= commit.author.login %></span> <time pubdate datetime="<%= commit.published_at %>"><%= commit.published %></time></div>
+  |  <div class="metadata">by <a href="/members/<%= commit.author.login %>" target="_blank"><span class='author'><%= commit.author.login %></span></a> <time pubdate datetime="<%= commit.published_at %>"><%= commit.published %></time></div>
   | </div>
   | <div class="user-info">
   | <a href="/members/<%= commit.author.login %>" target="_blank">
