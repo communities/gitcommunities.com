@@ -498,21 +498,23 @@ handlePushWebHook = (req, res) ->
     console.log "getting topic", err, topic
     if not err and not topic?
       console.log "testing"
-      commits []
-      for payloadCommit in payload.commits
-        commit = 
-          author: payloadCommit.author
-          commiter: payloadCommit.commiter
-          commit:
-            id: payloadCommit.id
-            message: payloadCommit.message     
+      commits = []
+      if payload.commits?
+        for payloadCommit in payload.commits
+          commit = 
+            sha: payloadCommit.id
             url: payloadCommit.url
-            created: payloadCommit.timestamp
-      topic = 
-        name: topic
-        sha: payload.after
-        commits: commits
-      console.log "created topic", topic  
+            author: payloadCommit.author
+            commiter: payloadCommit.commiter
+            commit:
+              message: payloadCommit.message     
+              url: payloadCommit.url
+              created: payloadCommit.timestamp
+        topic = 
+          name: topic
+          sha: payload.after
+          commits: commits
+        console.log "created topic", topic  
   io.sockets.emit channel, payload
   res.send()
 
