@@ -4,6 +4,7 @@ express = require "express"
 md      = require "markdown"
 async   = require "async"
 _       = require "underscore"
+_s      = require "underscore.string"
 nconf   = require "nconf"
 moment  = require "moment"
 
@@ -68,7 +69,7 @@ createGitHubRepo = (repo, username, callback) ->
     if err
       callback err
       return
-    ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-admins", permission: "admin", repo_names:["communities/#{repo.name}"]}, (err, status, team) ->
+    ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-admins", permission: "admin", repo_names: ["communities/#{repo.name}"]}, (err, status, team) ->
       if err
         callback err
         return
@@ -76,7 +77,7 @@ createGitHubRepo = (repo, username, callback) ->
         if err
           callback err
           return   
-        ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-members", permission: "push", repo_names:["communities/#{repo.name}"]}, (err, status, team) ->
+        ghAdmin.post "/orgs/communities/teams", {name: "#{repo.name}-members", permission: "push", repo_names: ["communities/#{repo.name}"]}, (err, status, team) ->
           if err
             callback err
             return
@@ -84,7 +85,7 @@ createGitHubRepo = (repo, username, callback) ->
             "name": "web",
             "active": true,
             "config": {
-              "url": "https://gitcommunities.com/webhook/#{repo.name}"
+              "url": "http://gitcommunities.com/webhook/#{repo.name}"
             }
           }  
           ghAdmin.post "/repos/communities/#{repo.name}/hooks", hook, (err) ->
@@ -468,8 +469,8 @@ app.get "/communities/:community/:topic", renderIndexPage
 app.get "/members/:username", renderIndexPage
 
 
-app.post "/webhook/:community", (req, res) ->
-  payload  = req.body;
+handlePushWebHook = (req, res) ->
+  payload  = req.body
   console.log "Hook was called", payload, req.params.community
   topic = payload.ref.split("/")[2]
   channel = req.params.community
@@ -485,10 +486,11 @@ if nconf.get("NODE_ENV") == "development"
   io = socketIo.listen server
   server.listen 8090
 else
-  proxyServer = express.createServer()
+  proxyServer = express()
+  proxyServer.post "/webhook/:community", handlePushWebHook
   proxyServer.get "*", (req, res) -> 
     res.redirect "https://gitcommunities.com" + req.url
-  proxyServer.listen 80
+  proxyServer.listen 8091
   spdyServer = spdy.createServer(sslOptions, app)
   io = socketIo.listen spdyServer
   spdyServer.listen 443
