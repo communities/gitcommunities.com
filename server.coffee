@@ -487,6 +487,7 @@ if nconf.get("NODE_ENV") == "development"
   server.listen 8090
 else
   proxyServer = express()
+  proxyServer.use express.bodyParser()
   proxyServer.post "/webhook/:community", handlePushWebHook
   proxyServer.get "*", (req, res) -> 
     res.redirect "https://gitcommunities.com" + req.url
