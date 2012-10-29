@@ -490,12 +490,29 @@ handlePushWebHook = (req, res) ->
   {payload}  = req.body
   payload = JSON.parse payload
   topic = payload.ref.split("/")[2]
+  payload.topic - topic
   console.log "Hook was called", payload, req.params.community, topic
   channel = req.params.community
   rc.hmget "#{channel}:topics", topic, (err, reply) ->
-    console.log "getting topic", err, reply
-    if not err and not reply?
+    topic = _.first(_.compact(reply))
+    console.log "getting topic", err, topic
+    if not err and not topic?
       console.log "testing"
+      commits []
+      for payloadCommit in payload.commits
+        commit = 
+          author: payloadCommit.author
+          commiter: payloadCommit.commiter
+          commit:
+            id: payloadCommit.id
+            message: payloadCommit.message     
+            url: payloadCommit.url
+            created: payloadCommit.timestamp
+      topic = 
+        name: topic
+        sha: payload.after
+        commits: commits
+      console.log "created topic", topic  
   io.sockets.emit channel, payload
   res.send()
 
