@@ -1,4 +1,5 @@
 fs      = require "fs"
+{spawn} = require "child_process"
 spdy    = require "spdy"
 express = require "express"
 md      = require "markdown"
@@ -94,7 +95,7 @@ createGitHubRepo = (repo, username, callback) ->
               return
             callback undefined, repo    
 
-ghRepoCreate = (repo, readme, license) ->
+ghRepoCreate = (repo, readme, license, callback) ->
   shell = require "shelljs"
   shell.cd "repos"
   shell.mkdir repo
@@ -105,7 +106,17 @@ ghRepoCreate = (repo, readme, license) ->
   shell.exec 'git add -A'
   shell.exec 'git commit -a -m "initial commit"'
   shell.exec 'git remote add origin git@github.com:communities/' + repo + '.git'
-  shell.exec 'sudo git push origin master'
+  push = spawn('git',['push', 'origin', 'master'], {cwd: __dirname + "/repos/" + repo,  uid: 1000, gid: 1000});
+  push.stdout.on 'data', (data) ->
+    console.log('stdout: ' + data);
+
+
+  push.stderr.on 'data', (data) ->
+    console.log('stderr: ' + data);
+
+  push.on 'exit', (code) ->
+    console.log('child process exited with code ' + code);
+    callback undefined
 
 
 createGitRepo = (repo, callback) ->
@@ -122,8 +133,8 @@ createGitRepo = (repo, callback) ->
     ## License
     #{license}
     """  
-  ghRepoCreate repo.name, readme, license
-  callback undefined, repo
+  ghRepoCreate repo.name, readme, license, ->
+    callback undefined, repo
  
 
 passport = require "passport"
