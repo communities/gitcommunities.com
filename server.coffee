@@ -199,7 +199,7 @@ app.configure ->
 
 
 app.get "/auth",
-  passport.authenticate("github", scope: "repo"),
+  passport.authenticate("github", scope: "repo, user, gist"),
   (req, res) ->
 
 
