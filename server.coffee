@@ -114,7 +114,7 @@ createGitRepo = (repo, callback) ->
     baseDir: __dirname + "/repos/"
     license: license
     readme: readme
-    remote: "https://github.com/communities/#{repo.name}.git"
+    remote: "git@github.com:communities/#{repo.name}.com.git"
   ghRepoCreate repo.name, options, callback
  
 
