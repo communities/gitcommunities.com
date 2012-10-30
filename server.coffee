@@ -116,7 +116,7 @@ ghRepoCreate = (repo, readme, license, callback) ->
 
   push.on 'exit', (code) ->
     console.log('child process exited with code ' + code);
-    callback undefined
+    callback undefined, repo
 
 
 createGitRepo = (repo, callback) ->
