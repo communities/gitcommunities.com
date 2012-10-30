@@ -425,6 +425,16 @@ app.post "/communities", (req, res) ->
       console.log "error", err
       res.send 500, { error: "API call failed" }
       return
+    repo.members = []
+    repo.members_count [1]  
+    userUrl = "https://api.github.com/users/" + req.user.username
+    admin =
+      avatar_url: req.user.avatar
+      gravatar_id: ""
+      id: req.user.id
+      login: req.user.username
+      url: userUrl
+    repo.admins = [admin]
     rc.hmset "communities", repo.name, JSON.stringify(repo)  
     res.json repo
 
