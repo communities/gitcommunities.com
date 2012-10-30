@@ -110,19 +110,27 @@ $(function(){
     });
   }
 
-  function renderMyCommunitiesPage(){
-    var $communitiesListEl = $('#my-communities-list').empty();
-    $communitiesListEl.spin();
+  function fetchUserCommunities(callback){
     var url = '/api/' + cUnity.user.username + '/communities';
     $.get(url, function(communities){
-      $communitiesListEl.spin(false);
-      renderArray(communities, $communitiesListEl, 'my-communities-page-community-tpl');
       _.each(communities, function(community){
         subscribreToRealTimeUpdates(community.name);
       });
-    }).error(function(){
+      callback(undefined, communities);
+    }).error(function(err){
       console.log("Failed to load my communities");
+      callback(err);
+    });
+  }
+
+  function renderMyCommunitiesPage(){
+    var $communitiesListEl = $('#my-communities-list').empty();
+    $communitiesListEl.spin();
+    fetchUserCommunities(function(err, communities){
       $communitiesListEl.spin(false);
+      if(!err){
+        renderArray(communities, $communitiesListEl, 'my-communities-page-community-tpl');
+      }
     });
   }
 
@@ -405,6 +413,7 @@ $(function(){
       $('html').addClass('logined');
       $('#user-profile img').attr('src', cUnity.user.avatar);
       $('#user-profile span').text(cUnity.user.username);
+      fetchUserCommunities();
     }
     next();
   }

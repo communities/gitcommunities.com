@@ -468,7 +468,7 @@ app.post "/communities/:community/leave", (req, res) ->
 renderIndexPage = (req, res) ->
   params = 
     user: req.user or {}
-    jsFile: if nconf.get("NODE_ENV") == "production" then "/app.min.js" else "/app.js"
+    jsFile: "/app.js" #if nconf.get("NODE_ENV") == "production" then "/app.min.js" else "/app.js"
   getCommunities (err, communities) ->
     if !err and communities?
       params.communitiesCount = communities.length
@@ -490,7 +490,7 @@ handlePushWebHook = (req, res) ->
   {payload}  = req.body
   payload = JSON.parse payload
   topic = payload.ref.split("/")[2]
-  payload.topic - topic
+  payload.topic = topic
   console.log "Hook was called", payload, req.params.community, topic
   channel = req.params.community
   rc.hmget "#{channel}:topics", topic, (err, reply) ->
@@ -510,6 +510,7 @@ handlePushWebHook = (req, res) ->
               message: payloadCommit.message     
               url: payloadCommit.url
               created: payloadCommit.timestamp
+          commits.push commit    
         topic = 
           name: topic
           sha: payload.after
