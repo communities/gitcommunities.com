@@ -115,7 +115,7 @@ createGitRepo = (repo, callback) ->
     license: license
     readme: readme
     remote: "https://github.com/communities/#{repo.name}.git"
-  ghRepoCreate name, options, callback
+  ghRepoCreate repo.name, options, callback
  
 
 passport = require "passport"
