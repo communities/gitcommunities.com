@@ -505,17 +505,18 @@ handlePushWebHook = (req, res) ->
             sha: payloadCommit.id
             url: payloadCommit.url
             author: payloadCommit.author
-            commiter: payloadCommit.commiter
+            committer: payloadCommit.committer
             commit:
               message: payloadCommit.message     
               url: payloadCommit.url
               created: payloadCommit.timestamp
           commits.push commit    
-        topic = 
+        topicObj = 
           name: topic
           sha: payload.after
           commits: commits
-        console.log "created topic", topic  
+        console.log "created topic", topicObj  
+        rc.hmset "#{channel}:topics", topic, JSON.stringify(topicObj)           
   io.sockets.emit channel, payload
   res.send()
 
