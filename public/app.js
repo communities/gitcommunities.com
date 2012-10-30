@@ -14767,6 +14767,7 @@ $(function(){
                 published_at: moment().format()
               };
               message.commit.author = {
+                login: cUnity.user.username,
                 url: cUnity.user.profileUrl,
                 avatar_url: cUnity.user.avatar
               };
