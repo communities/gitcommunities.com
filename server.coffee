@@ -105,7 +105,7 @@ ghRepoCreate = (repo, readme, license) ->
   shell.exec 'git add -A'
   shell.exec 'git commit -a -m "initial commit"'
   shell.exec 'git remote add origin git@github.com:communities/' + repo + '.git'
-  shell.exec 'git push -u origin master'
+  shell.exec 'git push origin master'
 
 
 createGitRepo = (repo, callback) ->
