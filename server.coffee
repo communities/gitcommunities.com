@@ -102,7 +102,7 @@ createGitRepo = (repo, callback) ->
      http://creativecommons.org/licenses/by/3.0/.
   """
   readme = """
-    # #{name}
+    # #{repo.name}
     
     Visit our page at [gitcommunities.com](#{repo.homepage}).
     
