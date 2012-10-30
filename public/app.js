@@ -14892,7 +14892,11 @@ $(function(){
       $('html').addClass('logined');
       $('#user-profile img').attr('src', cUnity.user.avatar);
       $('#user-profile span').text(cUnity.user.username);
-      fetchUserCommunities();
+      fetchUserCommunities(function(err, communities){
+        if(!err && communities){
+          cUnity.user.communities = communities;
+        }
+      });
     }
     next();
   }
