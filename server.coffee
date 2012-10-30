@@ -425,8 +425,6 @@ app.post "/communities", (req, res) ->
       console.log "error", err
       res.send 500, { error: "API call failed" }
       return
-    repo.members = []
-    repo.members_count  = 1
     userUrl = "https://api.github.com/users/" + req.user.username
     admin =
       avatar_url: req.user.avatar
@@ -435,6 +433,14 @@ app.post "/communities", (req, res) ->
       login: req.user.username
       url: userUrl
     repo.admins = [admin]
+    repo.topics = []
+    repo.topics_count = 0
+    repo.members = []
+    repo.members_count  = 1    
+    repo.created_at = new Date().toISOString()
+    repo.created = moment(repo.created_at).fromNow()
+    repo.pushed_at = new Date().toISOString()
+    repo.pushed = moment(repo.pushed_at).fromNow()    
     rc.hmset "communities", repo.name, JSON.stringify(repo)  
     res.json repo
 
