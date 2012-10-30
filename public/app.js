@@ -14792,7 +14792,8 @@ $(function(){
           })(node);
         }
         async.parallel(workers, function(error, files){
-          files = _.first(files, files.length - 1);
+          // we are skipping README and LICENSE files here
+          files = _.first(files, files.length - 2);
           console.log('files', files);
           repo.getRef('heads/' + topic, function(err, sha){
 
@@ -14807,8 +14808,10 @@ $(function(){
                   var commit = commits[i];
                   commit.published_at = commit.commit.author.date;
                   commit.published = moment(commit.published_at).fromNow();
-                  file.commit = commit;
-                  file.html = makeHtml(file.content);
+                  if(commit){
+                    file.commit = commit;
+                    file.html = makeHtml(file.content);
+                  }
                 }
               }
               $messagesListEl.spin(false);
