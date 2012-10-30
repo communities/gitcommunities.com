@@ -497,7 +497,8 @@ renderIndexPage = (req, res) ->
       params.membersCount = _.reduce communities, membersSumFunc, 0
     else
       params.topicsCount = 0
-      params.membersCount = 0  
+      params.membersCount = 0
+      params.communitiesCount = 0  
     res.render "index", params
 
 app.get "/", renderIndexPage
