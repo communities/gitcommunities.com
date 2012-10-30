@@ -14892,7 +14892,9 @@ $(function(){
     var tplStr = $('#' + templateName).html();
     var tpl = _.template(tplStr);
     var html = tpl(item);
-    containerEl.append(html);
+    if(html){
+      containerEl.append(html);
+    }
   }
 
   function renderArray(array, containerEl, templateName){
@@ -14959,7 +14961,7 @@ $(function(){
       history.back();
     }
   });
-  $('.login-btn').on('click', function(e){
+  $('#login-btn').on('click', function(e){
       e.preventDefault();
       var pathName = document.location.pathname;
       localStorage.setItem('lastUrl', pathName);
