@@ -94,9 +94,21 @@ createGitHubRepo = (repo, username, callback) ->
               return
             callback undefined, repo    
 
+ghRepoCreate = (repo, readme, license) ->
+  shell = require "shelljs"
+  shell.cd "repos"
+  shell.mkdir repo
+  shell.cd repo
+  shell.exec "git init"
+  fs.writeFileSync __dirname + "/repos/" + repo + '/README.md', readme
+  fs.writeFileSync __dirname + "/repos/" + repo + '/LICENSE', license
+  shell.exec 'git add -A'
+  shell.exec 'git commit -a -m "initial commit"'
+  shell.exec 'git remote add origin git@github.com:communities/#{repo}.git'
+  shell.exec 'git push -u origin master'
+
 
 createGitRepo = (repo, callback) ->
-  ghRepoCreate = require "gh-repo-create"
   license = """
      All materials are licensed under the Creative Commons Attribution 3.0 License
      http://creativecommons.org/licenses/by/3.0/.
@@ -110,12 +122,8 @@ createGitRepo = (repo, callback) ->
     ## License
     #{license}
     """  
-  options = 
-    baseDir: __dirname + "/repos/"
-    license: license
-    readme: readme
-    remote: "git@github.com:communities/#{repo.name}.git"
-  ghRepoCreate repo.name, options, callback
+  ghRepoCreate repo.name, readme, license
+  callback undefined, repo
  
 
 passport = require "passport"
