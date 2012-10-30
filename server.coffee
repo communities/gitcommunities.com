@@ -492,11 +492,11 @@ handlePushWebHook = (req, res) ->
   topic = payload.ref.split("/")[2]
   payload.topic = topic
   console.log "Hook was called", payload, req.params.community, topic
-  channel = req.params.community
-  rc.hmget "#{channel}:topics", topic, (err, reply) ->
-    topic = _.first(_.compact(reply))
-    console.log "getting topic", err, topic
-    if not err and not topic?
+  community = req.params.community
+  rc.hmget "#{community}:topics", topic, (err, reply) ->
+    cachedTopic = _.first(_.compact(reply))
+    console.log "getting topic", err, cachedTopic
+    if not err and not cachedTopic?
       console.log "testing"
       commits = []
       if payload.commits?
@@ -513,11 +513,17 @@ handlePushWebHook = (req, res) ->
           commits.push commit    
         topicObj = 
           name: topic
+          community: community
           sha: payload.after
           commits: commits
+          participants: []
+          created:
+            commit: commits[0]
+          updated:
+            commit: commits[0]  
         console.log "created topic", topicObj  
-        rc.hmset "#{channel}:topics", topic, JSON.stringify(topicObj)           
-  io.sockets.emit channel, payload
+        rc.hmset "#{community}:topics", topic, JSON.stringify(topicObj)           
+  io.sockets.emit community, payload
   res.send()
 
 socketIo = require "socket.io"
