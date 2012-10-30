@@ -519,7 +519,7 @@ handlePushWebHook = (req, res) ->
   rc.hmget "#{community}:topics", topic, (err, reply) ->
     cachedTopic = _.first(_.compact(reply))
     console.log "getting topic", err, cachedTopic
-    if not err and not cachedTopic?
+    if not err and not cachedTopic? and topic != "master"
       console.log "testing"
       commits = []
       if payload.commits?

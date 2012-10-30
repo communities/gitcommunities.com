@@ -215,10 +215,33 @@ a.btn
     & > *
       display: block; 
   & .details
+    position: relative;
+    height: 222px;
     & aside
       border-top: 1px solid $thirdColor;
       padding-top: 20px;
       margin-top: 20px;
+  & .member-stats    
+    position: absolute;
+    bottom: 0;
+    & .stats-item
+      display: inline-block;
+      & label  
+        font-size: 9px;
+        text-transform: uppercase;
+        display: block;
+        text-align: center;
+      & span
+        display: block;
+        font-size: 18px;
+        font-weight: bold;  
+        background-color: $fourthColor;
+        color: white;
+        border-right: 1px solid #a19faa;
+        text-align: center;
+        height: 42px;
+        width: 84px;
+        line-height: 42px;
 
 .app-header
 .app-footer .container

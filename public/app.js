@@ -14552,8 +14552,8 @@ $(function(){
         $page.find('.bio').html(profile.bio);
         $page.find('.location').html(profile.location);
         $page.find('.blog').html(profile.blog);
-        $page.find('.followers-count').html(profile.followers);
-        $page.find('.following-count').html(profile.following);
+        $page.find('.followers-count span').html(profile.followers);
+        $page.find('.following-count span').html(profile.following);
       }
 
       $('#follow-member-btn').on('click', function(){
@@ -14566,9 +14566,9 @@ $(function(){
             url: url,
             contentType: "application/json"
           }).done(function(){
-            var followersCount = parseInt($('.followers-count').text(), 10);
+            var followersCount = parseInt($('.followers-count span').text(), 10);
             followersCount += 1;
-            $('.followers-count').text(followersCount);
+            $('.followers-count span').text(followersCount);
           });
         } else {
           // unfollow user
@@ -14578,9 +14578,9 @@ $(function(){
             url: url,
             contentType: "application/json"
           }).done(function(){
-            var followersCount = parseInt($('.followers-count').text(), 10);
+            var followersCount = parseInt($('.followers-count span').text(), 10);
             followersCount -= 1;
-            $('.followers-count').text(followersCount);
+            $('.followers-count span').text(followersCount);
           });
             
         }
